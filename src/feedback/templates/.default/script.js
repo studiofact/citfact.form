@@ -18,7 +18,7 @@ Feedback.prototype.getData = function(action) {
 	switch (action) {
 		case 'feedback_remote':
 			data.push({ name: 'feedback_remote', value: 'true' });
-			data.push({ name: 'send_form', value: 'true' });
+			data.push({ name: this.form.find('.submit-form').attr('name'), value: 'true' });
 			data = $.param(data);
 			break;
 		

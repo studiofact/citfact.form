@@ -60,7 +60,7 @@ $APPLICATION->SetAdditionalCSS($templateFolder.'/style.css');
 		<?if($arParams['AJAX'] == 'Y'):?>
 			<input type="hidden" name="ajax_id" value="<?=$arResult['FORM']['COMPONENT_ID']?>" /> 
 		<?endif;?>
-		<input type="submit" name="send_form_<?=$arResult['FORM']['COMPONENT_ID']?>" value="<?=GetMessage('FILED_SUBMIT')?>"/>
+		<input type="submit" class="submit-form" name="send_form_<?=$arResult['FORM']['COMPONENT_ID']?>" value="<?=GetMessage('FILED_SUBMIT')?>"/>
 		<div class="clear"></div>
 	</form>
 </div>
