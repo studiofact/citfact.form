@@ -1,0 +1,32 @@
+.form-container { border-radius: 4px; padding: 10px; background: #F4F8FA; width: 400px; border: 1px solid #D1D1D1; }
+.form-container  .hidden { display: none !important; }
+.form-container .alert { border-radius: 4px; padding: 15px; margin: 0 0 5px 0; }
+.form-container .alert.alert-danger { background-color: #F2DEDE; border-color: #EBCCD1; color: #A94442; }
+.form-container .alert.alert-success { background-color: #DFF0D8; border-color: #D6E9C6; color: #3C763D; }
+.form-container .clear { clear: both; height: 0; visibility: hidden; display: block; font-size: 0; }
+.form-container .field { margin: 0 0 5px 0; }
+.form-container .field.margin-top { margin-top: 10px; }
+.form-container .field label { display: inline-block; font-weight: 700; margin-bottom: 5px; }
+.form-container .field .form-control { background-color: #FFFFFF; border: 1px solid #CCCCCC; border-radius: 4px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; color: #555555; display: block; font-size: 14px; height: 34px; line-height: 1.42857; padding: 6px 12px; width: 100%; }
+.form-container .field .form-control.has-error { border: 1px solid #A94442; }
+.form-container .field textarea.form-control { height: auto; }
+.form-container .field .captcha-container { display: inline-block; float: left; margin: 0 10px 0 0; }    
+.form-container .field .captcha-container img { display: block; }
+.form-container .field input[name=captcha_word] { width: 280px; }
+.form-container input[type=submit] {
+	float: right;
+	border: 1px solid #CCCCCC;
+	border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;	
+	background-color: #FFFFFF;
+    color: #333333;
+}    
