@@ -19,10 +19,10 @@ $APPLICATION->SetAdditionalCSS($templateFolder.'/style.css');
 <?endforeach;?>
 
 <form action="<?=POST_FORM_ACTION_URI?>" method="post" id="form-feedback-<?=$arResult['FORM']['COMPONENT_ID']?>">
-    <input type="text" placeholder="<?=GetMessage('FILED_NAME')?>" name="name" value="<?=$arResult['FORM']['NAME']?>" />
-    <input type="text" placeholder="<?=GetMessage('FILED_PHONE')?>" name="phone" value="<?=$arResult['FORM']['PHONE']?>"/>
-    <input type="text" placeholder="<?=GetMessage('FILED_EMAIL')?>" name="email" value="<?=$arResult['FORM']['EMAIL']?>"/>
-    <textarea placeholder="<?=GetMessage('FILED_MESSAGE')?>" name="message" ><?=$arResult['FORM']['MESSAGE']?></textarea>
+    <input type="text" placeholder="<?=GetMessage('FILED_NAME')?>" name="UF_NAME" value="<?=$arResult['FORM']['UF_NAME']?>" />
+    <input type="text" placeholder="<?=GetMessage('FILED_PHONE')?>" name="UF_PHONE" value="<?=$arResult['FORM']['UF_PHONE']?>"/>
+    <input type="text" placeholder="<?=GetMessage('FILED_EMAIL')?>" name="UF_EMAIL" value="<?=$arResult['FORM']['UF_EMAIL']?>"/>
+    <textarea placeholder="<?=GetMessage('FILED_MESSAGE')?>" name="UF_MESSAGE" ><?=$arResult['FORM']['UF_MESSAGE']?></textarea>
 	<?if($arParams['USE_CAPTCHA'] == 'Y'):?>
 		<img class="captcha-image" src="/bitrix/tools/captcha.php?captcha_sid=<?=$arResult['CAPTCHA_CODE']?>" alt="CAPTCHA" width="110" height="33" />
 		<a href="#" class="captcha-reload"><?=GetMessage('CAPTCHA_RELOAD')?></a>

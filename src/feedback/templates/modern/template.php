@@ -32,19 +32,19 @@ $APPLICATION->SetAdditionalCSS($templateFolder.'/style.css');
 	<form action="<?=POST_FORM_ACTION_URI?>" method="post" id="form-feedback-<?=$arResult['FORM']['COMPONENT_ID']?>">
 		<div class="field">
 			<label><?=GetMessage('FILED_NAME')?></label>
-			<input type="text" class="form-control validation empty" name="name" value="<?=$arResult['FORM']['NAME']?>" />
+			<input type="text" class="form-control validation empty" name="UF_NAME" value="<?=$arResult['FORM']['UF_NAME']?>" />
 		</div>
 		<div class="field">
 			<label><?=GetMessage('FILED_PHONE')?></label>
-			<input type="text" class="form-control validation phone" name="phone" value="<?=$arResult['FORM']['PHONE']?>"/>
+			<input type="text" class="form-control validation phone" name="UF_PHONE" value="<?=$arResult['FORM']['UF_PHONE']?>"/>
 		</div>		
 		<div class="field">
 			<label><?=GetMessage('FILED_EMAIL')?></label>
-			<input type="text" class="form-control validation email" name="email" value="<?=$arResult['FORM']['EMAIL']?>"/>
+			<input type="text" class="form-control validation email" name="UF_EMAIL" value="<?=$arResult['FORM']['UF_EMAIL']?>"/>
 		</div>
 		<div class="field">
 			<label><?=GetMessage('FILED_MESSAGE')?></label>
-			<textarea class="form-control validation empty" rows="5" name="message"><?=$arResult['FORM']['MESSAGE']?></textarea>
+			<textarea class="form-control validation empty" rows="5" name="UF_MESSAGE"><?=$arResult['FORM']['UF_MESSAGE']?></textarea>
 		</div>
 		<?if($arParams['USE_CAPTCHA'] == 'Y'):?>
 			<div class="field margin-top">

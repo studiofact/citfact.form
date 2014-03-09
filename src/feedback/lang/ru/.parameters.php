@@ -7,10 +7,9 @@
  */
 
 
-$MESS['IBLOCK_ID'] = 'ID инфоблока';
-$MESS['CHECK_IBLOCK'] = 'Проверить инфоблок';
+$MESS['HLBLOCK_ID'] = 'ID HL блока';
+$MESS['EVENT_NAME'] = 'Название почтового события';
+$MESS['EVENT_TEMPLATE'] = 'Индификатор почтового шаблона';
 $MESS['AJAX'] = 'Включить AJAX режим';
 $MESS['USE_CAPTCHA'] = 'Использовать каптчу';
-$MESS['PHONE_REGEXP'] = 'Регулярное выражение для номера телефона';
-$MESS['PHONE_REGEXP'] = 'Включить редир';
 $MESS['REDIRECT_PATH'] = 'УРЛ адрес для перенаправления после успешного оформления';

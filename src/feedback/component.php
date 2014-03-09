@@ -17,14 +17,17 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Config\ConfigurationException;
+use Bitrix\Main\LoaderException;
 use Bitrix\Main\Entity;
+use Bitrix\Highloadblock as HL;
+use Bitrix\Main\Event;
 
-global $APPLICATION;
+global $APPLICATION, $USER_FIELD_MANAGER;
 
 Loc::loadMessages(__FILE__);
 
-if (!class_exists('CIBlockElement')) {
-	Loader::includeModule('iblock');
+if (!Loader::includeModule('highloadblock')) {
+	throw new LoaderException(sprintf('Module "Highloadblock" not set'));
 }
 
 $application = Application::getInstance();
@@ -53,27 +56,6 @@ if ($isAjax) {
 	};
 }
 
-// Checking information block
-if (is_numeric($arParams['IBLOCK_ID'])) {
-	$arParams['IBLOCK_ID'] = (int)$arParams['IBLOCK_ID'];
-	if ($arParams['CHECK_IBLOCK'] == 'Y') {
-		$entityIblock = new Entity\Query(Entity\Base::getInstance('Bitrix\Iblock\IblockTable'));
-		$entityIblock
-			->setSelect(array('ID', 'NAME'))
-			->setFilter(array('ID' => $arParams['IBLOCK_ID']))
-			->setOrder(array('ID' => 'ASC'))
-			->setLimit(1);
-		
-		$iblockResult = $entityIblock->exec()->fetch();
-		if ($iblockResult === false) {
-			throw new ConfigurationException(sprintf('Iblock with ID = %d not found', $arParams['IBLOCK_ID']));
-		}
-	}
-} else {
-	throw new ConfigurationException(sprintf('Invalid IBLOCK_ID param'));
-}
-
-// Reload captcha
 // Return new code for captcha
 if ($arParams['USE_CAPTCHA'] == 'Y' && $request->getPost('feedback_captcha_remote') && $componentAjax) {
 	$applicationOld->RestartBuffer();
@@ -81,54 +63,69 @@ if ($arParams['USE_CAPTCHA'] == 'Y' && $request->getPost('feedback_captcha_remot
 	exit(json_encode(array('captcha' => $applicationOld->CaptchaGetCode())));
 }
 
-if ($arParams['PHONE_REGEXP'] == '') {
-	// @see http://habrahabr.ru/post/110731/
-	$arParams['PHONE_REGEXP'] = '/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/';
+// Checking highload block
+$hlblock = HL\HighloadBlockTable::getById($arParams['HLBLOCK_ID'])->fetch();
+if (empty($hlblock)) {
+	throw new ConfigurationException(sprintf('Highloadblock with ID = %d not found', $arParams['HLBLOCK_ID']));
 }
+
+$entityBase = HL\HighloadBlockTable::compileEntity($hlblock);
+$entityBaseFields = $USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $hlblock['ID']), 0, LANGUAGE_ID);
 
 // Validatation data in a form
 if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId))) {
 	$postData = $request->getPostList()->toArray();
 	$postData = array_map('strip_tags', $postData);
-	
-	if ($postData['name'] == '') {
-		$errorList['name'] = Loc::getMessage('ERROR_NAME');
-	}
-	
-	if ($postData['message'] == '') {
-		$errorList['message'] = Loc::getMessage('ERROR_MESSAGE');
-	}
-	
-	if (!filter_var($postData['email'], FILTER_VALIDATE_EMAIL)) {
-		$errorList['email'] = Loc::getMessage('ERROR_EMAIL');
-	}
-	
-	if (!preg_match($arParams['PHONE_REGEXP'], $postData['phone'])) {
-		$errorList['phone'] = Loc::getMessage('ERROR_PHONE');
-	}
-	
+
 	if ($arParams['USE_CAPTCHA'] == 'Y') {
 		if (!$applicationOld->CaptchaCheckCode($postData['captcha_word'], $postData['captcha_sid'])) {
 			$errorList['captcha_word'] = Loc::getMessage('ERROR_CAPTCHA');
 		}
 	}
+
+	$postData = array_intersect_key($postData, $entityBaseFields);
+	$USER_FIELD_MANAGER->EditFormAddFields(sprintf('HLBLOCK_%d', $hlblock['ID']), $postData);
+
+	if (!$USER_FIELD_MANAGER->CheckFields(sprintf('HLBLOCK_%d', $hlblock['ID']), $postData)) {
+		$errorList['internal'] = $applicationOld->GetException()->GetString();
+	}
 	
 	if (!isset($errorList)) {
-		$iblockElement = new CIBlockElement();
-		$elementResult = $iblockElement->add(array(
-			'IBLOCK_ID' => $arParams['IBLOCK_ID'],
-			'NAME' => sprintf('%s %s', Loc::getMessage('POSTED_BY'), $postData['name']),
-			'DETAIL_TEXT' => $postData['message'],
-			'DETAIL_TYPE' => 'TEXT',
-			'PROPERTY_VALUES' => array(
-				'EMAIL' => $postData['email'],
-				'PHONE' => $postData['phone']
-			)
-		));
+		$enityData = $entityBase->getDataClass();
+		$result = $enityData::add($postData);
 	
-		$success = (is_numeric($elementResult)) ? true : false;
+		$success = ($result->isSuccess()) ? true : false;
 		$internal = ($success === false) ? true : false;
 		
+		if (!$success) {
+			$errorList = $result->getErrorMessages();
+			$errorList = (sizeof($errorList) == 1) ? explode('<br>', $errorList[0]) : $errorList;
+
+			foreach ($entityBaseFields as $name => $field) {
+				foreach ($errorList as $key => $error) {
+					if (preg_match('#'.$field['EDIT_FORM_LABEL'].'#', $error) || $field['ERROR_MESSAGE'] == $error) {
+						if (!array_key_exists($name, $errorList)) {
+							$errorList[$name] = $error;
+						}
+
+						unset($errorList[$key]);
+					}
+				}
+			}
+
+			// Remove empty cell
+			$errorList = array_diff($errorList, array(null));
+		} else {
+			// Adding a post event
+			$event = $arParams['EVENT_NAME'];
+			$eventTemplate = (is_numeric($arParams['EVENT_TEMPLATE'])) ?: '';
+
+			$eventType = CEventType::GetList(array('EVENT_NAME' => $event))->GetNext();
+			if ($event && is_array($eventType)) {
+				CEvent::send($event, SITE_ID, $postData, 'Y', $eventTemplate);
+			}
+		}
+
 		if (strlen($arParams['REDIRECT_PATH']) > 0 && $success && $arParams['AJAX'] != 'Y') {
 			LocalRedirect($arParams['REDIRECT_PATH']);
 		} elseif ($success && $arParams['AJAX'] != 'Y') {
@@ -170,14 +167,16 @@ $arResult = array(
 	'SUCCESS' => $success ?: false,
 	'INTERNAL' => $internal ?: false,
 	'ERRORS' => $errorList ?: array(),
-	'FORM' => array(
-		'COMPONENT_ID' => $componentId,
-		'NAME' => array_key_exists('name', $postData) ? $postData['name'] : '',
-		'PHONE' => array_key_exists('phone', $postData) ? $postData['phone'] : '',
-		'EMAIL' => array_key_exists('email', $postData) ? $postData['email'] : '',
-		'MESSAGE' => array_key_exists('message', $postData) ? $postData['message'] : '',
+	'HLBLOCK' => array(
+		'DATA' => $hlblock,
+		'FIELDS' => $entityBaseFields,
 	)
 );
+
+$arResult['FORM']['COMPONENT_ID'] = $componentId;
+foreach ($entityBaseFields as $name => $value) {
+	$arResult['FORM'][$name] = array_key_exists($name, $postData) ? $postData[$name] : '';
+}
 
 if ($arParams['USE_CAPTCHA'] == 'Y') {
 	$arResult['CAPTCHA_CODE'] = $applicationOld->CaptchaGetCode();

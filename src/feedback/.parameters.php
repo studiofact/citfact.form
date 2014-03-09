@@ -20,14 +20,19 @@ Loc::loadMessages(__FILE__);
 
 $arComponentParameters = array(
 	'PARAMETERS' => array(
-		'IBLOCK_ID' => array(
-			'NAME' => Loc::getMessage('IBLOCK_ID'),
+		'HLBLOCK_ID' => array(
+			'NAME' => Loc::getMessage('HLBLOCK_ID'),
 			'TYPE' => 'STRING',
 			'DEFAULT' => '',
 		),
-		'CHECK_IBLOCK' => array(
-			'NAME' => Loc::getMessage('CHECK_IBLOCK'),
-			'TYPE' => 'CHECKBOX',
+		'EVENT_NAME' => array(
+			'NAME' => Loc::getMessage('EVENT_NAME'),
+			'TYPE' => 'STRING',
+			'DEFAULT' => '',
+		),
+		'EVENT_TEMPLATE' => array(
+			'NAME' => Loc::getMessage('EVENT_TEMPLATE'),
+			'TYPE' => 'STRING',
 			'DEFAULT' => '',
 		),
 		'AJAX' => array(
@@ -38,11 +43,6 @@ $arComponentParameters = array(
 		'USE_CAPTCHA' => array(
 			'NAME' => Loc::getMessage('USE_CAPTCHA'),
 			'TYPE' => 'CHECKBOX',
-			'DEFAULT' => '',
-		),
-		'PHONE_REGEXP' => array(
-			'NAME' => Loc::getMessage('PHONE_REGEXP'),
-			'TYPE' => 'STRING',
 			'DEFAULT' => '',
 		),
 		'REDIRECT_PATH' => array(
