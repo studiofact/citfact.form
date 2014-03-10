@@ -78,6 +78,29 @@ $parseErrorLitst = function ($errorList) use ($entityBaseFields) {
     return array_diff($result, array(null));
 };
 
+// Returns a list of custom field values
+$getEnumValue = function ($entityBaseFields) {
+    $enumList = $enumValue = array();
+    foreach ($entityBaseFields as $fieldName => $field) {
+        if ($field['USER_TYPE_ID'] == 'enumeration') {
+            $enumList[] = $field['ID'];
+        }
+    }
+    
+    $fieldEnum = CUserFieldEnum::GetList(array(), array('USER_FIELD_ID' => $enumList));
+    while ($row = $fieldEnum->GetNext()) {
+        $enumValue[$row['USER_FIELD_ID']][] = $row;
+    }
+    
+    foreach ($entityBaseFields as $fieldName => $field) {
+        if (array_key_exists($field['ID'], $enumValue)) {
+            $entityBaseFields[$fieldName]['VALUE'] = $enumValue[$field['ID']];
+        }
+    }
+    
+    return $entityBaseFields;
+};
+
 // For the current component ajax request?
 $componentAjax = function () use ($componentId, $request, $isAjax) {
     if (!$request->isPost() || !$request->getPost('ajax_id')) {
@@ -101,7 +124,7 @@ if (empty($hlblock)) {
 }
 
 $entityBase = HL\HighloadBlockTable::compileEntity($hlblock);
-$entityBaseFields = $USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $hlblock['ID']), 0, LANGUAGE_ID);
+$entityBaseFields = $getEnumValue($USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $hlblock['ID']), 0, LANGUAGE_ID));
 
 // Validatation data in a form
 if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId))) {
