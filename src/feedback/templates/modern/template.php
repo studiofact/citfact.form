@@ -29,7 +29,7 @@ $APPLICATION->SetAdditionalCSS($templateFolder.'/style.css');
 		</div>
 	<?endif;?>
 
-	<form action="<?=POST_FORM_ACTION_URI?>" method="post" id="form-feedback-<?=$arResult['FORM']['COMPONENT_ID']?>">
+	<form action="<?=POST_FORM_ACTION_URI?>" method="post" enctype="multipart/form-data" id="form-feedback-<?=$arResult['FORM']['COMPONENT_ID']?>">
 		<div class="field">
 			<label><?=GetMessage('FILED_NAME')?></label>
 			<input type="text" class="form-control validation empty" name="UF_NAME" value="<?=$arResult['FORM']['UF_NAME']?>" />

@@ -18,7 +18,7 @@ $APPLICATION->SetAdditionalCSS($templateFolder.'/style.css');
 	<?=$value?>
 <?endforeach;?>
 
-<form action="<?=POST_FORM_ACTION_URI?>" method="post" id="form-feedback-<?=$arResult['FORM']['COMPONENT_ID']?>">
+<form action="<?=POST_FORM_ACTION_URI?>" method="post" enctype="multipart/form-data" id="form-feedback-<?=$arResult['FORM']['COMPONENT_ID']?>">
     <input type="text" placeholder="<?=GetMessage('FILED_NAME')?>" name="UF_NAME" value="<?=$arResult['FORM']['UF_NAME']?>" />
     <input type="text" placeholder="<?=GetMessage('FILED_PHONE')?>" name="UF_PHONE" value="<?=$arResult['FORM']['UF_PHONE']?>"/>
     <input type="text" placeholder="<?=GetMessage('FILED_EMAIL')?>" name="UF_EMAIL" value="<?=$arResult['FORM']['UF_EMAIL']?>"/>

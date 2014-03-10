@@ -45,16 +45,47 @@ if (array_key_exists(sprintf('feedback_success_%s', $componentId), $_SESSION)) {
 	$success = true;
 }
 
-// For the current component ajax request?
-if ($isAjax) {
-	$componentAjax = function() use($componentId, $request) {
-		if (!$request->isPost() || !$request->getPost('ajax_id')) {
-			return false;
+// Parsing errors after working method CheckFields
+$parseErrorLitst = function($errorList) use($entityBaseFields) {
+	$result = array();
+	if (array_key_exists('captcha_word', $errorList)) {
+		$result['captcha_word'] = $errorList['captcha_word'];
+		unset($errorList['captcha_word']);
+	}
+	
+	$errorList = (array_key_exists('internal', $errorList))
+		? $errorList['internal']
+		: explode('<br>', $errorList[0]);
+	
+	if (is_object($errorList)) {
+		foreach ($errorList->messages as $error) {
+			if (!array_key_exists($error['id'], $result)) {
+				$result[$error['id']] = $error['text'];
+			}
 		}
+	} else {
+		foreach ($entityBaseFields as $name => $field) {
+			foreach ($errorList as $key => $error) {
+				if (preg_match('#'.$field['EDIT_FORM_LABEL'].'#', $error) || $field['ERROR_MESSAGE'] == $error) {
+					if (!array_key_exists($name, $result)) {
+						$result[$name] = $error;
+					}
+				}
+			}
+		}			
+	}
 		
-		return ($request->getPost('ajax_id') == $componentId);
-	};
-}
+	return array_diff($result, array(null));
+};
+
+// For the current component ajax request?
+$componentAjax = function() use($componentId, $request, $isAjax) {
+	if (!$request->isPost() || !$request->getPost('ajax_id')) {
+		return false;
+	}
+	
+	return ($request->getPost('ajax_id') == $componentId && $isAjax);
+};
 
 // Return new code for captcha
 if ($arParams['USE_CAPTCHA'] == 'Y' && $request->getPost('feedback_captcha_remote') && $componentAjax) {
@@ -76,46 +107,32 @@ $entityBaseFields = $USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $hl
 if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId))) {
 	$postData = $request->getPostList()->toArray();
 	$postData = array_map('strip_tags', $postData);
-
+	
 	if ($arParams['USE_CAPTCHA'] == 'Y') {
 		if (!$applicationOld->CaptchaCheckCode($postData['captcha_word'], $postData['captcha_sid'])) {
 			$errorList['captcha_word'] = Loc::getMessage('ERROR_CAPTCHA');
 		}
 	}
-
+	
 	$postData = array_intersect_key($postData, $entityBaseFields);
 	$USER_FIELD_MANAGER->EditFormAddFields(sprintf('HLBLOCK_%d', $hlblock['ID']), $postData);
-
-	if (!$USER_FIELD_MANAGER->CheckFields(sprintf('HLBLOCK_%d', $hlblock['ID']), $postData)) {
-		$errorList['internal'] = $applicationOld->GetException()->GetString();
+	
+	if (!$USER_FIELD_MANAGER->CheckFields(sprintf('HLBLOCK_%d', $hlblock['ID']), null, $postData)) {
+		$errorList['internal'] = $applicationOld->GetException();
 	}
 	
-	if (!isset($errorList)) {
+	if (isset($errorList)) {
+		$errorList = $parseErrorLitst($errorList);
+	}
+	
+	if (empty($errorList)) {
 		$enityData = $entityBase->getDataClass();
 		$result = $enityData::add($postData);
 	
 		$success = ($result->isSuccess()) ? true : false;
 		$internal = ($success === false) ? true : false;
 		
-		if (!$success) {
-			$errorList = $result->getErrorMessages();
-			$errorList = (sizeof($errorList) == 1) ? explode('<br>', $errorList[0]) : $errorList;
-
-			foreach ($entityBaseFields as $name => $field) {
-				foreach ($errorList as $key => $error) {
-					if (preg_match('#'.$field['EDIT_FORM_LABEL'].'#', $error) || $field['ERROR_MESSAGE'] == $error) {
-						if (!array_key_exists($name, $errorList)) {
-							$errorList[$name] = $error;
-						}
-
-						unset($errorList[$key]);
-					}
-				}
-			}
-
-			// Remove empty cell
-			$errorList = array_diff($errorList, array(null));
-		} else {
+		if ($success) {
 			// Adding a post event
 			$event = $arParams['EVENT_NAME'];
 			$eventTemplate = (is_numeric($arParams['EVENT_TEMPLATE'])) ?: '';
@@ -124,6 +141,8 @@ if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId
 			if ($event && is_array($eventType)) {
 				CEvent::send($event, SITE_ID, $postData, 'Y', $eventTemplate);
 			}
+		} else {
+			$errorList = $parseErrorLitst($result->getErrorMessages());
 		}
 
 		if (strlen($arParams['REDIRECT_PATH']) > 0 && $success && $arParams['AJAX'] != 'Y') {
