@@ -203,6 +203,12 @@ if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId
     // If enabled ajax mod and action in the request feedback_remote
     // Return the validation form in the format json
     if ($arParams['AJAX'] == 'Y' && $request->getPost('feedback_remote') && $componentAjax) {
+        if (strtolower(LANG_CHARSET) != 'utf-8' && isset($errorList)) {
+            foreach ($errorList as $key => $error) {
+                $errorList[$key] = iconv(LANG_CHARSET, 'utf-8', $error);
+            }
+        }
+        
         $applicationOld->RestartBuffer();
         header('Content-Type: application/json');
 
