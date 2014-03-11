@@ -3,6 +3,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
+$path = sprintf('%s%s', getenv('DOCUMENT_ROOT'), $templateFolder);
+if (file_exists($path . '/user_type.php')) {
+    include $path . '/user_type.php';
+}
+
 if ($arParams['AJAX'] == 'Y') {
     $APPLICATION->AddHeadScript($templateFolder . '/script.js');
 }
@@ -31,26 +36,7 @@ $APPLICATION->SetAdditionalCSS($templateFolder . '/style.css');
 
     <form action="<?= POST_FORM_ACTION_URI ?>" method="post" enctype="multipart/form-data"
           id="form-feedback-<?= $arResult['FORM']['COMPONENT_ID'] ?>">
-        <div class="field">
-            <label><?= GetMessage('FILED_NAME') ?></label>
-            <input type="text" class="form-control validation empty" name="UF_NAME"
-                   value="<?= $arResult['FORM']['UF_NAME'] ?>"/>
-        </div>
-        <div class="field">
-            <label><?= GetMessage('FILED_PHONE') ?></label>
-            <input type="text" class="form-control validation phone" name="UF_PHONE"
-                   value="<?= $arResult['FORM']['UF_PHONE'] ?>"/>
-        </div>
-        <div class="field">
-            <label><?= GetMessage('FILED_EMAIL') ?></label>
-            <input type="text" class="form-control validation email" name="UF_EMAIL"
-                   value="<?= $arResult['FORM']['UF_EMAIL'] ?>"/>
-        </div>
-        <div class="field">
-            <label><?= GetMessage('FILED_MESSAGE') ?></label>
-            <textarea class="form-control validation empty" rows="5"
-                      name="UF_MESSAGE"><?= $arResult['FORM']['UF_MESSAGE'] ?></textarea>
-        </div>
+        <? userTypePrint($arResult); ?>
         <? if ($arParams['USE_CAPTCHA'] == 'Y'): ?>
             <div class="field margin-top">
                 <div class="captcha-container">

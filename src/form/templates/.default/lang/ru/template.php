@@ -7,9 +7,7 @@
  */
 
 $MESS['SUCCESS_MESSAGE'] = 'Спасибо! Ваша заявка принята.';
-$MESS['FILED_NAME'] = 'Ваше имя';
-$MESS['FILED_EMAIL'] = 'Ваш e-mail';
-$MESS['FILED_PHONE'] = 'Ваш телефон';
-$MESS['FILED_MESSAGE'] = 'Ваш коментарий';
+$MESS['YES'] = 'Да';
+$MESS['NO'] = 'Нет';
 $MESS['FILED_SUBMIT'] = 'Отправить заявку';
 $MESS['CAPTCHA_RELOAD'] = 'Обновить';

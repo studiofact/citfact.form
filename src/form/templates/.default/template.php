@@ -3,6 +3,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
+$path = sprintf('%s%s', getenv('DOCUMENT_ROOT'), $templateFolder);
+if (file_exists($path . '/user_type.php')) {
+    include $path . '/user_type.php';
+}
+
 if ($arParams['AJAX'] == 'Y') {
     $APPLICATION->AddHeadScript($templateFolder . '/script.js');
 }
@@ -20,14 +25,7 @@ $APPLICATION->SetAdditionalCSS($templateFolder . '/style.css');
 
 <form action="<?= POST_FORM_ACTION_URI ?>" method="post" enctype="multipart/form-data"
       id="form-feedback-<?= $arResult['FORM']['COMPONENT_ID'] ?>">
-    <input type="text" placeholder="<?= GetMessage('FILED_NAME') ?>" name="UF_NAME"
-           value="<?= $arResult['FORM']['UF_NAME'] ?>"/>
-    <input type="text" placeholder="<?= GetMessage('FILED_PHONE') ?>" name="UF_PHONE"
-           value="<?= $arResult['FORM']['UF_PHONE'] ?>"/>
-    <input type="text" placeholder="<?= GetMessage('FILED_EMAIL') ?>" name="UF_EMAIL"
-           value="<?= $arResult['FORM']['UF_EMAIL'] ?>"/>
-    <textarea placeholder="<?= GetMessage('FILED_MESSAGE') ?>"
-              name="UF_MESSAGE"><?= $arResult['FORM']['UF_MESSAGE'] ?></textarea>
+    <? userTypePrint($arResult); ?>
     <? if ($arParams['USE_CAPTCHA'] == 'Y'): ?>
         <img class="captcha-image" src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult['CAPTCHA_CODE'] ?>"
              alt="CAPTCHA" width="110" height="33"/>

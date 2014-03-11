@@ -13,14 +13,14 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-use Bitrix\Main\Application;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\Loader;
-use Bitrix\Main\Config\ConfigurationException;
-use Bitrix\Main\LoaderException;
-use Bitrix\Main\Entity;
 use Bitrix\Highloadblock as HL;
+use Bitrix\Main\Application;
+use Bitrix\Main\Config\ConfigurationException;
+use Bitrix\Main\Entity;
 use Bitrix\Main\Event;
+use Bitrix\Main\Loader;
+use Bitrix\Main\LoaderException;
+use Bitrix\Main\Localization\Loc;
 
 global $APPLICATION, $USER_FIELD_MANAGER;
 
@@ -86,18 +86,37 @@ $getEnumValue = function ($entityBaseFields) {
             $enumList[] = $field['ID'];
         }
     }
-    
+
     $fieldEnum = CUserFieldEnum::GetList(array(), array('USER_FIELD_ID' => $enumList));
     while ($row = $fieldEnum->GetNext()) {
         $enumValue[$row['USER_FIELD_ID']][] = $row;
     }
-    
+
     foreach ($entityBaseFields as $fieldName => $field) {
         if (array_key_exists($field['ID'], $enumValue)) {
             $entityBaseFields[$fieldName]['VALUE'] = $enumValue[$field['ID']];
         }
     }
-    
+
+    return $entityBaseFields;
+};
+
+// Checks the list of custom field values ​​for activity
+$enumValueSelected = function ($entityBaseFields, $postData) {
+    foreach ($entityBaseFields as $fieldName => $field) {
+        if ($field['USER_TYPE_ID'] != 'enumeration') {
+            continue;
+        }
+
+        $formValue = (array_key_exists($fieldName, $postData)) ? $postData[$fieldName] : '';
+        foreach ($field['VALUE'] as $key => $value) {
+            $entityBaseFields[$fieldName]['VALUE'][$key]['SELECTED'] =
+                (is_array($formValue))
+                    ? (in_array($value['ID'], $formValue)) ? 'Y' : 'N'
+                    : ($value['ID'] == $formValue) ? 'Y' : 'N';
+        }
+    }
+
     return $entityBaseFields;
 };
 
@@ -211,7 +230,7 @@ $arResult = array(
     'ERRORS' => $errorList ? : array(),
     'HLBLOCK' => array(
         'DATA' => $hlblock,
-        'FIELDS' => $entityBaseFields,
+        'FIELDS' => $enumValueSelected($entityBaseFields, $postData),
     )
 );
 
