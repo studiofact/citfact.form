@@ -199,33 +199,6 @@ if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId
             LocalRedirect($redirectPath);
         }
     }
-
-    // If enabled ajax mod and action in the request feedback_remote
-    // Return the validation form in the format json
-    if ($arParams['AJAX'] == 'Y' && $request->getPost('feedback_remote') && $componentAjax) {
-        if (strtolower(LANG_CHARSET) != 'utf-8' && isset($errorList)) {
-            foreach ($errorList as $key => $error) {
-                $errorList[$key] = iconv(LANG_CHARSET, 'utf-8', $error);
-            }
-        }
-        
-        $applicationOld->RestartBuffer();
-        header('Content-Type: application/json');
-
-        $jsonResponse = array(
-            'success' => $success ? : false,
-            'errors' => $errorList ? : array(),
-            'internal' => $internal ? : false,
-            'use_redirect' => (strlen($arParams['REDIRECT_PATH']) > 0) ? : false,
-            'redirect_path' => $arParams['REDIRECT_PATH'],
-        );
-
-        if ($arParams['USE_CAPTCHA'] == 'Y') {
-            $jsonResponse['captcha'] = $applicationOld->CaptchaGetCode();
-        }
-
-        exit(json_encode($jsonResponse));
-    }
 }
 
 $postData = array_map('htmlspecialchars', (isset($postData)) ? $postData : array());
@@ -248,6 +221,38 @@ foreach ($entityBaseFields as $name => $value) {
 if ($arParams['USE_CAPTCHA'] == 'Y') {
     $arResult['CAPTCHA_CODE'] = $applicationOld->CaptchaGetCode();
     $arResult['FORM']['CAPTCHA'] = array_key_exists('captcha_word', $postData) ? $postData['name'] : '';
+}
+
+// If enabled ajax mod and action in the request feedback_remote
+// Return the validation form in the format json
+if ($arParams['AJAX'] == 'Y' && $request->getPost('feedback_remote') && $componentAjax) {
+    if (strtolower(LANG_CHARSET) != 'utf-8' && isset($errorList)) {
+        foreach ($errorList as $key => $error) {
+            $errorList[$key] = iconv(LANG_CHARSET, 'utf-8', $error);
+        }
+    }
+    
+    ob_start();
+    $this->IncludeComponentTemplate();
+    $componentTemplate = ob_get_contents();
+    ob_end_clean();
+    
+    $jsonResponse = array(
+        'success' => $arResult['SUCCESS'],
+        'errors' => $arResult['ERRORS'],
+        'internal' => $arResult['INTERNAL'],
+        'html' => $componentTemplate,
+        'use_redirect' => (strlen($arParams['REDIRECT_PATH']) > 0) ? : false,
+        'redirect_path' => $arParams['REDIRECT_PATH'],
+    );
+
+    if ($arParams['USE_CAPTCHA'] == 'Y') {
+        $jsonResponse['captcha'] = $arResult['CAPTCHA_CODE'];
+    }
+
+    $applicationOld->RestartBuffer();
+    header('Content-Type: application/json');
+    exit(json_encode($jsonResponse));
 }
 
 $this->IncludeComponentTemplate();
