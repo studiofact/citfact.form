@@ -204,6 +204,7 @@ if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId
 $postData = array_map('htmlspecialchars', (isset($postData)) ? $postData : array());
 $arResult = array(
     'IS_POST' => $request->isPost(),
+    'IS_AJAX' => $isAjax,
     'SUCCESS' => $success ? : false,
     'INTERNAL' => $internal ? : false,
     'ERRORS' => $errorList ? : array(),
