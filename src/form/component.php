@@ -238,7 +238,7 @@ if ($arParams['AJAX'] == 'Y' && $request->getPost('feedback_remote') && $compone
     ob_end_clean();
     
     if (strtolower(LANG_CHARSET) != 'utf-8') {
-        $componentTemplate = iconv(LANG_CHARSET, 'utf-8', $error);
+        $componentTemplate = iconv(LANG_CHARSET, 'utf-8', $componentTemplate);
     }
     
     $jsonResponse = array(
