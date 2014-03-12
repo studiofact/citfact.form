@@ -68,7 +68,7 @@ $arComponentParameters = array(
         ),
         'DISPLAY_FIELDS' => array(
             'PARENT' => 'BASE',
-            'NAME' => 'Список полей котрые будут отображаться в форме',
+            'NAME' => Loc::getMessage('DISPLAY_FIELDS'),
             'TYPE' => 'LIST',
             'MULTIPLE' => 'Y',
             'ADDITIONAL_VALUES' => 'Y',
