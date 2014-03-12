@@ -25,7 +25,7 @@ $APPLICATION->SetAdditionalCSS($templateFolder . '/style.css');
 
 <form action="<?= POST_FORM_ACTION_URI ?>" method="post" enctype="multipart/form-data"
       id="form-feedback-<?= $arResult['FORM']['COMPONENT_ID'] ?>">
-    <? userTypePrint($arResult); ?>
+    <? $userTypePrint($arResult); ?>
     <? if ($arParams['USE_CAPTCHA'] == 'Y'): ?>
         <img class="captcha-image" src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult['CAPTCHA_CODE'] ?>"
              alt="CAPTCHA" width="110" height="33"/>

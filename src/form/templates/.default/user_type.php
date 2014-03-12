@@ -20,8 +20,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
  * @param string $fieldFind
  * @return mixed
  */
-function userTypePrint($arResult, $fieldFind = '')
-{
+$userTypePrint = function ($arResult, $fieldFind = '') {
     ?>
     <?
     $entityFields = $arResult['HLBLOCK']['FIELDS'];
@@ -30,28 +29,29 @@ function userTypePrint($arResult, $fieldFind = '')
     ?>
     <? foreach ($entityFields as $fieldName => $fieldValue): ?>
 
-    <?
-    if (!empty($fieldFind) && $fieldFind != $fieldValue['FIELD_NAME']) {
-        continue;
-    }
-    ?>
-
-    <?switch ($fieldValue['USER_TYPE_ID']):
-
-        case 'string':
-        case 'integer':
-        case 'double':
-        case 'datetime':
-            ?>
-            <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
-            <input type="text" class="form-control" name="<?= $fieldValue['FIELD_NAME'] ?>"
-                   value="<?= $valueList[$fieldValue['FIELD_NAME']] ?>"/>
-            <? break; ?>
-
         <?
-        case 'enumeration': ?>
-            <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
-            <? if ($fieldValue['SETTINGS']['DISPLAY'] == 'LIST'): ?>
+        if (!empty($fieldFind) && $fieldFind != $fieldValue['FIELD_NAME']) {
+            continue;
+        }
+        ?>
+
+        <?switch ($fieldValue['USER_TYPE_ID']):
+
+            case 'string':
+            case 'integer':
+            case 'double':
+            case 'datetime':
+                ?>
+                <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
+                <input type="text" class="form-control" name="<?= $fieldValue['FIELD_NAME'] ?>"
+                       value="<?= $valueList[$fieldValue['FIELD_NAME']] ?>"/>
+                <? break; ?>
+
+            <?
+            case 'enumeration':
+                ?>
+                <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
+                <? if ($fieldValue['SETTINGS']['DISPLAY'] == 'LIST'): ?>
                 <? $multiple = ($fieldValue['MULTIPLE'] == 'Y') ? 'multiple="multiple"' : ''; ?>
                 <select name="<?= $fieldValue['FIELD_NAME'] ?>" <?= $multiple ?>>
                     <? foreach ($fieldValue['VALUE'] as $value): ?>
@@ -74,17 +74,18 @@ function userTypePrint($arResult, $fieldFind = '')
                     <? endforeach; ?>
                 <?endif; ?>
             <?endif; ?>
-            <? break; ?>
+                <? break; ?>
 
-        <?
-        case 'boolean': ?>
             <?
-            $defaultValue = $fieldValue['SETTINGS']['DEFAULT_VALUE'];
-            $formValue = $valueList[$fieldValue['FIELD_NAME']];
-            $realValue = ($isPost) ? $formValue : $defaultValue;
-            ?>
-            <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
-            <? if ($fieldValue['SETTINGS']['DISPLAY'] == 'RADIO'): ?>
+            case 'boolean':
+                ?>
+                <?
+                $defaultValue = $fieldValue['SETTINGS']['DEFAULT_VALUE'];
+                $formValue = $valueList[$fieldValue['FIELD_NAME']];
+                $realValue = ($isPost) ? $formValue : $defaultValue;
+                ?>
+                <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
+                <? if ($fieldValue['SETTINGS']['DISPLAY'] == 'RADIO'): ?>
                 <input type="radio" name="<?= $fieldValue['FIELD_NAME'] ?>" value="1"
                        <? if ($realValue): ?>checked="checked"<? endif; ?> /> <?= GetMessage('YES') ?>
                 <input type="radio" name="<?= $fieldValue['FIELD_NAME'] ?>" value="0"
@@ -101,21 +102,22 @@ function userTypePrint($arResult, $fieldFind = '')
                 <input type="checkbox" name="<?= $fieldValue['FIELD_NAME'] ?>" value="1"
                        <? if ($realValue): ?>checked="checked"<? endif; ?> />
             <?endif; ?>
-            <? break; ?>
+                <? break; ?>
+
+            <?
+            case 'file':
+                ?>
+                <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
+                <input type="file" name="<?= $fieldValue['FIELD_NAME'] ?>"/>
+                <? break; ?>
+
+            <?endswitch; ?>
 
         <?
-        case 'file': ?>
-            <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
-            <input type="file" name="<?= $fieldValue['FIELD_NAME'] ?>"/>
-            <? break; ?>
+        if ($fieldFind == $fieldValue['FIELD_NAME']) {
+            break;
+        }
+        ?>
 
-        <?endswitch; ?>
-
-    <?
-    if ($fieldFind == $fieldValue['FIELD_NAME']) {
-        break;
-    }
-    ?>
-
-<? endforeach; ?>
-<? } ?>
+    <? endforeach; ?>
+<? }; ?>

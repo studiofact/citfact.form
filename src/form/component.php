@@ -232,14 +232,14 @@ if ($arParams['AJAX'] == 'Y' && $request->getPost('feedback_remote') && $compone
     $this->IncludeComponentTemplate();
     $componentTemplate = ob_get_contents();
     ob_end_clean();
-    
+
     if (strtolower(LANG_CHARSET) != 'utf-8') {
         $componentTemplate = iconv(LANG_CHARSET, 'utf-8', $componentTemplate);
         foreach ($arResult['ERRORS'] as $key => $error) {
             $arResult['ERRORS'][$key] = iconv(LANG_CHARSET, 'utf-8', $error);
         }
     }
-    
+
     $jsonResponse = array(
         'success' => $arResult['SUCCESS'],
         'errors' => $arResult['ERRORS'],

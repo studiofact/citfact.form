@@ -36,7 +36,7 @@ $APPLICATION->SetAdditionalCSS($templateFolder . '/style.css');
 
     <form action="<?= POST_FORM_ACTION_URI ?>" method="post" enctype="multipart/form-data"
           id="form-feedback-<?= $arResult['FORM']['COMPONENT_ID'] ?>">
-        <? userTypePrint($arResult); ?>
+        <? $userTypePrint($arResult); ?>
         <? if ($arParams['USE_CAPTCHA'] == 'Y'): ?>
             <div class="field margin-top">
                 <div class="captcha-container">
