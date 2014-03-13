@@ -14,11 +14,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 }
 
 use Bitrix\Highloadblock as HL;
+use Bitrix\Main\Config\ConfigurationException as LogicException;
 use Bitrix\Main\Application;
-use Bitrix\Main\Config\ConfigurationException;
 use Bitrix\Main\Entity;
-use Bitrix\Main\Event;
 use Bitrix\Main\Loader;
+use Bitrix\Main\Data\Cache;
 use Bitrix\Main\LoaderException;
 use Bitrix\Main\Localization\Loc;
 
@@ -31,21 +31,21 @@ if (!Loader::includeModule('highloadblock')) {
 }
 
 $application = Application::getInstance();
-// Instance for old application
 $applicationOld = & $APPLICATION;
 
 $isAjax = (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') ? : false;
-$componentId = CAjax::GetComponentID($this->getName(), $this->getTemplateName());
 $request = $application->getContext()->getRequest();
-$componentAjax = false;
 
-// If after adding a redirect occurred at the same page 
-if (array_key_exists(sprintf('feedback_success_%s', $componentId), $_SESSION)) {
-    unset($_SESSION[sprintf('feedback_success_%s', $componentId)]);
-    $success = true;
-}
+$componentId = CAjax::GetComponentID($this->getName(), $this->getTemplateName());
+$cacheProvider = Cache::createInstance();
 
-// Parsing errors after working method CheckFields
+/*
+ * Parsing errors after working method CheckFields
+ *
+ * @param array $errorList
+ * @uses $entityBaseFields
+ * @return array
+ */
 $parseErrorLitst = function ($errorList) use ($entityBaseFields) {
     $result = array();
     if (array_key_exists('captcha_word', $errorList)) {
@@ -78,7 +78,12 @@ $parseErrorLitst = function ($errorList) use ($entityBaseFields) {
     return array_diff($result, array(null));
 };
 
-// Returns a list of custom field values
+/*
+ * Returns a list of custom field values
+ *
+ * @param array $entityBaseFields
+ * @return array
+ */
 $getEnumValue = function ($entityBaseFields) {
     $enumList = $enumValue = array();
     foreach ($entityBaseFields as $fieldName => $field) {
@@ -101,7 +106,13 @@ $getEnumValue = function ($entityBaseFields) {
     return $entityBaseFields;
 };
 
-// Checks the list of custom field values ​​for activity
+/*
+ * Checks the list of custom field values ​​for activity
+ *
+ * @param array $entityBaseFields
+ * @param $postData
+ * @return array
+ */
 $enumValueSelected = function ($entityBaseFields, $postData) {
     foreach ($entityBaseFields as $fieldName => $field) {
         if ($field['USER_TYPE_ID'] != 'enumeration') {
@@ -120,7 +131,14 @@ $enumValueSelected = function ($entityBaseFields, $postData) {
     return $entityBaseFields;
 };
 
-// Generate array of fields to display in the form
+/*
+ * Generate array of fields to display in the form
+ *
+ * @param array $entityBaseFields
+ * @param array $availableFields
+ * @param array $textareaFields
+ * @return array
+ */
 $getDisplayFields = function ($entityBaseFields, $availableFields, $textareaFields) {
     $displayList = array();
     foreach ($entityBaseFields as $fieldName => $field) {
@@ -137,7 +155,14 @@ $getDisplayFields = function ($entityBaseFields, $availableFields, $textareaFiel
     return $displayList;
 };
 
-// For the current component ajax request?
+/*
+ * For the current component ajax request?
+ *
+ * @uses $componentId
+ * @uses $request
+ * @uses $isAjax
+ * @return bool
+ */
 $componentAjax = function () use ($componentId, $request, $isAjax) {
     if (!$request->isPost() || !$request->getPost('ajax_id')) {
         return false;
@@ -146,6 +171,12 @@ $componentAjax = function () use ($componentId, $request, $isAjax) {
     return ($request->getPost('ajax_id') == $componentId && $isAjax);
 };
 
+// If after adding a redirect occurred at the same page 
+if (array_key_exists(sprintf('feedback_success_%s', $componentId), $_SESSION)) {
+    unset($_SESSION[sprintf('feedback_success_%s', $componentId)]);
+    $success = true;
+}
+
 // Return new code for captcha
 if ($arParams['USE_CAPTCHA'] == 'Y' && $request->getPost('feedback_captcha_remote') && $componentAjax) {
     $applicationOld->RestartBuffer();
@@ -153,14 +184,27 @@ if ($arParams['USE_CAPTCHA'] == 'Y' && $request->getPost('feedback_captcha_remot
     exit(json_encode(array('captcha' => $applicationOld->CaptchaGetCode())));
 }
 
-// Checking highload block
-$hlblock = HL\HighloadBlockTable::getById($arParams['HLBLOCK_ID'])->fetch();
-if (empty($hlblock)) {
-    throw new ConfigurationException(sprintf('Highloadblock with ID = %d not found', $arParams['HLBLOCK_ID']));
+// Init higeload block and get user fileds
+if ($cacheProvider->initCache(3600, sprintf('hlblock_form_%d', $arParams['HLBLOCK_ID']))) {
+    $cacheData = $cacheProvider->getVars();
+    $hlblock = $cacheData['hlblock'];
+    $entityBaseFields = $cacheData['hlblock_fields'];
+} else {
+    $hlblock = HL\HighloadBlockTable::getById($arParams['HLBLOCK_ID'])->fetch();
+    if ($hlblock && sizeof($hlblock) > 0) {
+        $entityBaseFields = $getEnumValue($USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $hlblock['ID']), 0, LANGUAGE_ID));
+        $cacheProvider->startDataCache();
+        $cacheProvider->endDataCache(array(
+            'hlblock' => $hlblock,
+            'hlblock_fields' => $entityBaseFields
+        ));
+    } else {
+        throw new LogicException(sprintf('Highloadblock with ID = %d not found', $arParams['HLBLOCK_ID']));
+    }
 }
 
+
 $entityBase = HL\HighloadBlockTable::compileEntity($hlblock);
-$entityBaseFields = $getEnumValue($USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $hlblock['ID']), 0, LANGUAGE_ID));
 $displayFields = $getDisplayFields($entityBaseFields, $arParams['DISPLAY_FIELDS'], $arParams['TEXTAREA_FIELDS']);
 
 // Validatation data in a form
