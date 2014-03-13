@@ -120,6 +120,23 @@ $enumValueSelected = function ($entityBaseFields, $postData) {
     return $entityBaseFields;
 };
 
+// Generate array of fields to display in the form
+$getDisplayFields = function ($entityBaseFields, $availableFields, $textareaFields) {
+    $displayList = array();
+    foreach ($entityBaseFields as $fieldName => $field) {
+        if (!in_array($fieldName, $availableFields)) {
+            continue;
+        }
+
+        $displayList[$fieldName] = $field;
+        $displayList[$fieldName]['~USER_TYPE_ID'] = $field['USER_TYPE_ID'];
+        $displayList[$fieldName]['USER_TYPE_ID'] =
+            (in_array($fieldName, $textareaFields)) ? 'textarea' : $field['USER_TYPE_ID'];
+    }
+
+    return $displayList;
+};
+
 // For the current component ajax request?
 $componentAjax = function () use ($componentId, $request, $isAjax) {
     if (!$request->isPost() || !$request->getPost('ajax_id')) {
@@ -144,6 +161,7 @@ if (empty($hlblock)) {
 
 $entityBase = HL\HighloadBlockTable::compileEntity($hlblock);
 $entityBaseFields = $getEnumValue($USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $hlblock['ID']), 0, LANGUAGE_ID));
+$displayFields = $getDisplayFields($entityBaseFields, $arParams['DISPLAY_FIELDS'], $arParams['TEXTAREA_FIELDS']);
 
 // Validatation data in a form
 if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId))) {
@@ -211,6 +229,7 @@ $arResult = array(
     'HLBLOCK' => array(
         'DATA' => $hlblock,
         'FIELDS' => $enumValueSelected($entityBaseFields, $postData),
+        'DISPLAY_FIELDS' => $enumValueSelected($displayFields, $postData),
     )
 );
 

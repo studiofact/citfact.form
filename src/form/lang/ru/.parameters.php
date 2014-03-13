@@ -9,6 +9,7 @@
 
 $MESS['HLBLOCK_ID'] = 'ID HL блока';
 $MESS['DISPLAY_FIELDS'] = 'Список полей котрые будут отображаться в форме';
+$MESS['TEXTAREA_FIELDS'] = 'Список полей котрые будут отображаться в форме как textarea';
 $MESS['EVENT_NAME'] = 'Название почтового события';
 $MESS['EVENT_TEMPLATE'] = 'Идентификатор почтового шаблона';
 $MESS['AJAX'] = 'Включить AJAX режим';

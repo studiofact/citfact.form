@@ -23,7 +23,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 $userTypePrint = function ($arResult, $fieldFind = '') {
     ?>
     <?
-    $entityFields = $arResult['HLBLOCK']['FIELDS'];
+    $entityFields = $arResult['HLBLOCK']['DISPLAY_FIELDS'];
     $valueList = $arResult['FORM'];
     $isPost = $arResult['IS_POST'];
     ?>
@@ -45,6 +45,14 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                 <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
                 <input type="text" class="form-control" name="<?= $fieldValue['FIELD_NAME'] ?>"
                        value="<?= $valueList[$fieldValue['FIELD_NAME']] ?>"/>
+                <? break; ?>
+
+            <?
+            case 'textarea':
+                ?>
+                <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
+                <textarea
+                    name="<?= $fieldValue['FIELD_NAME'] ?>"><?= $valueList[$fieldValue['FIELD_NAME']] ?></textarea>
                 <? break; ?>
 
             <?

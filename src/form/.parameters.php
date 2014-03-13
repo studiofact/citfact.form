@@ -74,6 +74,14 @@ $arComponentParameters = array(
             'ADDITIONAL_VALUES' => 'Y',
             'VALUES' => $userFiledsDisplay,
         ),
+        'TEXTAREA_FIELDS' => array(
+            'PARENT' => 'BASE',
+            'NAME' => Loc::getMessage('TEXTAREA_FIELDS'),
+            'TYPE' => 'LIST',
+            'MULTIPLE' => 'Y',
+            'ADDITIONAL_VALUES' => 'Y',
+            'VALUES' => $userFiledsDisplay,
+        ),
         'EVENT_NAME' => array(
             'NAME' => Loc::getMessage('EVENT_NAME'),
             'TYPE' => 'LIST',
