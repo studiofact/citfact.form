@@ -203,7 +203,6 @@ if ($cacheProvider->initCache(3600, sprintf('hlblock_form_%d', $arParams['HLBLOC
     }
 }
 
-
 $entityBase = HL\HighloadBlockTable::compileEntity($hlblock);
 $displayFields = $getDisplayFields($entityBaseFields, $arParams['DISPLAY_FIELDS'], $arParams['TEXTAREA_FIELDS']);
 
