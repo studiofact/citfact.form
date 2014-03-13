@@ -184,7 +184,7 @@ if ($arParams['USE_CAPTCHA'] == 'Y' && $request->getPost('feedback_captcha_remot
     exit(json_encode(array('captcha' => $applicationOld->CaptchaGetCode())));
 }
 
-// Init higeload block and get user fileds
+// Init higeload block and get user fields
 if ($cacheProvider->initCache(3600, sprintf('hlblock_form_%d', $arParams['HLBLOCK_ID']))) {
     $cacheData = $cacheProvider->getVars();
     $hlblock = $cacheData['hlblock'];
