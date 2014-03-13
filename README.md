@@ -3,7 +3,7 @@
 <br>
 Пример использования:
 
-	$APPLICATION->IncludeComponent('bitrix:feedback', '', array(
+	$APPLICATION->IncludeComponent('bitrix:form', '', array(
 		"HLBLOCK_ID" => 2, // Идентификатор HL блока,
         "DISPLAY_FIELDS" => array(), // Список полей которые будут отображаться в форме
         "TEXTAREA_FIELDS" => array(), // Список полей которые будут отображаться в форме как textarea
