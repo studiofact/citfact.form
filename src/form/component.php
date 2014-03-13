@@ -240,7 +240,7 @@ foreach ($entityBaseFields as $name => $value) {
 
 if ($arParams['USE_CAPTCHA'] == 'Y') {
     $arResult['CAPTCHA_CODE'] = $applicationOld->CaptchaGetCode();
-    $arResult['FORM']['CAPTCHA'] = array_key_exists('captcha_word', $postData) ? $postData['name'] : '';
+    $arResult['FORM']['CAPTCHA'] = array_key_exists('captcha_word', $postData) ? $postData['captcha_word'] : '';
 }
 
 // If enabled ajax mod and action in the request feedback_remote
