@@ -36,7 +36,7 @@ $applicationOld = & $APPLICATION;
 $isAjax = (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') ? : false;
 $request = $application->getContext()->getRequest();
 
-$componentId = CAjax::GetComponentID($this->getName(), $this->getTemplateName());
+$componentId = CAjax::GetComponentID($this->getName(), $this->getTemplateName(), array());
 $cacheProvider = Cache::createInstance();
 
 /*
@@ -204,7 +204,7 @@ if ($cacheProvider->initCache(3600, sprintf('hlblock_form_%d', $arParams['HLBLOC
 }
 
 $entityBase = HL\HighloadBlockTable::compileEntity($hlblock);
-$displayFields = $getDisplayFields($entityBaseFields, $arParams['DISPLAY_FIELDS'], $arParams['TEXTAREA_FIELDS']);
+$displayFields = $getDisplayFields($entityBaseFields, (array)$arParams['DISPLAY_FIELDS'], (array)$arParams['TEXTAREA_FIELDS']);
 
 // Validatation data in a form
 if ($request->isPost() && $request->getPost(sprintf('send_form_%s', $componentId))) {
