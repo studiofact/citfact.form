@@ -168,7 +168,7 @@ $componentAjax = function () use ($componentId, $request, $isAjax) {
         return false;
     }
 
-    return ($request->getPost('ajax_id') == $componentId && $isAjax);
+    return (($request->getPost('ajax_id') == $componentId) && $isAjax);
 };
 
 // If after adding a redirect occurred at the same page 
@@ -288,7 +288,7 @@ if ($arParams['USE_CAPTCHA'] == 'Y') {
 
 // If enabled ajax mod and action in the request feedback_remote
 // Return the validation form in the format json
-if ($arParams['AJAX'] == 'Y' && $request->getPost('feedback_remote') && $componentAjax) {
+if ($arParams['AJAX'] == 'Y' && $request->getPost('feedback_remote') && $componentAjax()) {
     // Compiling template
     ob_start();
     $this->IncludeComponentTemplate();
