@@ -21,7 +21,7 @@
 	// Клонируем репозиторий
 	git clone https://github.com/studiofact/form.git
 	
-	// Если bitrix >= 14, то создаим папку local/modules и переносим туда модуль
+	// Если bitrix >= 14, то создадим папку local/modules и переносим туда модуль
 	mkdir local && mkdir local/modules
 	mv form/src/citfact.form local/modules
 	
