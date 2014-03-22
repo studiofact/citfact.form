@@ -30,7 +30,7 @@ FormGenerator.prototype.init = function () {
  */
 FormGenerator.prototype.submitForm = function () {
     var self = this;
-    $(document).on('submit', this.form, function(){
+    $(document).on('submit', this.form, function () {
         $.post(self.uri, $(self.form).serialize(), function (response) {
             $(self.form).replaceWith(response.html);
             self.reloadCaptcha();

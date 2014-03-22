@@ -10,7 +10,7 @@
  */
 
 CModule::AddAutoloadClasses('citfact.form', array(
-	'Citfact\Form\HighLoadGenerator' => 'lib/HighLoadGenerator.php',
+    'Citfact\Form\HighLoadGenerator' => 'lib/HighLoadGenerator.php',
     'Citfact\Form\HighLoadManager' => 'lib/HighLoadManager.php',
 ));
 

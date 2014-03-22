@@ -15,7 +15,7 @@ Loc::loadMessages(__FILE__);
 
 class citfact_form extends CModule
 {
-	public $MODULE_ID = 'citfact.form';
+    public $MODULE_ID = 'citfact.form';
     public $MODULE_VERSION;
     public $MODULE_VERSION_DATE;
     public $MODULE_NAME;
@@ -28,19 +28,19 @@ class citfact_form extends CModule
      * Construct object
      */
     public function __construct()
-	{
-		$this->MODULE_NAME = Loc::getMessage('FORM_MODULE_NAME');
-		$this->MODULE_DESCRIPTION = Loc::getMessage('FORM_MODULE_DESCRIPTION');
+    {
+        $this->MODULE_NAME = Loc::getMessage('FORM_MODULE_NAME');
+        $this->MODULE_DESCRIPTION = Loc::getMessage('FORM_MODULE_DESCRIPTION');
         $this->PARTNER_NAME = Loc::getMessage('PARTNER_NAME');
-        $this->PARTNER_URI  = Loc::getMessage('PARTNER_URI');
+        $this->PARTNER_URI = Loc::getMessage('PARTNER_URI');
         $this->MODULE_PATH = $this->getModulePath();
 
         $arModuleVersion = array();
-        include $this->MODULE_PATH.'/install/version.php';
+        include $this->MODULE_PATH . '/install/version.php';
 
         $this->MODULE_VERSION = $arModuleVersion['VERSION'];
         $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
-	}
+    }
 
     /**
      * Return path module
@@ -153,7 +153,7 @@ class citfact_form extends CModule
      */
     public function InstallFiles()
     {
-        CopyDirFiles($this->MODULE_PATH.'/install/components', $this->getComponentsPath(), true, true);
+        CopyDirFiles($this->MODULE_PATH . '/install/components', $this->getComponentsPath(), true, true);
 
         return true;
     }
@@ -165,11 +165,11 @@ class citfact_form extends CModule
      */
     public function UnInstallFiles()
     {
-        DeleteDirFilesEx($this->getComponentsPath(false).'/citfact/form');
-        if (!glob($this->getComponentsPath().'/citfact/*')) {
-            @rmdir($this->getComponentsPath().'/citfact/');
+        DeleteDirFilesEx($this->getComponentsPath(false) . '/citfact/form');
+        if (!glob($this->getComponentsPath() . '/citfact/*')) {
+            @rmdir($this->getComponentsPath() . '/citfact/');
         }
-        
+
         return true;
     }
 }

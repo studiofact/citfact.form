@@ -111,7 +111,7 @@ class HighLoadManager
 
         $eventType = \CEventType::GetList(array('EVENT_NAME' => $eventName))->GetNext();
         if ($eventName && is_array($eventType)) {
-           \CEvent::send($eventName, SITE_ID, $data, 'Y', $eventTemplate);
+            \CEvent::send($eventName, SITE_ID, $data, 'Y', $eventTemplate);
         }
     }
 
