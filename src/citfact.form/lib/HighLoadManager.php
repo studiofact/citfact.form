@@ -107,7 +107,7 @@ class HighLoadManager
      */
     public function addEmailEvent($eventName, $eventTemplate, $data)
     {
-        $eventTemplate = (is_numeric($eventTemplate)) ? : '';
+        $eventTemplate = (is_numeric($eventTemplate)) ? $eventTemplate : '';
 
         $eventType = \CEventType::GetList(array('EVENT_NAME' => $eventName))->GetNext();
         if ($eventName && is_array($eventType)) {

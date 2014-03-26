@@ -9,7 +9,6 @@
 var FormGenerator = function (params) {
     this.form = params.formContainer;
     this.ajaxMode = params.ajaxMode;
-    this.successMessage = params.ajaxMode;
     this.captchaImg = params.captchaImg;
     this.captchaReload = params.captchaReload;
     this.uri = params.uri;
