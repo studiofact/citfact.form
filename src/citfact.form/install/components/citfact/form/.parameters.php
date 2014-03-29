@@ -23,7 +23,7 @@ Loc::loadMessages(__FILE__);
 global $USER_FIELD_MANAGER;
 
 if (!Loader::includeModule('highloadblock')) {
-    throw new LoaderException(sprintf('Module "Highloadblock" not set'));
+    return ShowError('Module "Highloadblock" not set');
 }
 
 $hlblockList = array();

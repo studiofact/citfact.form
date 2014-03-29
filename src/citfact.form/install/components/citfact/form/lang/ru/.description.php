@@ -11,3 +11,4 @@
 
 $MESS['NAME'] = 'Генератор форм';
 $MESS['DESCRIPTION'] = 'Генератор форм на основе highload инфоблоков';
+$MESS['CITFACT_NAME'] = 'ЦИТ "ФАКТ"';

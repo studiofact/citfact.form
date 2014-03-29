@@ -65,12 +65,20 @@ if ($request->isPost() && $request->getPost('component_id') == $componentId) {
     }
 
     if (!is_array($errorList)) {
+        foreach (GetModuleEvents('citfact.form', 'onBeforeHighElementAdd', true) as $event) {
+            ExecuteModuleEventEx($event, array(&$postData));
+        }
+
         $enityBase = $highLoadGenerator->getCompileBlock();
         $result = $enityBase::add($postData);
 
         if (!$result->isSuccess()) {
             $errorList = $result->getErrorMessages();
         } else {
+            foreach (GetModuleEvents('citfact.form', 'onAfterHighElementAdd', true) as $event) {
+                ExecuteModuleEventEx($event, array($result->getId(), &$postData));
+            }
+
             $highLoadManager->addEmailEvent($arParams['EVENT_NAME'], $arParams['EVENT_TEMPLATE'], $postData);
             $arResult['SUCCESS'] = true;
         }

@@ -98,11 +98,11 @@ class citfact_form extends CModule
      */
     public function DoUninstall()
     {
-        UnRegisterModule($this->MODULE_ID);
-
         $this->UnInstallDB();
         $this->UnInstallFiles();
         $this->UnInstallEvents();
+
+        UnRegisterModule($this->MODULE_ID);
     }
 
     /**
@@ -132,6 +132,9 @@ class citfact_form extends CModule
      */
     public function InstallEvents()
     {
+        RegisterModuleDependences($this->MODULE_ID, 'onBeforeHighElementAdd');
+        RegisterModuleDependences($this->MODULE_ID, 'onAfterHighElementAdd');
+
         return true;
     }
 
@@ -143,6 +146,9 @@ class citfact_form extends CModule
      */
     public function UnInstallEvents()
     {
+        UnRegisterModuleDependences($this->MODULE_ID, 'onBeforeHighElementAdd');
+        UnRegisterModuleDependences($this->MODULE_ID, 'onAfterHighElementAdd');
+
         return true;
     }
 
