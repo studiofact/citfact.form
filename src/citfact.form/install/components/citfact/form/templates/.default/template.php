@@ -15,7 +15,7 @@ if (!$arResult['IS_AJAX']) {
 ?>
 
     <form action="<?= POST_FORM_ACTION_URI ?>" method="post" enctype="multipart/form-data" class="form-generator"
-          id="form-feedback-<?= $arResult['FORM']['COMPONENT_ID'] ?>">
+          id="form-container-<?= $arResult['FORM']['COMPONENT_ID'] ?>">
 
         <? if ($arResult['SUCCESS'] === true): ?>
             <div class="alert alert-success"><?= GetMessage('SUCCESS_MESSAGE') ?></div>
@@ -56,7 +56,7 @@ if (!$arResult['IS_AJAX']) {
 <? if (!$arResult['IS_AJAX']): ?>
     <script type="text/javascript">
         var formGenerator = new FormGenerator({
-            formContainer: '#form-feedback-<?=$arResult['FORM']['COMPONENT_ID']?>',
+            formContainer: '#form-container-<?=$arResult['FORM']['COMPONENT_ID']?>',
             ajaxMode: <?= ($arParams['AJAX'] == 'Y') ? 'true' : 'false' ?>,
             captchaImg: '.captcha-image',
             captchaReload: '.captcha-reload',
