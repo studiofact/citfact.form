@@ -15,33 +15,68 @@
  - Привяка к элементам инф. блоков
  
 ## Установка:
-	// Переходим в корень проекта
-	cd /path/to/project/
-	
-	// Клонируем репозиторий
-	git clone https://github.com/studiofact/form.git
-	
-	// Если bitrix >= 14, то создадим папку local/modules и переносим туда модуль
-	mkdir local && mkdir local/modules
-	mv form/src/citfact.form local/modules
-	
-	// Если версия < 14, переносим в пространство bitrix
-	mv form/src/citfact.form bitrix/modules
-	
-	// Удаляем репозиторий
-	rm -rf form
+
+``` bash
+# Переходим в корень проекта
+cd /path/to/project/
+
+# Клонируем репозиторий
+git clone https://github.com/studiofact/form.git
+
+# Если bitrix >= 14, то создадим папку local/modules и переносим туда модуль
+mkdir local && mkdir local/modules
+mv form/src/citfact.form local/modules
+
+# Если версия < 14, переносим в пространство bitrix
+mv form/src/citfact.form bitrix/modules
+
+# Удаляем репозиторий
+rm -rf form
+```
 
 Далее в административной панели в разделе "Marketplace > Установленные решения" устанавливаем модуль.
 
 ## Пример использования:
 
-	$APPLICATION->IncludeComponent('citfact:form', '', array(
-		"HLBLOCK_ID" => 2, // Идентификатор HL блока,
-        "DISPLAY_FIELDS" => array(), // Список полей которые будут отображаться в форме
-        "TEXTAREA_FIELDS" => array(), // Список полей которые будут отображаться в форме как textarea
-		"EVENT_NAME" => "FEEDBACK", // Название почтового события
-		"EVENT_TEMPLATE" => "", // Идентификатор почтового шаблона
-		"AJAX" => "N", // Включить AJAX режим
-		"USE_CAPTCHA" => "N", // Использовать каптчу
-		"REDIRECT_PATH" => "" // УРЛ адрес для перенаправления после успешного добавления
-	));
+``` php
+$APPLICATION->IncludeComponent('citfact:form', '', array(
+	"HLBLOCK_ID" => 2, // Идентификатор HL блока,
+    "DISPLAY_FIELDS" => array(), // Список полей которые будут отображаться в форме
+    "TEXTAREA_FIELDS" => array(), // Список полей которые будут отображаться в форме как textarea
+	"EVENT_NAME" => "FEEDBACK", // Название почтового события
+	"EVENT_TEMPLATE" => "", // Идентификатор почтового шаблона
+	"AJAX" => "N", // Включить AJAX режим
+	"USE_CAPTCHA" => "N", // Использовать каптчу
+	"REDIRECT_PATH" => "" // УРЛ адрес для перенаправления после успешного добавления
+));
+```
+
+Пользовательские события
+ - `onBeforeHighElementAdd` - срабатывает до добавления записи в highload инфоблок
+ - `onAfterHighElementAdd` - срабатывает после успешной записи в highload инфоблок до вызова почтового события
+
+``` php
+// init.php
+
+AddEventHandler('citfact.form', 'onBeforeHighElementAdd', 'onBeforeHandler');
+AddEventHandler('citfact.form', 'onAfterHighElementAdd', 'onAfterHanlder');
+
+/**
+ * @param array $postData Массив с данными(передается по ссылке)
+ * @param array $higeLoadBlockData Информация о инфоблоке
+ */
+function onBeforeHandler($postData, $higeLoadBlockData)
+{
+	...
+}
+
+/**
+ * @param int $id Идентификатор добавленного элемента
+ * @param array $postData Массив с данными(передается по ссылке)
+ * @param array $higeLoadBlockData Информация о инфоблоке
+ */
+function onAfterHanlder($id, $postData, $higeLoadBlockData)
+{
+	...
+}
+```
