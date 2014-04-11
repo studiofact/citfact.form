@@ -56,9 +56,8 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                      date-max-length="<?= $fieldValue['SETTINGS']['MAX_LENGTH'] ?>"
                     >
                     <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
-                    <textarea class="form-control" name="<?= $fieldValue['FIELD_NAME'] ?>">
-                        <?= $valueList[$fieldValue['FIELD_NAME']] ?>
-                    </textarea>
+                    <textarea class="form-control"
+                              name="<?= $fieldValue['FIELD_NAME'] ?>"><?= $valueList[$fieldValue['FIELD_NAME']] ?></textarea>
                 </div>
                 <? break; ?>
 
