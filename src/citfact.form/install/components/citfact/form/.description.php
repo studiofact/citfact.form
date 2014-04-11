@@ -21,10 +21,10 @@ Loc::loadMessages(__FILE__);
 $arComponentDescription = array(
     'NAME' => Loc::getMessage('NAME'),
     'DESCRIPTION' => Loc::getMessage('DESCRIPTION'),
-	'SORT' => 10,
-	'CACHE_PATH' => 'Y',
-	'PATH' => array(
+    'SORT' => 10,
+    'CACHE_PATH' => 'Y',
+    'PATH' => array(
         'ID' => 'citfact',
-		'NAME' => Loc::getMessage('CITFACT_NAME'),
-	),
+        'NAME' => Loc::getMessage('CITFACT_NAME'),
+    ),
 );
