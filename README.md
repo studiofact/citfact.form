@@ -59,13 +59,13 @@ $APPLICATION->IncludeComponent('citfact:form', '', array(
 // init.php
 
 AddEventHandler('citfact.form', 'onBeforeHighElementAdd', 'onBeforeHandler');
-AddEventHandler('citfact.form', 'onAfterHighElementAdd', 'onAfterHanlder');
+AddEventHandler('citfact.form', 'onAfterHighElementAdd', 'onAfterHandler');
 
 /**
  * @param array $postData Массив с данными(передается по ссылке)
- * @param array $higeLoadBlockData Информация о инфоблоке
+ * @param array $highLoadBlockData Информация о инфоблоке
  */
-function onBeforeHandler($postData, $higeLoadBlockData)
+function onBeforeHandler($postData, $highLoadBlockData)
 {
 	...
 }
@@ -73,9 +73,9 @@ function onBeforeHandler($postData, $higeLoadBlockData)
 /**
  * @param int $id Идентификатор добавленного элемента
  * @param array $postData Массив с данными(передается по ссылке)
- * @param array $higeLoadBlockData Информация о инфоблоке
+ * @param array $highLoadBlockData Информация о инфоблоке
  */
-function onAfterHanlder($id, $postData, $higeLoadBlockData)
+function onAfterHandler($id, $postData, $highLoadBlockData)
 {
 	...
 }

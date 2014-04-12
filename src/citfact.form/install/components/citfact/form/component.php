@@ -41,8 +41,8 @@ $componentId = CAjax::GetComponentID($this->getName(), $this->getTemplateName(),
 $highLoadGenerator = new HighLoadGenerator($USER_FIELD_MANAGER);
 $highLoadManager = new HighLoadManager($highLoadGenerator);
 
-$highLoadGenerator->setHigeLoadBlockId($arParams['HLBLOCK_ID']);
-if (!$highLoadGenerator->initHigeLoadBlock()) {
+$highLoadGenerator->setHighLoadBlockId($arParams['HLBLOCK_ID']);
+if (!$highLoadGenerator->initHighLoadBlock()) {
     return ShowError(sprintf('Highloadblock with ID = %d not found', $arParams['HLBLOCK_ID']));
 }
 
@@ -57,7 +57,7 @@ if ($request->isPost() && $request->getPost('component_id') == $componentId) {
         }
     }
 
-    $postData = array_intersect_key($postData, $highLoadGenerator->getHigeLoadBlockFields());
+    $postData = array_intersect_key($postData, $highLoadGenerator->getHighLoadBlockFields());
     $USER_FIELD_MANAGER->EditFormAddFields(sprintf('HLBLOCK_%d', $arParams['HLBLOCK_ID']), $postData);
 
     if (!$USER_FIELD_MANAGER->CheckFields(sprintf('HLBLOCK_%d', $arParams['HLBLOCK_ID']), null, $postData)) {
@@ -66,7 +66,7 @@ if ($request->isPost() && $request->getPost('component_id') == $componentId) {
 
     if (!is_array($errorList)) {
         foreach (GetModuleEvents('citfact.form', 'onBeforeHighElementAdd', true) as $event) {
-            ExecuteModuleEventEx($event, array(&$postData, $highLoadGenerator->getHigeLoadBlockData()));
+            ExecuteModuleEventEx($event, array(&$postData, $highLoadGenerator->getHighLoadBlockData()));
         }
 
         $enityBase = $highLoadGenerator->getCompileBlock();
@@ -76,7 +76,7 @@ if ($request->isPost() && $request->getPost('component_id') == $componentId) {
             $errorList = $result->getErrorMessages();
         } else {
             foreach (GetModuleEvents('citfact.form', 'onAfterHighElementAdd', true) as $event) {
-                ExecuteModuleEventEx($event, array($result->getId(), &$postData, $highLoadGenerator->getHigeLoadBlockData()));
+                ExecuteModuleEventEx($event, array($result->getId(), &$postData, $highLoadGenerator->getHighLoadBlockData()));
             }
 
             $highLoadManager->addEmailEvent($arParams['EVENT_NAME'], $arParams['EVENT_TEMPLATE'], $postData);
@@ -114,8 +114,8 @@ $arResult = array_merge(array(
     'SUCCESS' => false,
     'ERRORS' => $errorList,
     'HLBLOCK' => array(
-        'DATA' => $highLoadGenerator->getHigeLoadBlockData(),
-        'FIELDS' => $highLoadGenerator->getHigeLoadBlockFields(),
+        'DATA' => $highLoadGenerator->getHighLoadBlockData(),
+        'FIELDS' => $highLoadGenerator->getHighLoadBlockFields(),
         'DISPLAY_FIELDS' => $highLoadManager->getDisplayFields((array)$arParams['DISPLAY_FIELDS'], (array)$arParams['TEXTAREA_FIELDS']),
     )
 ), $arResult);

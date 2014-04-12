@@ -9,7 +9,4 @@
  * file that was distributed with this source code.
  */
 
-$arModuleVersion = array(
-    'VERSION' => '0.5.1-RC',
-    'VERSION_DATE' => '2014-04-12 10:00:00',
-);
+$MESS['HLBLOCK_TEMPLATE_TEXT'] = 'Почтовый шаблон из HL инфоблока';

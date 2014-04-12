@@ -29,17 +29,17 @@ class HighLoadGenerator
     /**
      * @var int
      */
-    protected $higeLoadBlockId;
+    protected $highLoadBlockId;
 
     /**
      * @var array
      */
-    protected $higeLoadBlockData;
+    protected $highLoadBlockData;
 
     /**
      * @var array
      */
-    protected $higeLoadBlockFields;
+    protected $highLoadBlockFields;
 
     /**
      * Construct object
@@ -53,27 +53,27 @@ class HighLoadGenerator
     }
 
     /**
-     * Init higeload block
+     * Init highload block
      *
      * @return bool
      */
-    public function initHigeLoadBlock()
+    public function initHighLoadBlock()
     {
-        $cacheUniq = sprintf('hlblock_form_%d', $this->higeLoadBlockId);
+        $cacheUniq = sprintf('hlblock_form_%d', $this->highLoadBlockId);
         if ($this->cacheProvider->initCache(3600, $cacheUniq)) {
             $cacheData = $this->cacheProvider->getVars();
-            $this->setHigeLoadBlockData($cacheData['hlblock']);
-            $this->setHigeLoadBlockFields($cacheData['hlblock_fields']);
+            $this->setHighLoadBlockData($cacheData['hlblock']);
+            $this->setHighLoadBlockFields($cacheData['hlblock_fields']);
 
             return true;
         }
 
-        $higeLoadBlock = HL\HighloadBlockTable::getById($this->higeLoadBlockId)->fetch();
-        if ($higeLoadBlock && sizeof($higeLoadBlock) > 0) {
-            $higeLoadBlockFields = $this->userFieldManager->GetUserFields(sprintf('HLBLOCK_%d', $higeLoadBlock['ID']), 0, LANGUAGE_ID);
+        $highLoadBlock = HL\HighloadBlockTable::getById($this->highLoadBlockId)->fetch();
+        if ($highLoadBlock && sizeof($highLoadBlock) > 0) {
+            $highLoadBlockFields = $this->userFieldManager->GetUserFields(sprintf('HLBLOCK_%d', $highLoadBlock['ID']), 0, LANGUAGE_ID);
 
-            $this->setHigeLoadBlockData($higeLoadBlock);
-            $this->setHigeLoadBlockFields($higeLoadBlockFields);
+            $this->setHighLoadBlockData($highLoadBlock);
+            $this->setHighLoadBlockFields($highLoadBlockFields);
 
             $this->setEnumValue();
             $this->setIblockElementValue();
@@ -81,12 +81,12 @@ class HighLoadGenerator
 
             $this->cacheProvider->startDataCache();
             $this->cacheProvider->endDataCache(array(
-                'hlblock' => $higeLoadBlock,
-                'hlblock_fields' => $higeLoadBlockFields
+                'hlblock' => $highLoadBlock,
+                'hlblock_fields' => $highLoadBlockFields
             ));
         }
 
-        return (empty($higeLoadBlock)) ? false : true;
+        return (empty($highLoadBlock)) ? false : true;
     }
 
     /**
@@ -96,9 +96,9 @@ class HighLoadGenerator
      */
     private function setEnumValue()
     {
-        $higeLoadBLockFields = $this->getHigeLoadBlockFields();
+        $highLoadBLockFields = $this->getHighLoadBlockFields();
         $enumList = $enumValue = array();
-        foreach ($higeLoadBLockFields as $fieldName => $field) {
+        foreach ($highLoadBLockFields as $fieldName => $field) {
             if ($field['USER_TYPE_ID'] == 'enumeration') {
                 $enumList[] = $field['ID'];
             }
@@ -110,13 +110,13 @@ class HighLoadGenerator
             $enumValue[$row['USER_FIELD_ID']][] = $row;
         }
 
-        foreach ($higeLoadBLockFields as $fieldName => $field) {
+        foreach ($highLoadBLockFields as $fieldName => $field) {
             if (array_key_exists($field['ID'], $enumValue)) {
-                $higeLoadBLockFields[$fieldName]['VALUE'] = $enumValue[$field['ID']];
+                $highLoadBLockFields[$fieldName]['VALUE'] = $enumValue[$field['ID']];
             }
         }
 
-        $this->setHigeLoadBlockFields($higeLoadBLockFields);
+        $this->setHighLoadBlockFields($highLoadBLockFields);
     }
 
     /**
@@ -126,9 +126,9 @@ class HighLoadGenerator
      */
     private function setIblockElementValue()
     {
-        $higeLoadBLockFields = $this->getHigeLoadBlockFields();
+        $highLoadBLockFields = $this->getHighLoadBlockFields();
         $iblockList = $elementList = array();
-        foreach ($higeLoadBLockFields as $fieldName => $field) {
+        foreach ($highLoadBLockFields as $fieldName => $field) {
             if ($field['USER_TYPE_ID'] == 'iblock_element') {
                 $iblockList[] = $field['SETTINGS']['IBLOCK_ID'];
             }
@@ -140,13 +140,13 @@ class HighLoadGenerator
             $elementList[$row['IBLOCK_ID']][] = $row;
         }
 
-        foreach ($higeLoadBLockFields as $fieldName => $field) {
+        foreach ($highLoadBLockFields as $fieldName => $field) {
             if (array_key_exists($field['SETTINGS']['IBLOCK_ID'], $elementList) && $field['USER_TYPE_ID'] == 'iblock_element') {
-                $higeLoadBLockFields[$fieldName]['VALUE'] = $elementList[$field['SETTINGS']['IBLOCK_ID']];
+                $highLoadBLockFields[$fieldName]['VALUE'] = $elementList[$field['SETTINGS']['IBLOCK_ID']];
             }
         }
 
-        $this->setHigeLoadBlockFields($higeLoadBLockFields);
+        $this->setHighLoadBlockFields($highLoadBLockFields);
     }
 
     /**
@@ -156,9 +156,9 @@ class HighLoadGenerator
      */
     private function setIblockSectionValue()
     {
-        $higeLoadBLockFields = $this->getHigeLoadBlockFields();
+        $highLoadBLockFields = $this->getHighLoadBlockFields();
         $iblockList = $sectionList = array();
-        foreach ($higeLoadBLockFields as $fieldName => $field) {
+        foreach ($highLoadBLockFields as $fieldName => $field) {
             if ($field['USER_TYPE_ID'] == 'iblock_section') {
                 $iblockList[] = $field['SETTINGS']['IBLOCK_ID'];
             }
@@ -170,13 +170,13 @@ class HighLoadGenerator
             $sectionList[$row['IBLOCK_ID']][] = $row;
         }
 
-        foreach ($higeLoadBLockFields as $fieldName => $field) {
+        foreach ($highLoadBLockFields as $fieldName => $field) {
             if (array_key_exists($field['SETTINGS']['IBLOCK_ID'], $sectionList) && $field['USER_TYPE_ID'] == 'iblock_section') {
-                $higeLoadBLockFields[$fieldName]['VALUE'] = $sectionList[$field['SETTINGS']['IBLOCK_ID']];
+                $highLoadBLockFields[$fieldName]['VALUE'] = $sectionList[$field['SETTINGS']['IBLOCK_ID']];
             }
         }
 
-        $this->setHigeLoadBlockFields($higeLoadBLockFields);
+        $this->setHighLoadBlockFields($highLoadBLockFields);
     }
 
     /**
@@ -186,68 +186,68 @@ class HighLoadGenerator
      */
     public function getCompileBlock()
     {
-        $enity = HL\HighloadBlockTable::compileEntity($this->getHigeLoadBlockData());
+        $enity = HL\HighloadBlockTable::compileEntity($this->getHighLoadBlockData());
 
         return $enity->getDataClass();
     }
 
     /**
-     * Set higeload block id
+     * Set highload block id
      *
      * @param int $id
      */
-    public function setHigeLoadBlockId($id)
+    public function setHighLoadBlockId($id)
     {
-        $this->higeLoadBlockId = (int)$id;
+        $this->highLoadBlockId = (int)$id;
     }
 
     /**
-     * Return higeload block id
+     * Return highload block id
      *
      * @param int $id
      */
-    public function getHigeLoadBlockId()
+    public function getHighLoadBlockId()
     {
-        return $this->higeLoadBlockId;
+        return $this->highLoadBlockId;
     }
 
     /**
-     * Set higeload block data
+     * Set highload block data
      *
      * @param array $data
      */
-    public function setHigeLoadBlockData($data)
+    public function setHighLoadBlockData($data)
     {
-        $this->higeLoadBlockData = $data;
+        $this->highLoadBlockData = $data;
     }
 
     /**
-     * Return higeload block data
+     * Return highload block data
      *
      * @return array
      */
-    public function getHigeLoadBlockData()
+    public function getHighLoadBlockData()
     {
-        return $this->higeLoadBlockData;
+        return $this->highLoadBlockData;
     }
 
     /**
-     * Set higeload block fields
+     * Set highload block fields
      *
      * @param array $fields
      */
-    public function setHigeLoadBlockFields($fields)
+    public function setHighLoadBlockFields($fields)
     {
-        $this->higeLoadBlockFields = $fields;
+        $this->highLoadBlockFields = $fields;
     }
 
     /**
-     * Return higeload block fields
+     * Return highload block fields
      *
      * @return array
      */
-    public function getHigeLoadBlockFields()
+    public function getHighLoadBlockFields()
     {
-        return $this->higeLoadBlockFields;
+        return $this->highLoadBlockFields;
     }
 }

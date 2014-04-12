@@ -36,7 +36,7 @@ class HighLoadManager
      */
     public function checkValueSelected($postData)
     {
-        $highLoadBLockFields = $this->generator->getHigeLoadBlockFields();
+        $highLoadBLockFields = $this->generator->getHighLoadBlockFields();
         foreach ($highLoadBLockFields as $fieldName => $field) {
             $availableType = array('enumeration', 'iblock_section', 'iblock_element');
             if (!in_array($field['USER_TYPE_ID'], $availableType)) {
@@ -52,7 +52,7 @@ class HighLoadManager
             }
         }
 
-        $this->generator->setHigeLoadBlockFields($highLoadBLockFields);
+        $this->generator->setHighLoadBlockFields($highLoadBLockFields);
     }
 
 
@@ -81,7 +81,7 @@ class HighLoadManager
                 }
             }
         } else {
-            foreach ($this->generator->getHigeLoadBlockFields() as $name => $field) {
+            foreach ($this->generator->getHighLoadBlockFields() as $name => $field) {
                 foreach ($errorList as $error) {
                     if (!preg_match('#' . $field['EDIT_FORM_LABEL'] . '#', $error) && $field['ERROR_MESSAGE'] != $error) {
                         continue;
@@ -125,7 +125,7 @@ class HighLoadManager
     public function getDisplayFields($availableFields, $textareaFields)
     {
         $displayList = array();
-        foreach ($this->generator->getHigeLoadBlockFields() as $fieldName => $field) {
+        foreach ($this->generator->getHighLoadBlockFields() as $fieldName => $field) {
             if (!in_array($fieldName, $availableFields)) {
                 continue;
             }
