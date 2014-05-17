@@ -25,10 +25,12 @@ git clone https://github.com/studiofact/citfact.form.git
 
 # Если bitrix >= 14, то создадим папку local/modules и переносим туда модуль
 mkdir local && mkdir local/modules
-mv citfact.form local/modules
+cp -rf citfact.form local/modules
 
 # Если версия < 14, переносим в пространство bitrix
-mv citfact.form bitrix/modules
+cp -rf citfact.form bitrix/modules
+
+rm -rf citfact.form
 ```
 
 Далее в административной панели в разделе "Marketplace > Установленные решения" устанавливаем модуль.
