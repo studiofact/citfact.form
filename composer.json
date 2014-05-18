@@ -1,0 +1,26 @@
+{
+    "name": "citfact/form",
+    "type": "bitrix-module",
+    "description": "Form Generator based on highload information blocks",
+    "keywords": ["form", "citfact"],
+    "homepage": "https://github.com/studiofact/citfact.form",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kulichkin Denis",
+            "email": "onexhovia@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "composer/installers": "~1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Citfact\\Form\\": "lib/"
+        }
+    },
+    "extra": {
+        "installer-name": "citfact.form"
+    }
+}
