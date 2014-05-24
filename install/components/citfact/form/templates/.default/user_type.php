@@ -36,9 +36,9 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                 <div
                     class="form-group"
                     data-required="<?= ($fieldValue['MANDATORY'] == 'Y') ? 'true' : 'false' ?>"
-                    date-regexp="<?= $fieldValue['SETTINGS']['REGEXP'] ?>"
-                    date-min-length="<?= $fieldValue['SETTINGS']['MIN_LENGTH'] ?>"
-                    date-max-length="<?= $fieldValue['SETTINGS']['MAX_LENGTH'] ?>"
+                    data-regexp="<?= $fieldValue['SETTINGS']['REGEXP'] ?>"
+                    data-min-length="<?= $fieldValue['SETTINGS']['MIN_LENGTH'] ?>"
+                    data-max-length="<?= $fieldValue['SETTINGS']['MAX_LENGTH'] ?>"
                     >
                     <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
                     <input type="text" class="form-control" name="<?= $fieldValue['FIELD_NAME'] ?>"
@@ -51,9 +51,9 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                 ?>
                 <div class="form-group"
                      data-required="<?= ($fieldValue['MANDATORY'] == 'Y') ? 'true' : 'false' ?>"
-                     date-regexp="<?= $fieldValue['SETTINGS']['REGEXP'] ?>"
-                     date-min-length="<?= $fieldValue['SETTINGS']['MIN_LENGTH'] ?>"
-                     date-max-length="<?= $fieldValue['SETTINGS']['MAX_LENGTH'] ?>"
+                     data-regexp="<?= $fieldValue['SETTINGS']['REGEXP'] ?>"
+                     data-min-length="<?= $fieldValue['SETTINGS']['MIN_LENGTH'] ?>"
+                     data-max-length="<?= $fieldValue['SETTINGS']['MAX_LENGTH'] ?>"
                     >
                     <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
                     <textarea class="form-control"
