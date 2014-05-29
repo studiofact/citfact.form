@@ -134,10 +134,11 @@ class HighLoadGenerator
             }
         }
 
-        $elementResult = \CIBlockElement::GetList(array(), array('IBLOCK_ID' => $iblockList), false, false, array());
-        while ($row = $elementResult->GetNext()) {
-            $row['SELECTED'] = 'N';
-            $elementList[$row['IBLOCK_ID']][] = $row;
+        $elementResult = \CIBlockElement::GetList(array(), array('IBLOCK_ID' => $iblockList), false, false, array('ID', 'IBLOCK_ID'));
+        while ($row = $elementResult->GetNextElement()) {
+            $fields = $row->GetFields();
+            $fields['SELECTED'] = 'N';
+            $elementList[$fields['IBLOCK_ID']][] = $fields;
         }
 
         foreach ($highLoadBLockFields as $fieldName => $field) {
