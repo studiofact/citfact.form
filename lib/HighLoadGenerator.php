@@ -104,15 +104,17 @@ class HighLoadGenerator
             }
         }
 
-        $fieldEnum = \CUserFieldEnum::GetList(array(), array('USER_FIELD_ID' => $enumList));
-        while ($row = $fieldEnum->GetNext()) {
-            $row['SELECTED'] = 'N';
-            $enumValue[$row['USER_FIELD_ID']][] = $row;
-        }
+        if (!empty($enumList)) {
+            $fieldEnum = \CUserFieldEnum::GetList(array(), array('USER_FIELD_ID' => $enumList));
+            while ($row = $fieldEnum->GetNext()) {
+                $row['SELECTED'] = 'N';
+                $enumValue[$row['USER_FIELD_ID']][] = $row;
+            }
 
-        foreach ($highLoadBLockFields as $fieldName => $field) {
-            if (array_key_exists($field['ID'], $enumValue)) {
-                $highLoadBLockFields[$fieldName]['VALUE'] = $enumValue[$field['ID']];
+            foreach ($highLoadBLockFields as $fieldName => $field) {
+                if (array_key_exists($field['ID'], $enumValue)) {
+                    $highLoadBLockFields[$fieldName]['VALUE'] = $enumValue[$field['ID']];
+                }
             }
         }
 
@@ -134,16 +136,18 @@ class HighLoadGenerator
             }
         }
 
-        $elementResult = \CIBlockElement::GetList(array(), array('IBLOCK_ID' => $iblockList), false, false, array('ID', 'IBLOCK_ID'));
-        while ($row = $elementResult->GetNextElement()) {
-            $fields = $row->GetFields();
-            $fields['SELECTED'] = 'N';
-            $elementList[$fields['IBLOCK_ID']][] = $fields;
-        }
+        if (!empty($iblockList)) {
+            $elementResult = \CIBlockElement::GetList(array(), array('IBLOCK_ID' => $iblockList), false, false, array('ID', 'IBLOCK_ID'));
+            while ($row = $elementResult->GetNextElement()) {
+                $fields = $row->GetFields();
+                $fields['SELECTED'] = 'N';
+                $elementList[$fields['IBLOCK_ID']][] = $fields;
+            }
 
-        foreach ($highLoadBLockFields as $fieldName => $field) {
-            if (array_key_exists($field['SETTINGS']['IBLOCK_ID'], $elementList) && $field['USER_TYPE_ID'] == 'iblock_element') {
-                $highLoadBLockFields[$fieldName]['VALUE'] = $elementList[$field['SETTINGS']['IBLOCK_ID']];
+            foreach ($highLoadBLockFields as $fieldName => $field) {
+                if (array_key_exists($field['SETTINGS']['IBLOCK_ID'], $elementList) && $field['USER_TYPE_ID'] == 'iblock_element') {
+                    $highLoadBLockFields[$fieldName]['VALUE'] = $elementList[$field['SETTINGS']['IBLOCK_ID']];
+                }
             }
         }
 
@@ -165,15 +169,17 @@ class HighLoadGenerator
             }
         }
 
-        $sectionResult = \CIBlockSection::GetList(array(), array('IBLOCK_ID' => $iblockList), false, array(), false);
-        while ($row = $sectionResult->GetNext()) {
-            $row['SELECTED'] = 'N';
-            $sectionList[$row['IBLOCK_ID']][] = $row;
-        }
+        if (!empty($iblockList)) {
+            $sectionResult = \CIBlockSection::GetList(array(), array('IBLOCK_ID' => $iblockList), false, array(), false);
+            while ($row = $sectionResult->GetNext()) {
+                $row['SELECTED'] = 'N';
+                $sectionList[$row['IBLOCK_ID']][] = $row;
+            }
 
-        foreach ($highLoadBLockFields as $fieldName => $field) {
-            if (array_key_exists($field['SETTINGS']['IBLOCK_ID'], $sectionList) && $field['USER_TYPE_ID'] == 'iblock_section') {
-                $highLoadBLockFields[$fieldName]['VALUE'] = $sectionList[$field['SETTINGS']['IBLOCK_ID']];
+            foreach ($highLoadBLockFields as $fieldName => $field) {
+                if (array_key_exists($field['SETTINGS']['IBLOCK_ID'], $sectionList) && $field['USER_TYPE_ID'] == 'iblock_section') {
+                    $highLoadBLockFields[$fieldName]['VALUE'] = $sectionList[$field['SETTINGS']['IBLOCK_ID']];
+                }
             }
         }
 
