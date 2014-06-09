@@ -89,7 +89,7 @@ class citfact_form extends CModule
     /**
      * Return components path for install
      *
-     * @oaram bool $absolute
+     * @param bool $absolute
      * @return string
      */
     protected function getComponentsPath($absolute = true)
