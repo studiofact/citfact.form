@@ -16,6 +16,7 @@ use Bitrix\Main\Entity;
 use Bitrix\Iblock;
 use Bitrix\Highloadblock as HL;
 use Citfact\Form\Exception\BuilderException;
+use Citfact\Form\Type\ParameterDictionary;
 use Citfact\Form\FormBuilderInterface;
 
 class UserFieldBuilder implements FormBuilderInterface
@@ -28,7 +29,7 @@ class UserFieldBuilder implements FormBuilderInterface
     /**
      * @inheritdoc
      */
-    public function create(Type\ParameterDictionary $parameters)
+    public function create(ParameterDictionary $parameters)
     {
         $highLoadBlockId = (int)$parameters->get('HLBLOCK_ID');
         $highLoadBlock = HL\HighloadBlockTable::getById($highLoadBlockId)->fetch();

@@ -44,6 +44,9 @@ $result->set('BUILDER', $form->getBuilder()->getBuilderData());
 $result->set('SUCCESS', $form->isValid());
 $result->set('ERRORS', $form->getErrors());
 $result->set('REQUEST', $form->getRequestData());
+$result->set('CSRF', $form->getCsrfToken());
+$result->set('CAPTCHA', $form->getCaptchaToken());
+$result->set('COMPONENT_ID', $form->getIdentifierToken());
 $result->set('IS_POST', $form->getRequest()->isPost());
 $result->set('IS_AJAX', (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'));
 
@@ -51,6 +54,7 @@ if ($result->get('IS_AJAX') && $params->get('AJAX') == 'Y') {
     $response = array(
         'success' => $result->get('SUCCESS'),
         'errors' => $result->get('ERRORS'),
+        'captcha' => $result->get('CAPTCHA'),
         'html' => '',
     );
 

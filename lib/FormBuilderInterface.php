@@ -11,7 +11,7 @@
 
 namespace Citfact\Form;
 
-use Bitrix\Main\Type\ParameterDictionary;
+use Citfact\Form\Type\ParameterDictionary;
 
 interface FormBuilderInterface
 {
