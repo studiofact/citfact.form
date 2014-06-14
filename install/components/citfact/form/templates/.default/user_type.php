@@ -31,7 +31,6 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
             case 'string':
             case 'integer':
             case 'double':
-            case 'datetime':
                 ?>
                 <div
                     class="form-group"
@@ -47,17 +46,16 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                 <? break; ?>
 
             <?
-            case 'textarea':
+            case 'datetime':
                 ?>
-                <div class="form-group"
-                     data-required="<?= ($fieldValue['MANDATORY'] == 'Y') ? 'true' : 'false' ?>"
-                     data-regexp="<?= $fieldValue['SETTINGS']['REGEXP'] ?>"
-                     data-min-length="<?= $fieldValue['SETTINGS']['MIN_LENGTH'] ?>"
-                     data-max-length="<?= $fieldValue['SETTINGS']['MAX_LENGTH'] ?>"
-                    >
+                <div class="form-group" data-required="<?= ($fieldValue['MANDATORY'] == 'Y') ? 'true' : 'false' ?>">
                     <label><?= $fieldValue['EDIT_FORM_LABEL'] ?></label>
-                    <textarea class="form-control"
-                              name="<?= $fieldValue['FIELD_NAME'] ?>"><?= $valueList[$fieldValue['FIELD_NAME']] ?></textarea>
+                    <div class="calendar-container">
+                        <input type="text" class="form-control" name="<?= $fieldValue['FIELD_NAME'] ?>"
+                               value="<?= $valueList[$fieldValue['FIELD_NAME']] ?>"/>
+                        <span class="calendar" title="<?= GetMessage('CHOOSE_DATE') ?>"
+                              onclick="BX.calendar({ node: this, field: '<?= $fieldValue['FIELD_NAME'] ?>', bTime: true, bHideTime: false });"></span>
+                    </div>
                 </div>
                 <? break; ?>
 
@@ -73,20 +71,20 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                         <? $multiple = ($fieldValue['MULTIPLE'] == 'Y') ? 'multiple="multiple"' : ''; ?>
                         <select class="form-control" name="<?= $fieldValue['FIELD_NAME'] ?>" <?= $multiple ?>>
                             <? foreach ($fieldValue['VALUE'] as $value): ?>
-                                <? $selected = ($value['SELECTED'] == 'Y') ? 'selected="selected"' : ''; ?>
+                                <? $selected = ($value['ID'] == $valueList[$fieldValue['FIELD_NAME']]) ? 'selected="selected"' : ''; ?>
                                 <option value="<?= $value['ID'] ?>" <?= $selected ?>><?= $value[$keyValue] ?></option>
                             <? endforeach; ?>
                         </select>
                     <? else: ?>
                         <? if ($fieldValue['MULTIPLE'] == 'Y'): ?>
                             <? foreach ($fieldValue['VALUE'] as $value): ?>
-                                <? $checked = ($value['SELECTED'] == 'Y') ? 'checked="checked"' : ''; ?>
+                                <? $checked = ($value['ID'] == $valueList[$fieldValue['FIELD_NAME']]) ? 'checked="checked"' : ''; ?>
                                 <input type="checkbox" name="<?= $fieldValue['FIELD_NAME'] ?>"
                                        value="<?= $value['ID'] ?>" <?= $checked ?> /> <?= $value[$keyValue] ?>
                             <? endforeach; ?>
                         <? else: ?>
                             <? foreach ($fieldValue['VALUE'] as $value): ?>
-                                <? $checked = ($value['SELECTED'] == 'Y') ? 'checked="checked"' : ''; ?>
+                                <? $checked = ($value['ID'] == $valueList[$fieldValue['FIELD_NAME']]) ? 'checked="checked"' : ''; ?>
                                 <input type="radio" name="<?= $fieldValue['FIELD_NAME'] ?>"
                                        value="<?= $value['ID'] ?>" <?= $checked ?> /> <?= $value[$keyValue] ?>
                             <? endforeach; ?>

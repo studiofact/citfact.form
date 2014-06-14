@@ -44,6 +44,6 @@ class IdentifierExtension
         $caller = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
         $caller = $caller[sizeof($caller) - 1];
 
-        return (string)crc32(sprintf('%s_%s' ,$caller['file'], $caller['line']));
+        return (string)crc32(sprintf('%s_%s', $caller['file'], $caller['line']));
     }
 }

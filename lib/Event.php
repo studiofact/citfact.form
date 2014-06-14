@@ -26,7 +26,7 @@ class Event
      * @param string $name
      * @param array $params
      */
-    protected function triggerEvent($name, $params)
+    protected function trigger($name, $params)
     {
         $event = new BaseEvent(self::MODULE_ID, $name);
         $event->setParameters($params);
@@ -46,7 +46,7 @@ class Event
             case 'onAfterBuilder':
             case 'onBeforeStorage':
             case 'onAfterStorage':
-                $this->triggerEvent($method, $arguments);
+                $this->trigger($method, $arguments);
                 break;
 
             default:

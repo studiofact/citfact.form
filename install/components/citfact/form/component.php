@@ -55,6 +55,7 @@ if ($result->get('IS_AJAX') && $form->isSubmitted()) {
     header('Content-Type: application/json');
 
     ob_start();
+    $arResult = $result->toArray();
     $this->includeComponentTemplate();
     $bufferTemplate = ob_get_contents();
     ob_clean();

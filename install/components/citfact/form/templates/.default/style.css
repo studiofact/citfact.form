@@ -36,6 +36,20 @@
     width: 100%;
 }
 
+.form-generator .form-group .calendar-container {
+    position: relative;
+}
+
+.form-generator .form-group .calendar-container span.calendar {
+    background: url("/bitrix/panel/main/images/bx-admin-sprite-small-1.png") no-repeat scroll 0 -1934px;
+    width: 16px;
+    height: 15px;
+    cursor: pointer;
+    position: absolute;
+    right: 6px;
+    top: 4px;
+}
+
 .form-generator .form-group input[type=file],
 .form-generator .form-group .captcha-image {
     display: block;

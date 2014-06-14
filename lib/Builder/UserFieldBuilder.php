@@ -63,7 +63,6 @@ class UserFieldBuilder implements FormBuilderInterface
             foreach ($this->highLoadBlockFields as &$field) {
                 if ($field['ID'] == $row['USER_FIELD_ID']) {
                     $field['VALUE'][] = $row;
-                    break;
                 }
             }
         }
@@ -86,9 +85,12 @@ class UserFieldBuilder implements FormBuilderInterface
         $elementResult = $queryBuilder->exec();
         while ($element = $elementResult->fetch()) {
             foreach ($this->highLoadBlockFields as &$field) {
+                if ($field['USER_TYPE_ID'] != 'iblock_element') {
+                    continue;
+                }
+
                 if ($field['SETTINGS']['IBLOCK_ID'] == $element['IBLOCK_ID']) {
                     $field['VALUE'][] = $element;
-                    break;
                 }
             }
         }
@@ -111,9 +113,12 @@ class UserFieldBuilder implements FormBuilderInterface
         $sectionResult = $queryBuilder->exec();
         while ($section = $sectionResult->fetch()) {
             foreach ($this->highLoadBlockFields as &$field) {
+                if ($field['USER_TYPE_ID'] != 'iblock_section') {
+                    continue;
+                }
+
                 if ($field['SETTINGS']['IBLOCK_ID'] == $section['IBLOCK_ID']) {
                     $field['VALUE'][] = $section;
-                    break;
                 }
             }
         }

@@ -9,8 +9,9 @@ if (file_exists($path . '/user_type.php')) {
 }
 
 if (!$arResult['IS_AJAX']) {
-    $APPLICATION->AddHeadScript($templateFolder . '/script.js');
-    $APPLICATION->SetAdditionalCSS($templateFolder . '/style.css');
+    $GLOBALS['APPLICATION']->AddHeadScript($templateFolder . '/script.js');
+    $GLOBALS['APPLICATION']->SetAdditionalCSS($templateFolder . '/style.css');
+    CJSCore::Init(array('date'));
 }
 ?>
 
@@ -23,8 +24,12 @@ if (!$arResult['IS_AJAX']) {
 
         <? if (sizeof($arResult['ERRORS']['LIST']) > 0): ?>
             <div class="alert alert-danger">
-                <? foreach ($arResult['ERRORS']['LIST'] as $value): ?>
-                    <div><?= $value ?></div>
+                <? foreach ($arResult['ERRORS']['LIST'] as $type => $value): ?>
+                    <? if ($type == 'CAPTCHA' || $type == 'CSRF'): ?>
+                        <div><?= GetMessage($value) ?></div>
+                    <? else: ?>
+                        <div><?= $value ?></div>
+                    <? endif; ?>
                 <? endforeach; ?>
             </div>
         <? endif; ?>
