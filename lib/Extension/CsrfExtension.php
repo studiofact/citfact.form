@@ -31,24 +31,22 @@ class CsrfExtension
     /**
      * Generates a CSRF token
      *
-     * @param string $intention
      * @return string
      */
-    public function generateCsrfToken($intention)
+    public function generateCsrfToken()
     {
-        return sha1($this->secret.$intention.$this->getSessionId());
+        return sha1($this->secret.$this->getSessionId());
     }
 
     /**
      * Validates a CSRF token.
      *
-     * @param string $intention
      * @param string $token
      * @return bool
      */
-    public function isCsrfTokenValid($intention, $token)
+    public function isCsrfTokenValid($token)
     {
-        return $token === $this->generateCsrfToken($intention);
+        return $token === $this->generateCsrfToken();
     }
 
     /**

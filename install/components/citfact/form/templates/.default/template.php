@@ -21,9 +21,9 @@ if (!$arResult['IS_AJAX']) {
             <div class="alert alert-success"><?= GetMessage('SUCCESS_MESSAGE') ?></div>
         <? endif; ?>
 
-        <? if (sizeof($arResult['ERRORS']) > 0): ?>
+        <? if (sizeof($arResult['ERRORS']['LIST']) > 0): ?>
             <div class="alert alert-danger">
-                <? foreach ($arResult['ERRORS'] as $value): ?>
+                <? foreach ($arResult['ERRORS']['LIST'] as $value): ?>
                     <div><?= $value ?></div>
                 <? endforeach; ?>
             </div>
@@ -56,7 +56,7 @@ if (!$arResult['IS_AJAX']) {
 <? if (!$arResult['IS_AJAX']): ?>
     <script type="text/javascript">
         var formGenerator = new FormGenerator({
-            formContainer: '#form-container-<?=$arResult['FORM']['COMPONENT_ID']?>',
+            formContainer: '#form-container-<?=$arResult['COMPONENT_ID']?>',
             ajaxMode: <?= ($arParams['AJAX'] == 'Y') ? 'true' : 'false' ?>,
             captchaImg: '.captcha-image',
             captchaReload: '.captcha-reload',

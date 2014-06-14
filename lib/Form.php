@@ -52,17 +52,17 @@ class Form
     private $request;
 
     /**
-     * @var Extension\CaptchaExtension
+     * @var \Citfact\Form\Extension\CaptchaExtension
      */
     private $captcha;
 
     /**
-     * @var Extension\CsrfExtension
+     * @var \Citfact\Form\Extension\CsrfExtension
      */
     private $csrf;
 
     /**
-     * @var Extension\IdentifierExtension
+     * @var \Citfact\Form\Extension\IdentifierExtension
      */
     private $identifier;
 
@@ -109,7 +109,7 @@ class Form
             return $this;
         }
 
-        if (!$this->csrf->isCsrfTokenValid('', $this->request->getPost('CSRF'))) {
+        if (!$this->csrf->isCsrfTokenValid($this->request->getPost('CSRF'))) {
             $this->addError('CSRF', 'CSRF_NOT_VALID');
         }
 
@@ -157,6 +157,14 @@ class Form
         $storage->save();
         if (!$storage->isSuccess()) {
             $this->addError('STORAGE', $storage->getErrors());
+        } else {
+            if ($this->params->get('AJAX') != 'Y') {
+                if (strlen($this->params->get('REDIRECT_PATH')) > 0) {
+                    LocalRedirect($this->params->get('REDIRECT_PATH'));
+                }
+
+                LocalRedirect(getenv('REQUEST_URI'));
+            }
         }
 
         return $this;
@@ -179,11 +187,28 @@ class Form
     /**
      * Return errors of this form
      *
+     * @param bool $original
      * @return array
      */
-    public function getErrors()
+    public function getErrors($original = true)
     {
-        return $this->errors;
+        if ($original) {
+            return $this->errors;
+        }
+
+        $errorsList = array('ORIGINAL' => null, 'LIST' => array());
+        $errorsList['ORIGINAL'] = $this->errors;
+        foreach ($this->errors as $type => $error) {
+            if (!is_array($error)) {
+                $errorsList['LIST'][$type] = $error;
+            } else {
+                foreach ($error as $key => $message) {
+                    $errorsList['LIST'][$key] = $message;
+                }
+            }
+        }
+
+        return $errorsList;
     }
 
     /**
@@ -193,7 +218,7 @@ class Form
      */
     public function isValid()
     {
-        if (!$this->submitted) {
+        if (!$this->isSubmitted()) {
             return false;
         }
 
@@ -205,7 +230,19 @@ class Form
     }
 
     /**
-     * @return mixed
+     * Returns whether the form is submitted.
+     *
+     * @return bool
+     */
+    public function isSubmitted()
+    {
+        return $this->submitted;
+    }
+
+    /**
+     * Return current request
+     *
+     * @return Request
      */
     public function getRequest()
     {
@@ -213,14 +250,26 @@ class Form
     }
 
     /**
+     * Return request data in an array
+     *
      * @return array
      */
     public function getRequestData()
     {
-        return array();
+        $postList = ($this->isSubmitted())
+            ? $this->request->getPostList()->toArray()
+            : array();
+
+        array_walk_recursive($postList, function (&$value) {
+            $value = htmlspecialchars($value);
+        });
+
+        return $postList;
     }
 
     /**
+     * Return params component
+     *
      * @return ParameterDictionary
      */
     public function getParams()
@@ -229,6 +278,8 @@ class Form
     }
 
     /**
+     * Return builder of this form
+     *
      * @return FormBuilder
      */
     public function getBuilder()
@@ -243,7 +294,7 @@ class Form
      */
     public function getCsrfToken()
     {
-        return $this->csrf->generateCsrfToken('');
+        return $this->csrf->generateCsrfToken();
     }
 
     /**

@@ -14,11 +14,11 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 $userTypePrint = function ($arResult, $fieldFind = '') {
     ?>
     <?
-    $entityFields = $arResult['HLBLOCK']['DISPLAY_FIELDS'];
-    $valueList = $arResult['FORM'];
+    $entityFields = $arResult['BUILDER']['FIELDS'];
+    $valueList = $arResult['REQUEST'];
     $isPost = $arResult['IS_POST'];
     ?>
-    <? foreach ($entityFields as $fieldName => $fieldValue): ?>
+    <? foreach ($entityFields as $fieldValue): ?>
 
         <?
         if (!empty($fieldFind) && $fieldFind != $fieldValue['FIELD_NAME']) {

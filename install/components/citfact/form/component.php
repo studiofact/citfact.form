@@ -42,7 +42,7 @@ if ($form->isValid()) {
 
 $result->set('BUILDER', $form->getBuilder()->getBuilderData());
 $result->set('SUCCESS', $form->isValid());
-$result->set('ERRORS', $form->getErrors());
+$result->set('ERRORS', $form->getErrors(false));
 $result->set('REQUEST', $form->getRequestData());
 $result->set('CSRF', $form->getCsrfToken());
 $result->set('CAPTCHA', $form->getCaptchaToken());
@@ -50,16 +50,22 @@ $result->set('COMPONENT_ID', $form->getIdentifierToken());
 $result->set('IS_POST', $form->getRequest()->isPost());
 $result->set('IS_AJAX', (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'));
 
-if ($result->get('IS_AJAX') && $params->get('AJAX') == 'Y') {
+if ($result->get('IS_AJAX') && $form->isSubmitted()) {
+    $GLOBALS['APPLICATION']->restartBuffer();
+    header('Content-Type: application/json');
+
+    ob_start();
+    $this->includeComponentTemplate();
+    $bufferTemplate = ob_get_contents();
+    ob_clean();
+
     $response = array(
         'success' => $result->get('SUCCESS'),
         'errors' => $result->get('ERRORS'),
         'captcha' => $result->get('CAPTCHA'),
-        'html' => '',
+        'html' => $bufferTemplate,
     );
 
-    $GLOBALS['APPLICATION']->restartBuffer();
-    header('Content-Type: application/json');
     exit(json_encode($response));
 }
 

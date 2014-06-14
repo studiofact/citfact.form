@@ -28,10 +28,13 @@ CModule::AddAutoloadClasses('citfact.form', array(
     'Citfact\Form\Storage\HighLoadBlockStorage' => 'lib/Storage/HighLoadBlockStorage.php',
     'Citfact\Form\Type\ParameterDictionary' => 'lib/Type/ParameterDictionary.php',
     'Citfact\Form\Validator\UserFieldValidator' => 'lib/Validator/UserFieldValidator.php',
+    'Citfact\Form\Event' => 'lib/Event.php',
     'Citfact\Form\Form' => 'lib/Form.php',
     'Citfact\Form\FormBuilder' => 'lib/FormBuilder.php',
     'Citfact\Form\FormBuilderInterface' => 'lib/FormBuilderInterface.php',
     'Citfact\Form\FormValidator' => 'lib/FormValidator.php',
     'Citfact\Form\FormValidatorInterface' => 'lib/FormValidatorInterface.php',
+    'Citfact\Form\Mailer' => 'lib/Mailer.php',
+    'Citfact\Form\Storage' => 'lib/Storage.php',
     'Citfact\Form\StorageInterface' => 'lib/StorageInterface.php',
 ));

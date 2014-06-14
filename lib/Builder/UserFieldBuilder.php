@@ -61,10 +61,9 @@ class UserFieldBuilder implements FormBuilderInterface
         $enumList = $this->getListByType('enumeration');
         $fieldEnum = $this->getUserFieldEnum()->getList(array(), array('USER_FIELD_ID' => $enumList));
         while ($row = $fieldEnum->fetch()) {
-            $row['SELECTED'] = 'N';
-            foreach ($this->highLoadBlockFields as $fieldName => $field) {
+            foreach ($this->highLoadBlockFields as &$field) {
                 if ($field['ID'] == $row['USER_FIELD_ID']) {
-                    $this->highLoadBlockFields[$fieldName]['VALUE'][] = $row;
+                    $field['VALUE'][] = $row;
                     break;
                 }
             }
@@ -81,16 +80,15 @@ class UserFieldBuilder implements FormBuilderInterface
         $iblockList = $this->getListByType('iblock_element');
         $queryBuilder = new Entity\Query(Iblock\ElementTable::getEntity());
         $queryBuilder
-            ->setSelect(array('*'))
+            ->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID'))
             ->setFilter(array('IBLOCK_ID' => $iblockList))
             ->setOrder(array());
 
         $elementResult = $queryBuilder->exec();
         while ($element = $elementResult->fetch()) {
-            $element['SELECTED'] = 'N';
-            foreach ($this->highLoadBlockFields as $fieldName => $field) {
+            foreach ($this->highLoadBlockFields as &$field) {
                 if ($field['SETTINGS']['IBLOCK_ID'] == $element['IBLOCK_ID']) {
-                    $this->highLoadBlockFields[$fieldName]['VALUE'][] = $element;
+                    $field['VALUE'][] = $element;
                     break;
                 }
             }
@@ -107,16 +105,15 @@ class UserFieldBuilder implements FormBuilderInterface
         $iblockList = $this->getListByType('iblock_section');
         $queryBuilder = new Entity\Query(Iblock\SectionTable::getEntity());
         $queryBuilder
-            ->setSelect(array('*'))
+            ->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'XML_ID'))
             ->setFilter(array('IBLOCK_ID' => $iblockList))
             ->setOrder(array());
 
         $sectionResult = $queryBuilder->exec();
         while ($section = $sectionResult->fetch()) {
-            $section['SELECTED'] = 'N';
-            foreach ($this->highLoadBlockFields as $fieldName => $field) {
+            foreach ($this->highLoadBlockFields as &$field) {
                 if ($field['SETTINGS']['IBLOCK_ID'] == $section['IBLOCK_ID']) {
-                    $this->highLoadBlockFields[$fieldName]['VALUE'][] = $section;
+                    $field['VALUE'][] = $section;
                     break;
                 }
             }

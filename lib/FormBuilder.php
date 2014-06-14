@@ -21,7 +21,7 @@ class FormBuilder
     protected $builder;
 
     /**
-     * @var \Bitrix\Main\Type\ParameterDictionary
+     * @var \Citfact\Form\Type\ParameterDictionary
      */
     protected $parameters;
 
@@ -33,11 +33,13 @@ class FormBuilder
     /**
      * @param FormBuilderInterface $builder
      * @param ParameterDictionary $parameters
+     * @param Event $eventManager
      */
     public function __construct(FormBuilderInterface $builder, ParameterDictionary $parameters)
     {
         $this->builder = $builder;
         $this->parameters = $parameters;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -46,6 +48,9 @@ class FormBuilder
     public function create()
     {
         $builderData = $this->builder->create($this->parameters);
+
+        $eventManager = new Event();
+        $eventManager->onAfterBuilder($builderData);
 
         $this->setBuilderData($builderData);
     }

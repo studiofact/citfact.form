@@ -67,17 +67,4 @@ class FormValidator
     {
         return $this->validator->getErrors();
     }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function recursiveStripTags($data)
-    {
-        array_walk_recursive($data, function (&$value) {
-            $value = strip_tags($value);
-        });
-
-        return $data;
-    }
 }
