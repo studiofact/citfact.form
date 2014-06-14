@@ -32,16 +32,6 @@ while ($item = $hlblockListResult->fetch()) {
     $hlblockList[$item['ID']] = sprintf('[%d] %s', $item['ID'], $item['NAME']);
 }
 
-$userFiledsDisplay = array();
-if ((int)$arCurrentValues['HLBLOCK_ID'] > 0) {
-    $userFields = $USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $arCurrentValues['HLBLOCK_ID']), 0, LANGUAGE_ID);
-    if (sizeof($userFields) > 0) {
-        foreach ($userFields as $fieldName => $field) {
-            $userFiledsDisplay[$fieldName] = sprintf('[%s] %s', $fieldName, $field['LIST_COLUMN_LABEL']);
-        }
-    }
-}
-
 $eventTypeList = array();
 $eventType = CEventType::GetList(array('LID' => SITE_ID));
 while ($item = $eventType->GetNext()) {
@@ -56,17 +46,6 @@ if (strlen($arCurrentValues['EVENT_NAME']) > 0) {
     }
 }
 
-$userFieldsTextarea = array();
-if (sizeof($userFiledsDisplay) > 0) {
-    foreach ($userFields as $fieldName => $field) {
-        if ($field['USER_TYPE_ID'] != 'string') {
-            continue;
-        }
-
-        $userFieldsTextarea[$fieldName] = sprintf('[%s] %s', $fieldName, $field['LIST_COLUMN_LABEL']);
-    }
-}
-
 $arComponentParameters = array(
     'PARAMETERS' => array(
         'HLBLOCK_ID' => array(
@@ -76,22 +55,6 @@ $arComponentParameters = array(
             'ADDITIONAL_VALUES' => 'Y',
             'VALUES' => $hlblockList,
             'REFRESH' => 'Y',
-        ),
-        'DISPLAY_FIELDS' => array(
-            'PARENT' => 'BASE',
-            'NAME' => Loc::getMessage('DISPLAY_FIELDS'),
-            'TYPE' => 'LIST',
-            'MULTIPLE' => 'Y',
-            'ADDITIONAL_VALUES' => 'Y',
-            'VALUES' => $userFiledsDisplay,
-        ),
-        'TEXTAREA_FIELDS' => array(
-            'PARENT' => 'BASE',
-            'NAME' => Loc::getMessage('TEXTAREA_FIELDS'),
-            'TYPE' => 'LIST',
-            'MULTIPLE' => 'Y',
-            'ADDITIONAL_VALUES' => 'Y',
-            'VALUES' => $userFieldsTextarea,
         ),
         'EVENT_NAME' => array(
             'NAME' => Loc::getMessage('EVENT_NAME'),
@@ -106,6 +69,26 @@ $arComponentParameters = array(
             'TYPE' => 'LIST',
             'VALUES' => $eventTemplateList,
             'ADDITIONAL_VALUES' => 'Y',
+            'DEFAULT' => '',
+        ),
+        'EVENT_TYPE' => array(
+            'NAME' => Loc::getMessage('EVENT_TYPE'),
+            'TYPE' => 'STRING',
+            'DEFAULT' => '',
+        ),
+        'BUILDER' => array(
+            'NAME' => Loc::getMessage('BUILDER'),
+            'TYPE' => 'STRING',
+            'DEFAULT' => '',
+        ),
+        'STORAGE' => array(
+            'NAME' => Loc::getMessage('STORAGE'),
+            'TYPE' => 'STRING',
+            'DEFAULT' => '',
+        ),
+        'VALIDATOR' => array(
+            'NAME' => Loc::getMessage('VALIDATOR'),
+            'TYPE' => 'STRING',
             'DEFAULT' => '',
         ),
         'AJAX' => array(

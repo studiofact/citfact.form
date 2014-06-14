@@ -11,13 +11,12 @@
 
 namespace Citfact\Form\Builder;
 
-use Bitrix\Main\Type;
-use Bitrix\Main\Entity;
 use Bitrix\Iblock;
+use Bitrix\Main\Entity;
 use Bitrix\Highloadblock as HL;
-use Citfact\Form\Exception\BuilderException;
-use Citfact\Form\Type\ParameterDictionary;
 use Citfact\Form\FormBuilderInterface;
+use Citfact\Form\Type\ParameterDictionary;
+use Citfact\Form\Exception\BuilderException;
 
 class UserFieldBuilder implements FormBuilderInterface
 {
