@@ -22,4 +22,11 @@ interface FormBuilderInterface
      * @return array
      */
     public function create(ParameterDictionary $parameters);
+
+    /**
+     * Return type builder
+     *
+     * @return string
+     */
+    public function getType();
 }

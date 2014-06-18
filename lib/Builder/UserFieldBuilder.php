@@ -30,7 +30,7 @@ class UserFieldBuilder implements FormBuilderInterface
      */
     public function create(ParameterDictionary $parameters)
     {
-        $highLoadBlockId = (int)$parameters->get('HLBLOCK_ID');
+        $highLoadBlockId = (int)$parameters->get('ID');
         $highLoadBlock = HL\HighloadBlockTable::getById($highLoadBlockId)->fetch();
         if (empty($highLoadBlock)) {
             throw new BuilderException(sprintf('Not found highloadblock with id = %d', $highLoadBlockId));
@@ -51,6 +51,14 @@ class UserFieldBuilder implements FormBuilderInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getType()
+    {
+        return 'userfields';
+    }
+
+    /**
      * Set values for fields type enumeration
      *
      * @return void
@@ -62,7 +70,7 @@ class UserFieldBuilder implements FormBuilderInterface
         while ($row = $fieldEnum->fetch()) {
             foreach ($this->highLoadBlockFields as &$field) {
                 if ($field['ID'] == $row['USER_FIELD_ID']) {
-                    $field['VALUE'][] = $row;
+                    $field['VALUE_LIST'][] = $row;
                 }
             }
         }
@@ -77,8 +85,7 @@ class UserFieldBuilder implements FormBuilderInterface
     {
         $iblockList = $this->getListByType('iblock_element');
         $queryBuilder = new Entity\Query(Iblock\ElementTable::getEntity());
-        $queryBuilder
-            ->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID'))
+        $queryBuilder->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID'))
             ->setFilter(array('IBLOCK_ID' => $iblockList))
             ->setOrder(array());
 
@@ -90,7 +97,7 @@ class UserFieldBuilder implements FormBuilderInterface
                 }
 
                 if ($field['SETTINGS']['IBLOCK_ID'] == $element['IBLOCK_ID']) {
-                    $field['VALUE'][] = $element;
+                    $field['VALUE_LIST'][] = $element;
                 }
             }
         }
@@ -105,8 +112,7 @@ class UserFieldBuilder implements FormBuilderInterface
     {
         $iblockList = $this->getListByType('iblock_section');
         $queryBuilder = new Entity\Query(Iblock\SectionTable::getEntity());
-        $queryBuilder
-            ->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'XML_ID'))
+        $queryBuilder->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'XML_ID'))
             ->setFilter(array('IBLOCK_ID' => $iblockList))
             ->setOrder(array());
 
@@ -118,7 +124,7 @@ class UserFieldBuilder implements FormBuilderInterface
                 }
 
                 if ($field['SETTINGS']['IBLOCK_ID'] == $section['IBLOCK_ID']) {
-                    $field['VALUE'][] = $section;
+                    $field['VALUE_LIST'][] = $section;
                 }
             }
         }

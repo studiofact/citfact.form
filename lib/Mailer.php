@@ -42,7 +42,7 @@ class Mailer
             : '';
 
         $eventType = $this->getEventType()->getList(array('EVENT_NAME' => $eventName))->getNext();
-        if ($eventName && is_array($eventType)) {
+        if ($eventName && !is_array($eventType)) {
             return false;
         }
 

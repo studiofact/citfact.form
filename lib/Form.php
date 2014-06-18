@@ -158,6 +158,9 @@ class Form
         if (!$storage->isSuccess()) {
             $this->addError('STORAGE', $storage->getErrors());
         } else {
+            $mailer = new Mailer($this->getParams());
+            $mailer->send($this->getRequestData(false));
+
             if ($this->params->get('AJAX') != 'Y') {
                 if (strlen($this->params->get('REDIRECT_PATH')) > 0) {
                     LocalRedirect($this->params->get('REDIRECT_PATH'));
@@ -252,13 +255,18 @@ class Form
     /**
      * Return request data in an array
      *
+     * @param bool $htmlspecial
      * @return array
      */
-    public function getRequestData()
+    public function getRequestData($htmlspecial = true)
     {
         $postList = ($this->isSubmitted())
             ? $this->request->getPostList()->toArray()
             : array();
+
+        if (!$htmlspecial) {
+            return $postList;
+        }
 
         array_walk_recursive($postList, function (&$value) {
             $value = htmlspecialchars($value);

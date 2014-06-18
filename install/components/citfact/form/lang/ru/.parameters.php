@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-$MESS['HLBLOCK_ID'] = 'ID HL блока';
+$MESS['ID'] = 'ID HL блока или обычного инфоблока';
 $MESS['EVENT_NAME'] = 'Название почтового события';
 $MESS['EVENT_TEMPLATE'] = 'Идентификатор почтового шаблона';
 $MESS['EVENT_TYPE'] = 'Тип почтового события';

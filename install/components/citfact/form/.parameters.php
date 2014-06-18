@@ -14,23 +14,10 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-use Bitrix\Highloadblock as HL;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
-
-global $USER_FIELD_MANAGER;
-
-if (!Loader::includeModule('highloadblock')) {
-    return ShowError('Module "Highloadblock" not set');
-}
-
-$hlblockList = array();
-$hlblockListResult = HL\HighloadBlockTable::getList(array('select' => array('ID', 'NAME')));
-while ($item = $hlblockListResult->fetch()) {
-    $hlblockList[$item['ID']] = sprintf('[%d] %s', $item['ID'], $item['NAME']);
-}
 
 $eventTypeList = array();
 $eventType = CEventType::GetList(array('LID' => SITE_ID));
@@ -48,9 +35,9 @@ if (strlen($arCurrentValues['EVENT_NAME']) > 0) {
 
 $arComponentParameters = array(
     'PARAMETERS' => array(
-        'HLBLOCK_ID' => array(
+        'ID' => array(
             'PARENT' => 'BASE',
-            'NAME' => Loc::getMessage('HLBLOCK_ID'),
+            'NAME' => Loc::getMessage('ID'),
             'TYPE' => 'LIST',
             'ADDITIONAL_VALUES' => 'Y',
             'VALUES' => $hlblockList,
