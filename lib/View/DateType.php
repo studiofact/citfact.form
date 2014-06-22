@@ -16,7 +16,7 @@ class DateType implements ViewInterface
     /**
      * @inheritdoc
      */
-    public function detectet($field, $typeBuilder)
+    public function detected($field, $typeBuilder)
     {
         if ($typeBuilder == 'userfields') {
             if ($field['USER_TYPE_ID'] == 'datetime') {
@@ -29,5 +29,13 @@ class DateType implements ViewInterface
         }
 
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return 'date';
     }
 }

@@ -20,5 +20,12 @@ interface ViewInterface
      * @param string $typeBuilder
      * @return bool
      */
-    public function detectet($field, $typeBuilder);
+    public function detected($field, $typeBuilder);
+
+    /**
+     * Return type name
+     *
+     * @return string
+     */
+    public function getName();
 }

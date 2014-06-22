@@ -41,6 +41,7 @@ if ($form->isValid()) {
 }
 
 $result->set('BUILDER', $form->getBuilder()->getBuilderData());
+$result->set('VIEW', $form->getViewData());
 $result->set('SUCCESS', $form->isValid());
 $result->set('ERRORS', $form->getErrors(false));
 $result->set('REQUEST', $form->getRequestData());

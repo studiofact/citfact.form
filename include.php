@@ -30,6 +30,7 @@ CModule::AddAutoloadClasses('citfact.form', array(
     'Citfact\Form\Storage\HighLoadBlockStorage' => 'lib/Storage/HighLoadBlockStorage.php',
     'Citfact\Form\Type\ParameterDictionary' => 'lib/Type/ParameterDictionary.php',
     'Citfact\Form\Validator\IBlockValidator' => 'lib/Validator/IBlockValidator.php',
+    'Citfact\Form\Validator\IBlockErrorParser' => 'lib/Validator/IBlockErrorParser.php',
     'Citfact\Form\Validator\UserFieldValidator' => 'lib/Validator/UserFieldValidator.php',
     'Citfact\Form\View\CheckboxType' => 'lib/View/CheckboxType.php',
     'Citfact\Form\View\DateType' => 'lib/View/DateType.php',

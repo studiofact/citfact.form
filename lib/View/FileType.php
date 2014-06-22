@@ -16,7 +16,7 @@ class FileType implements ViewInterface
     /**
      * @inheritdoc
      */
-    public function detectet($field, $typeBuilder)
+    public function detected($field, $typeBuilder)
     {
         if ($typeBuilder == 'userfields') {
             if ($field['USER_TYPE_ID'] == 'file') {
@@ -29,5 +29,13 @@ class FileType implements ViewInterface
         }
 
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return 'file';
     }
 }

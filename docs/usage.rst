@@ -4,7 +4,7 @@
 .. code-block:: php
 
     $APPLICATION->IncludeComponent("citfact:form", "", array(
-        "HLBLOCK_ID" => "2",
+        "ID" => "2",
         "EVENT_NAME" => "FEEDBACK",
         "EVENT_TEMPLATE" => "",
         "EVENT_TYPE" => "",
@@ -21,7 +21,7 @@
 Описание параметров
 ~~~~~~~~~~
 
-* **HLBLOCK_ID** - Идентификатор HL блока или обычного инфоблока
+* **ID** - Идентификатор HL блока или обычного инфоблока
 * **EVENT_NAME** - Название почтового события
 * **EVENT_TEMPLATE** - Идентификатор почтового шаблона
 * **EVENT_TYPE** - Тип почтового события, при значение "IMMEDIATE" используется метод CEvent::SendImmediate иначе CEvent::Send

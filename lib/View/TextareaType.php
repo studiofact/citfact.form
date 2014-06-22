@@ -16,7 +16,7 @@ class TextareaType implements ViewInterface
     /**
      * @inheritdoc
      */
-    public function detectet($field, $typeBuilder)
+    public function detected($field, $typeBuilder)
     {
         if ($typeBuilder == 'iblock') {
             if ($field['PROPERTY_TYPE'] == 'S' && $field['USER_TYPE'] == 'HTML') {
@@ -25,5 +25,13 @@ class TextareaType implements ViewInterface
         }
 
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return 'textarea';
     }
 }

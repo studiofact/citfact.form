@@ -42,7 +42,7 @@ class Form
     private $submitted = false;
 
     /**
-     * @var \Citfact\Form\FormBuilder
+     * @var FormBuilder
      */
     private $builder;
 
@@ -52,17 +52,17 @@ class Form
     private $request;
 
     /**
-     * @var \Citfact\Form\Extension\CaptchaExtension
+     * @var Extension\CaptchaExtension
      */
     private $captcha;
 
     /**
-     * @var \Citfact\Form\Extension\CsrfExtension
+     * @var Extension\CsrfExtension
      */
     private $csrf;
 
     /**
-     * @var \Citfact\Form\Extension\IdentifierExtension
+     * @var Extension\IdentifierExtension
      */
     private $identifier;
 
@@ -140,6 +140,7 @@ class Form
      * Save request form in storage
      *
      * @return $this
+     * @throws ValidateException When not valid request
      */
     public function save()
     {
@@ -273,6 +274,17 @@ class Form
         });
 
         return $postList;
+    }
+
+    /**
+     * @return array
+     */
+    public function getViewData()
+    {
+        $view = new FormView($this->builder);
+        $view->create();
+
+        return $view->getViewData();
     }
 
     /**

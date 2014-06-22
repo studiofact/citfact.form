@@ -33,13 +33,11 @@ class FormBuilder
     /**
      * @param FormBuilderInterface $builder
      * @param ParameterDictionary $parameters
-     * @param Event $eventManager
      */
     public function __construct(FormBuilderInterface $builder, ParameterDictionary $parameters)
     {
         $this->builder = $builder;
         $this->parameters = $parameters;
-        $this->eventManager = $eventManager;
     }
 
     /**
@@ -48,9 +46,6 @@ class FormBuilder
     public function create()
     {
         $builderData = $this->builder->create($this->parameters);
-
-        $eventManager = new Event();
-        $eventManager->onAfterBuilder($builderData);
 
         $this->setBuilderData($builderData);
     }
@@ -69,5 +64,13 @@ class FormBuilder
     public function getBuilderData()
     {
         return $this->builderData;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->builder->getType();
     }
 }

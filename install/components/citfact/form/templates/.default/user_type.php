@@ -8,32 +8,32 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
  * Display custom fields
  *
  * @param array $arResult
- * @param string $fieldFind
  * @return mixed
  */
-$userTypePrint = function ($arResult, $fieldFind = '') {
-    ?>
-    <?
-    $entityFields = $arResult['BUILDER']['FIELDS'];
+$userTypePrint = function ($arResult) {
+    $fieldList = $arResult['VIEW'];
     $valueList = $arResult['REQUEST'];
-    $isPost = $arResult['IS_POST'];
     ?>
-    <? foreach ($entityFields as $fieldValue): ?>
-
-        <?
-        if (!empty($fieldFind) && $fieldFind != $fieldValue['NAME']) {
-            continue;
-        }
-        ?>
-
+    <? foreach ($fieldList as $fieldValue): ?>
         <?switch ($fieldValue['TYPE']):
 
-            case 'input':
-                ?>
+            case 'input': ?>
                 <div class="form-group">
                     <label><?= $fieldValue['LABEL'] ?></label>
                     <input type="text" class="form-control" name="<?= $fieldValue['NAME'] ?>"
                            value="<?= $valueList[$fieldValue['NAME']] ?>"/>
+                </div>
+                <? break; ?>
+
+            <? case 'date': ?>
+                <div class="form-group">
+                    <label><?= $fieldValue['LABEL'] ?></label>
+                    <div class="calendar-container">
+                        <input type="text" class="form-control" name="<?= $fieldValue['NAME'] ?>"
+                               value="<?= $valueList[$fieldValue['NAME']] ?>"/>
+                        <span class="calendar" title="<?= GetMessage('CHOOSE_DATE') ?>"
+                              onclick="BX.calendar({ node: this, field: '<?= $fieldValue['NAME'] ?>', bTime: true, bHideTime: false });"></span>
+                    </div>
                 </div>
                 <? break; ?>
 
@@ -45,22 +45,11 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                 </div>
                 <? break; ?>
 
-            <? case 'date': ?>
-                <div class="form-group">
-                    <label><?= $fieldValue['LABEL'] ?></label>
-                    <div class="calendar-container">
-                        <input type="text" class="form-control" name="<?= $fieldValue['NAME'] ?>"
-                               value="<?= $valueList[$fieldValue['NAME']] ?>"/>
-                        <span class="calendar" title="<?= GetMessage('CHOOSE_DATE') ?>"
-                              onclick="BX.calendar({ node: this, field: '<?= $fieldValue['FIELD_NAME'] ?>', bTime: true, bHideTime: false });"></span>
-                    </div>
-                </div>
-                <? break; ?>
-
             <? case 'select': ?>
                 <div class="form-group">
                     <label><?= $fieldValue['LABEL'] ?></label>
-                    <select class="form-control" name="<?= $fieldValue['NAME'] ?>">
+                    <? $multiple = ($fieldValue['MULTIPLE'] == 'Y') ? 'multiple="multiple"' : ''  ?>
+                    <select class="form-control" name="<?= $fieldValue['NAME'] ?>" <?= $multiple ?>>
                         <? foreach ($fieldValue['VALUE_LIST'] as $value): ?>
                             <? $selected = ($value['ID'] == $valueList[$fieldValue['NAME']]) ? 'selected="selected"' : ''; ?>
                             <option value="<?= $value['ID'] ?>" <?= $selected ?>><?= $value['VALUE'] ?></option>
@@ -72,14 +61,22 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
             <? case 'checkbox': ?>
                 <div class="form-group">
                     <label><?= $fieldValue['LABEL'] ?></label>
-                    <input type="checkbox" name="<?= $fieldValue['NAME'] ?>" />
+                    <? foreach ($fieldValue['VALUE_LIST'] as $value): ?>
+                        <? $checked = ($value['ID'] == $valueList[$fieldValue['NAME']]) ? 'checked="checked"' : ''; ?>
+                        <input type="checkbox" name="<?= $fieldValue['NAME'] ?>"
+                               value="<?= $value['ID'] ?>" <?=$checked?>/> <?= $value['VALUE'] ?>
+                    <? endforeach; ?>
                 </div>
                 <? break; ?>
 
             <? case 'radio': ?>
                 <div class="form-group">
                     <label><?= $fieldValue['LABEL'] ?></label>
-                    <input type="radio" name="<?= $fieldValue['NAME'] ?>" />
+                    <? foreach ($fieldValue['VALUE_LIST'] as $value): ?>
+                        <? $checked = ($value['ID'] == $valueList[$fieldValue['NAME']]) ? 'checked="checked"' : ''; ?>
+                        <input type="radio" name="<?= $fieldValue['NAME'] ?>"
+                               value="<?= $value['ID'] ?>" <?=$checked?>/> <?= $value['VALUE'] ?>
+                    <? endforeach; ?>
                 </div>
                 <? break; ?>
 
@@ -90,13 +87,6 @@ $userTypePrint = function ($arResult, $fieldFind = '') {
                 </div>
                 <? break; ?>
 
-            <? endswitch; ?>
-
-        <?
-        if ($fieldFind == $fieldValue['NAME']) {
-            break;
-        }
-        ?>
-
+         <? endswitch; ?>
     <? endforeach; ?>
 <? }; ?>

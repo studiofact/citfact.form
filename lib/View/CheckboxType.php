@@ -16,8 +16,28 @@ class CheckboxType implements ViewInterface
     /**
      * @inheritdoc
      */
-    public function detectet($field, $typeBuilder)
+    public function detected($field, $typeBuilder)
     {
+        if ($typeBuilder == 'userfields') {
+            if (in_array($field['USER_TYPE_ID'], array('iblock_element', 'iblock_section', 'enumeration'))) {
+                if ($field['SETTINGS']['DISPLAY'] == 'CHECKBOX' && $field['MULTIPLE'] == 'Y') {
+                    return true;
+                }
+            }
+        } elseif ($typeBuilder == 'iblock') {
+            if ($field['PROPERTY_TYPE'] == 'L' && $field['LIST_TYPE'] == 'C' && $field['MULTIPLE'] == 'Y') {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return 'checkbox';
     }
 }

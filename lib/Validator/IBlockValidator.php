@@ -34,6 +34,17 @@ class IBlockValidator implements FormValidatorInterface
      */
     public function validate(Request $request, array $builderData)
     {
+        $iblockElement = new \CIBlockElement();
+        $postRequest = $request->getPostList()->toArray();
 
+        $fields['IBLOCK_ID'] = $builderData['DATA']['ID'];
+        foreach ($builderData['FIELDS'] as $fieldName => $field) {
+            $fields['PROPERTY_VALUES'][$fieldName] = $postRequest[$fieldName];
+        }
+
+        if (!$iblockElement->checkFields($fields)) {
+            $iblockErrorParser = new IBlockErrorParser($builderData['FIELDS']);
+            $this->errorList = $iblockErrorParser->parse($iblockElement->LAST_ERROR);
+        }
     }
 }

@@ -16,7 +16,7 @@ class InputType implements ViewInterface
     /**
      * @inheritdoc
      */
-    public function detectet($field, $typeBuilder)
+    public function detected($field, $typeBuilder)
     {
         if ($typeBuilder == 'userfields') {
             if (in_array($field['USER_TYPE_ID'], array('string', 'integer', 'double'))) {
@@ -29,5 +29,13 @@ class InputType implements ViewInterface
         }
 
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return 'input';
     }
 }

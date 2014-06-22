@@ -1,8 +1,8 @@
 {
     "name": "citfact/form",
     "type": "bitrix-module",
-    "description": "Form Generator based on highload information blocks",
-    "keywords": ["form", "citfact"],
+    "description": "Form Generator based on highload and default information blocks",
+    "keywords": ["form", "citfact", "iblock", "highloadblock", "csrf"],
     "homepage": "https://github.com/studiofact/citfact.form",
     "license": "MIT",
     "authors": [
