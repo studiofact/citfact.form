@@ -10,6 +10,10 @@
  */
 
 $MESS['ID'] = 'ID HL блока или обычного инфоблока';
+$MESS['TYPE'] = 'Тип генератора';
+$MESS['TYPE_IBLOCK'] = 'Инфоблок';
+$MESS['TYPE_HLBLOCK'] = 'Highload инфоблок';
+$MESS['TYPE_CUSTOM'] = 'Расширенный режим';
 $MESS['EVENT_NAME'] = 'Название почтового события';
 $MESS['EVENT_TEMPLATE'] = 'Идентификатор почтового шаблона';
 $MESS['EVENT_TYPE'] = 'Тип почтового события';

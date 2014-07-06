@@ -23,6 +23,11 @@ class FileType implements ViewInterface
                 return true;
             }
         } elseif ($typeBuilder == 'iblock') {
+            // For default fields
+            if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'file') {
+                return true;
+            }
+
             if ($field['PROPERTY_TYPE'] == 'F') {
                 return true;
             }

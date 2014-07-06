@@ -23,6 +23,11 @@ class InputType implements ViewInterface
                 return true;
             }
         } elseif ($typeBuilder == 'iblock') {
+            // For default fields
+            if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'string') {
+                return true;
+            }
+
             if ($field['PROPERTY_TYPE'] == 'S' || $field['PROPERTY_TYPE'] == 'N') {
                 return true;
             }

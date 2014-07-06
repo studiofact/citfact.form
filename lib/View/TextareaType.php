@@ -19,6 +19,11 @@ class TextareaType implements ViewInterface
     public function detected($field, $typeBuilder)
     {
         if ($typeBuilder == 'iblock') {
+            // For default fields
+            if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'textarea') {
+                return true;
+            }
+
             if ($field['PROPERTY_TYPE'] == 'S' && $field['USER_TYPE'] == 'HTML') {
                 return true;
             }

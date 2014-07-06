@@ -25,9 +25,23 @@ $app = Application::getInstance();
 $params = new ParameterDictionary($arParams);
 $result = new ParameterDictionary();
 
-$builder = $params->get('BUILDER') ?: Config\Option::get('citfact.form', 'BUILDER');
-$storage = $params->get('STORAGE') ?: Config\Option::get('citfact.form', 'STORAGE');
-$validator = $params->get('VALIDATOR') ?: Config\Option::get('citfact.form', 'VALIDATOR');
+if (!in_array($params->get('TYPE'), array('IBLOCK', 'HLBLOCK', 'CUSTOM'))) {
+    $params->set('TYPE', 'CUSTOM');
+}
+
+if ($params->get('TYPE') == 'IBLOCK') {
+    $builder = 'Citfact\\Form\\Builder\\IBlockBuilder';
+    $storage = 'Citfact\\Form\\Storage\\IBlockStorage';
+    $validator = 'Citfact\\Form\\Validator\\IBlockValidator';
+} elseif ($params->get('TYPE') == 'HLBLOCK') {
+    $builder = 'Citfact\\Form\\Builder\\UserFieldBuilder';
+    $storage = 'Citfact\\Form\\Storage\\HighLoadBlockStorage';
+    $validator = 'Citfact\\Form\\Validator\\UserFieldValidator';
+} elseif ($params->get('TYPE') == 'CUSTOM') {
+    $builder = $params->get('BUILDER') ?: Config\Option::get('citfact.form', 'BUILDER');
+    $storage = $params->get('STORAGE') ?: Config\Option::get('citfact.form', 'STORAGE');
+    $validator = $params->get('VALIDATOR') ?: Config\Option::get('citfact.form', 'VALIDATOR');
+}
 
 $form = new Form\Form($params);
 $form->register('builder', $builder);

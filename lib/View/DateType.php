@@ -23,6 +23,11 @@ class DateType implements ViewInterface
                 return true;
             }
         } elseif ($typeBuilder == 'iblock') {
+            // For default fields
+            if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'date') {
+                return true;
+            }
+
             if ($field['PROPERTY_TYPE'] == 'S' && $field['USER_TYPE'] == 'DateTime') {
                 return true;
             }

@@ -23,6 +23,11 @@ class SelectType implements ViewInterface
                 return true;
             }
         } elseif ($typeBuilder == 'iblock') {
+            // For default fields
+            if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'select') {
+                return true;
+            }
+
             if (in_array($field['PROPERTY_TYPE'], array('E', 'G', 'L'))) {
                 return true;
             }

@@ -38,6 +38,10 @@ class IBlockValidator implements FormValidatorInterface
         $postRequest = $request->getPostList()->toArray();
 
         $fields['IBLOCK_ID'] = $builderData['DATA']['ID'];
+        foreach ($builderData['DEFAULT_FIELDS'] as $fieldName => $field) {
+            $fields[$fieldName] = $postRequest[$fieldName];
+        }
+
         foreach ($builderData['FIELDS'] as $fieldName => $field) {
             $fields['PROPERTY_VALUES'][$fieldName] = $postRequest[$fieldName];
         }

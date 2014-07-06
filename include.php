@@ -18,7 +18,7 @@ use Bitrix\Main\Loader;
 Loader::includeModule('iblock');
 Loader::includeModule('highloadblock');
 
-CModule::AddAutoloadClasses('citfact.form', array(
+Loader::registerAutoLoadClasses('citfact.form', array(
     'Citfact\Form\Builder\IBlockBuilder' => 'lib/Builder/IBlockBuilder.php',
     'Citfact\Form\Builder\UserFieldBuilder' => 'lib/Builder/UserFieldBuilder.php',
     'Citfact\Form\Exception\ExceptionInterface' => 'lib/Exception/ExceptionInterface.php',

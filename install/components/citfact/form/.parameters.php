@@ -9,12 +9,10 @@
  * file that was distributed with this source code.
  */
 
-
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
@@ -38,10 +36,17 @@ $arComponentParameters = array(
         'ID' => array(
             'PARENT' => 'BASE',
             'NAME' => Loc::getMessage('ID'),
+            'TYPE' => 'STRING',
+        ),
+        'TYPE' => array(
+            'PARENT' => 'BASE',
+            'NAME' => Loc::getMessage('TYPE'),
             'TYPE' => 'LIST',
-            'ADDITIONAL_VALUES' => 'Y',
-            'VALUES' => $hlblockList,
-            'REFRESH' => 'Y',
+            'VALUES' => array(
+                'IBLOCK' => Loc::getMessage('TYPE_IBLOCK'),
+                'HLBLOCK' => Loc::getMessage('TYPE_HLBLOCK'),
+                'CUSTOM' => Loc::getMessage('TYPE_CUSTOM'),
+            ),
         ),
         'EVENT_NAME' => array(
             'NAME' => Loc::getMessage('EVENT_NAME'),

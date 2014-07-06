@@ -41,6 +41,17 @@ class IBlockBuilder implements FormBuilderInterface
             throw new BuilderException(sprintf('Not found iblock with id = %d', $iblockId));
         }
 
+        $queryBuilder = new Entity\Query(Iblock\IblockFieldTable::getEntity());
+        $iblockDataResult = $queryBuilder->setSelect(array('*'))
+            ->setFilter(array('IBLOCK_ID' => $iblockData['ID']))
+            ->setOrder(array())
+            ->exec();
+
+        $iblockDataFields = array();
+        while ($field = $iblockDataResult->fetch()) {
+            $iblockDataFields[$field['CODE']] = $field;
+        }
+
         $queryBuilder = new Entity\Query(Iblock\PropertyTable::getEntity());
         $propertyResult = $queryBuilder->setSelect(array('*'))
             ->setFilter(array('IBLOCK_ID' => $iblockData['ID']))
@@ -57,8 +68,29 @@ class IBlockBuilder implements FormBuilderInterface
         $this->setSectionValue();
         $this->setEnumValue();
 
+        $sectionValueList = array();
+        if (in_array($iblockData['ID'], $this->getListByType('G'))) {
+            foreach ($this->iblockProperty as $field) {
+                if ($field['PROPERTY_TYPE'] == 'G' && $field['LINK_IBLOCK_ID'] == $iblockData['ID']) {
+                    $sectionValueList = (isset($field['VALUE_LIST'])) ? $field['VALUE_LIST'] : array();
+                    break;
+                }
+            }
+        } else {
+            $queryBuilder = new Entity\Query(Iblock\SectionTable::getEntity());
+            $sectionValueList = $queryBuilder->setSelect(array('ID', 'NAME'))
+                ->setFilter(array('IBLOCK_ID' => $iblockData['ID']))
+                ->setOrder(array())
+                ->exec()
+                ->fetchAll();
+        }
+
+        $upperLevel[] = array('ID' => 0, 'NAME' => GetMessage('IBLOCK_UPPER_LEVEL'));
+        $sectionValueList = $upperLevel + $sectionValueList;
+
         return array(
             'DATA' => $iblockData,
+            'DEFAULT_FIELDS' => $this->getDefaultFields($iblockDataFields, $sectionValueList),
             'FIELDS' => $this->iblockProperty,
         );
     }
@@ -69,6 +101,99 @@ class IBlockBuilder implements FormBuilderInterface
     public function getType()
     {
         return 'iblock';
+    }
+
+    /**
+     * @param array $settings
+     * @param array $sectionValue
+     * @return array
+     */
+    protected function getDefaultFields($settings, $sectionValue)
+    {
+        return array(
+            'ACTIVE' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_ACTIVE'),
+                'CODE' => 'ACTIVE',
+                'FIELD_TYPE' => 'checkbox',
+                'IS_REQUIRED' => $settings['ACTIVE']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+                'VALUE_LIST' => array(array(
+                    'ID' => 'Y',
+                    'NAME' => ''
+                )),
+            ),
+            'ACTIVE_FROM' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_ACTIVE_FROM'),
+                'CODE' => 'ACTIVE_FROM',
+                'FIELD_TYPE' => 'date',
+                'IS_REQUIRED' => $settings['ACTIVE_FROM']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'ACTIVE_TO' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_ACTIVE_TO'),
+                'CODE' => 'ACTIVE_TO',
+                'FIELD_TYPE' => 'date',
+                'IS_REQUIRED' => $settings['ACTIVE_TO']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'NAME' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_NAME'),
+                'CODE' => 'NAME',
+                'FIELD_TYPE' => 'string',
+                'IS_REQUIRED' => $settings['NAME']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'CODE' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_CODE'),
+                'CODE' => 'CODE',
+                'FIELD_TYPE' => 'string',
+                'IS_REQUIRED' => $settings['CODE']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'SORT' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_SORT'),
+                'CODE' => 'SORT',
+                'FIELD_TYPE' => 'string',
+                'IS_REQUIRED' => $settings['SORT']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'IBLOCK_SECTION_ID' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_SECTION_ID'),
+                'CODE' => 'IBLOCK_SECTION_ID',
+                'FIELD_TYPE' => 'select',
+                'IS_REQUIRED' => $settings['IBLOCK_SECTION_ID']['IS_REQUIRED'],
+                'MULTIPLE' => 'Y',
+                'VALUE_LIST' => $sectionValue,
+            ),
+            'PREVIEW_PICTURE' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_PREVIEW_PICTURE'),
+                'CODE' => 'PREVIEW_PICTURE',
+                'FIELD_TYPE' => 'file',
+                'IS_REQUIRED' => $settings['PREVIEW_PICTURE']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'DETAIL_PICTURE' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_DETAIL_PICTURE'),
+                'CODE' => 'DETAIL_PICTURE',
+                'FIELD_TYPE' => 'file',
+                'IS_REQUIRED' => $settings['DETAIL_PICTURE']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'PREVIEW_TEXT' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_PREVIEW_TEXT'),
+                'CODE' => 'PREVIEW_TEXT',
+                'FIELD_TYPE' => 'textarea',
+                'IS_REQUIRED' => $settings['PREVIEW_TEXT']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+            'DETAIL_TEXT' => array(
+                'NAME' => GetMessage('IBLOCK_FIELD_DETAIL_TEXT'),
+                'CODE' => 'DETAIL_TEXT',
+                'FIELD_TYPE' => 'textarea',
+                'IS_REQUIRED' => $settings['DETAIL_TEXT']['IS_REQUIRED'],
+                'MULTIPLE' => 'N',
+            ),
+        );
     }
 
     /**

@@ -12,9 +12,7 @@
 namespace Citfact\Form;
 
 use Bitrix\Main\Request;
-use Citfact\Form\Extension\CaptchaExtension;
-use Citfact\Form\Extension\CsrfExtension;
-use Citfact\Form\Extension\IdentifierExtension;
+use Citfact\Form\Extension;
 use Citfact\Form\Exception\ValidateException;
 use Citfact\Form\Type\ParameterDictionary;
 
@@ -72,9 +70,9 @@ class Form
     public function __construct(ParameterDictionary $params)
     {
         $this->params = $params;
-        $this->captcha = new CaptchaExtension();
-        $this->csrf = new CsrfExtension();
-        $this->identifier = new IdentifierExtension();
+        $this->captcha = new Extension\CaptchaExtension();
+        $this->csrf = new Extension\CsrfExtension();
+        $this->identifier = new Extension\IdentifierExtension();
     }
 
     /**
@@ -281,7 +279,7 @@ class Form
      */
     public function getViewData()
     {
-        $view = new FormView($this->builder);
+        $view = new FormView($this->builder, $this->getParams());
         $view->create();
 
         return $view->getViewData();

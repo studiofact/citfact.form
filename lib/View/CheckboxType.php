@@ -25,6 +25,11 @@ class CheckboxType implements ViewInterface
                 }
             }
         } elseif ($typeBuilder == 'iblock') {
+            // For default fields
+            if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'checkbox') {
+                return true;
+            }
+
             if ($field['PROPERTY_TYPE'] == 'L' && $field['LIST_TYPE'] == 'C' && $field['MULTIPLE'] == 'Y') {
                 return true;
             }
