@@ -11,8 +11,6 @@
  - Отправка почтовых уведомлений
  - Возможность использовать множество экземпляров формы
 
-[![Build Status](https://travis-ci.org/studiofact/citfact.form.svg)](https://travis-ci.org/studiofact/citfact.form)
-
 ## Требования:
 
  - PHP версия >= 5.3.3
