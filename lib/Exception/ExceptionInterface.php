@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+namespace Citfact\Form\Exception;
 
-$MESS['POSTED_BY'] = 'Сообщение от';
-$MESS['ERROR_CAPTCHA'] = 'Введите правильно код с картинки';
+interface ExceptionInterface
+{
+
+}

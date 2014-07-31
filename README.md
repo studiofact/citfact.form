@@ -1,81 +1,25 @@
-Генератор форм
-========
-
 ## Описание
-Генератор форм основан на highload инфоблоках, т.е пользовательские поля инфоблока выступают в роле контролов формы.
-На данный момент поддерживаются пользовательские поля:
- - Строка
- - Целое число
- - Число
- - Дата/Время
- - Да/Нет
- - Файл
- - Список
- - Привязка к разделам инф. блоков
- - Привяка к элементам инф. блоков
- 
-## Установка:
 
-``` bash
-# Переходим в корень проекта
-cd /path/to/project/
+Модуль для генерации веб-форм. Основные возможности:
 
-# Клонируем репозиторий
-git clone https://github.com/studiofact/citfact.form.git
+ - Билдер данных (по умолчанию на highload инфоблоках)
+ - Валидатор (по умолчанию используется валидатор пользовательский полей)
+ - Хранение данных (по умолчанию в highload инфоблоках)
+ - Защита от CSRF и XSS атак
+ - Каптча
+ - Пользовательские события
+ - Отправка почтовых уведомлений
+ - Возможность использовать множество экземпляров формы
 
-# Если bitrix >= 14, то создадим папку local/modules и переносим туда модуль
-mkdir local && mkdir local/modules
-cp -rf citfact.form local/modules
+[![Build Status](https://travis-ci.org/studiofact/citfact.form.svg)](https://travis-ci.org/studiofact/citfact.form)
 
-# Если версия < 14, переносим в пространство bitrix
-cp -rf citfact.form bitrix/modules
+## Требования:
 
-rm -rf citfact.form
-```
+ - PHP версия >= 5.3.3
+ - Bitrix версия >= 14
 
-Далее в административной панели в разделе "Marketplace > Установленные решения" устанавливаем модуль.
+## Документация
 
-## Пример использования:
-
-``` php
-$APPLICATION->IncludeComponent('citfact:form', '', array(
-	"HLBLOCK_ID" => 2, // Идентификатор HL блока,
-    "DISPLAY_FIELDS" => array(), // Список полей которые будут отображаться в форме
-    "TEXTAREA_FIELDS" => array(), // Список полей которые будут отображаться в форме как textarea
-	"EVENT_NAME" => "FEEDBACK", // Название почтового события
-	"EVENT_TEMPLATE" => "", // Идентификатор почтового шаблона
-	"AJAX" => "N", // Включить AJAX режим
-	"USE_CAPTCHA" => "N", // Использовать каптчу
-	"REDIRECT_PATH" => "" // УРЛ адрес для перенаправления после успешного добавления
-));
-```
-
-Пользовательские события
- - `onBeforeHighElementAdd` - срабатывает до добавления записи в highload инфоблок
- - `onAfterHighElementAdd` - срабатывает после успешной записи в highload инфоблок до вызова почтового события
-
-``` php
-// init.php
-
-AddEventHandler('citfact.form', 'onBeforeHighElementAdd', 'onBeforeHandler');
-AddEventHandler('citfact.form', 'onAfterHighElementAdd', 'onAfterHandler');
-
-/**
- * @param array $postData Массив с данными(передается по ссылке)
- * @param array $highLoadBlockData Информация о инфоблоке
- */
-function onBeforeHandler($postData, $highLoadBlockData)
-{
-	...
-}
-
-/**
- * @param int $id Идентификатор добавленного элемента
- * @param array $postData Массив с данными(передается по ссылке)
- * @param array $highLoadBlockData Информация о инфоблоке
- */
-function onAfterHandler($id, $postData, $highLoadBlockData)
-{
-	...
-}
-```
+ - [Установка](https://github.com/studiofact/citfact.core/blob/master/docs/installation.rst)
+ - [Пример использования](https://github.com/studiofact/citfact.core/blob/master/docs/usage.rst)
+ - [Пользовательские события](https://github.com/studiofact/citfact.core/blob/master/docs/events.rst)

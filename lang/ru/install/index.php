@@ -10,6 +10,6 @@
  */
 
 $MESS['FORM_MODULE_NAME'] = 'Генератор форм';
-$MESS['FORM_MODULE_DESCRIPTION'] = 'Генератор форм на основе highload инфоблоков';
+$MESS['FORM_MODULE_DESCRIPTION'] = 'Генератор форм на основе highload и обычных инфоблоков';
 $MESS['PARTNER_NAME'] = 'ООО «Центр интернет технологий «ФАКТ»';
 $MESS['PARTNER_URI'] = 'http://www.studiofact.ru/';

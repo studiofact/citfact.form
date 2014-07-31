@@ -9,38 +9,13 @@
  * file that was distributed with this source code.
  */
 
-
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-use Bitrix\Highloadblock as HL;
-use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
-
-global $USER_FIELD_MANAGER;
-
-if (!Loader::includeModule('highloadblock')) {
-    return ShowError('Module "Highloadblock" not set');
-}
-
-$hlblockList = array();
-$hlblockListResult = HL\HighloadBlockTable::getList(array('select' => array('ID', 'NAME')));
-while ($item = $hlblockListResult->fetch()) {
-    $hlblockList[$item['ID']] = sprintf('[%d] %s', $item['ID'], $item['NAME']);
-}
-
-$userFiledsDisplay = array();
-if ((int)$arCurrentValues['HLBLOCK_ID'] > 0) {
-    $userFields = $USER_FIELD_MANAGER->GetUserFields(sprintf('HLBLOCK_%d', $arCurrentValues['HLBLOCK_ID']), 0, LANGUAGE_ID);
-    if (sizeof($userFields) > 0) {
-        foreach ($userFields as $fieldName => $field) {
-            $userFiledsDisplay[$fieldName] = sprintf('[%s] %s', $fieldName, $field['LIST_COLUMN_LABEL']);
-        }
-    }
-}
 
 $eventTypeList = array();
 $eventType = CEventType::GetList(array('LID' => SITE_ID));
@@ -56,42 +31,22 @@ if (strlen($arCurrentValues['EVENT_NAME']) > 0) {
     }
 }
 
-$userFieldsTextarea = array();
-if (sizeof($userFiledsDisplay) > 0) {
-    foreach ($userFields as $fieldName => $field) {
-        if ($field['USER_TYPE_ID'] != 'string') {
-            continue;
-        }
-
-        $userFieldsTextarea[$fieldName] = sprintf('[%s] %s', $fieldName, $field['LIST_COLUMN_LABEL']);
-    }
-}
-
 $arComponentParameters = array(
     'PARAMETERS' => array(
-        'HLBLOCK_ID' => array(
+        'ID' => array(
             'PARENT' => 'BASE',
-            'NAME' => Loc::getMessage('HLBLOCK_ID'),
-            'TYPE' => 'LIST',
-            'ADDITIONAL_VALUES' => 'Y',
-            'VALUES' => $hlblockList,
-            'REFRESH' => 'Y',
+            'NAME' => Loc::getMessage('ID'),
+            'TYPE' => 'STRING',
         ),
-        'DISPLAY_FIELDS' => array(
+        'TYPE' => array(
             'PARENT' => 'BASE',
-            'NAME' => Loc::getMessage('DISPLAY_FIELDS'),
+            'NAME' => Loc::getMessage('TYPE'),
             'TYPE' => 'LIST',
-            'MULTIPLE' => 'Y',
-            'ADDITIONAL_VALUES' => 'Y',
-            'VALUES' => $userFiledsDisplay,
-        ),
-        'TEXTAREA_FIELDS' => array(
-            'PARENT' => 'BASE',
-            'NAME' => Loc::getMessage('TEXTAREA_FIELDS'),
-            'TYPE' => 'LIST',
-            'MULTIPLE' => 'Y',
-            'ADDITIONAL_VALUES' => 'Y',
-            'VALUES' => $userFieldsTextarea,
+            'VALUES' => array(
+                'IBLOCK' => Loc::getMessage('TYPE_IBLOCK'),
+                'HLBLOCK' => Loc::getMessage('TYPE_HLBLOCK'),
+                'CUSTOM' => Loc::getMessage('TYPE_CUSTOM'),
+            ),
         ),
         'EVENT_NAME' => array(
             'NAME' => Loc::getMessage('EVENT_NAME'),
@@ -106,6 +61,26 @@ $arComponentParameters = array(
             'TYPE' => 'LIST',
             'VALUES' => $eventTemplateList,
             'ADDITIONAL_VALUES' => 'Y',
+            'DEFAULT' => '',
+        ),
+        'EVENT_TYPE' => array(
+            'NAME' => Loc::getMessage('EVENT_TYPE'),
+            'TYPE' => 'STRING',
+            'DEFAULT' => '',
+        ),
+        'BUILDER' => array(
+            'NAME' => Loc::getMessage('BUILDER'),
+            'TYPE' => 'STRING',
+            'DEFAULT' => '',
+        ),
+        'STORAGE' => array(
+            'NAME' => Loc::getMessage('STORAGE'),
+            'TYPE' => 'STRING',
+            'DEFAULT' => '',
+        ),
+        'VALIDATOR' => array(
+            'NAME' => Loc::getMessage('VALIDATOR'),
+            'TYPE' => 'STRING',
             'DEFAULT' => '',
         ),
         'AJAX' => array(

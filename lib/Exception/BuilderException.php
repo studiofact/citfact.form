@@ -9,4 +9,9 @@
  * file that was distributed with this source code.
  */
 
-$MESS['HLBLOCK_TEMPLATE_TEXT'] = 'Почтовый шаблон из HL инфоблока';
+namespace Citfact\Form\Exception;
+
+class BuilderException extends \RuntimeException implements ExceptionInterface
+{
+
+}

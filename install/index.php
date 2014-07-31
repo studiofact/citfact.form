@@ -89,7 +89,7 @@ class citfact_form extends CModule
     /**
      * Return components path for install
      *
-     * @oaram bool $absolute
+     * @param bool $absolute
      * @return string
      */
     protected function getComponentsPath($absolute = true)
@@ -191,7 +191,6 @@ class citfact_form extends CModule
     public function InstallFiles()
     {
         CopyDirFiles($this->MODULE_PATH . '/install/components', $this->getComponentsPath(), true, true);
-        CopyDirFiles($this->MODULE_PATH . '/install/admin', getenv('DOCUMENT_ROOT') . '/bitrix/admin', true, true);
 
         return true;
     }
@@ -203,7 +202,6 @@ class citfact_form extends CModule
      */
     public function UnInstallFiles()
     {
-        DeleteDirFiles($this->MODULE_PATH . '/install/admin', getenv('DOCUMENT_ROOT') . '/bitrix/admin');
         DeleteDirFilesEx($this->getComponentsPath(false) . '/citfact/form');
         if (!glob($this->getComponentsPath() . '/citfact/*')) {
             @rmdir($this->getComponentsPath() . '/citfact/');

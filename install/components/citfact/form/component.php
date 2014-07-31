@@ -15,147 +15,75 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 
 use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
-use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Config;
+use Citfact\Form;
+use Citfact\Form\Type\ParameterDictionary;
 
-use Citfact\Form\HighLoadGenerator;
-use Citfact\Form\HighLoadManager;
+Loader::includeModule('citfact.form');
 
-global $APPLICATION, $USER_FIELD_MANAGER;
+$app = Application::getInstance();
+$params = new ParameterDictionary($arParams);
+$result = new ParameterDictionary();
 
-Loc::loadMessages(__FILE__);
-
-if (!Loader::includeModule('citfact.form')) {
-    return ShowError('Module "citfact.form" not set');
+if (!in_array($params->get('TYPE'), array('IBLOCK', 'HLBLOCK', 'CUSTOM'))) {
+    $params->set('TYPE', 'CUSTOM');
 }
 
-if (!Loader::includeModule('highloadblock')) {
-    return ShowError('Module "highloadblock" not set');
+if ($params->get('TYPE') == 'IBLOCK') {
+    $builder = 'Citfact\\Form\\Builder\\IBlockBuilder';
+    $storage = 'Citfact\\Form\\Storage\\IBlockStorage';
+    $validator = 'Citfact\\Form\\Validator\\IBlockValidator';
+} elseif ($params->get('TYPE') == 'HLBLOCK') {
+    $builder = 'Citfact\\Form\\Builder\\UserFieldBuilder';
+    $storage = 'Citfact\\Form\\Storage\\HighLoadBlockStorage';
+    $validator = 'Citfact\\Form\\Validator\\UserFieldValidator';
+} elseif ($params->get('TYPE') == 'CUSTOM') {
+    $builder = $params->get('BUILDER') ?: Config\Option::get('citfact.form', 'BUILDER');
+    $storage = $params->get('STORAGE') ?: Config\Option::get('citfact.form', 'STORAGE');
+    $validator = $params->get('VALIDATOR') ?: Config\Option::get('citfact.form', 'VALIDATOR');
 }
 
-$application = Application::getInstance();
-$applicationOld = & $APPLICATION;
+$form = new Form\Form($params);
+$form->register('builder', $builder);
+$form->register('validator', $validator);
+$form->register('storage', $storage);
 
-$request = $application->getContext()->getRequest();
-$componentId = CAjax::GetComponentID($this->getName(), $this->getTemplateName(), array());
-
-$highLoadGenerator = new HighLoadGenerator($USER_FIELD_MANAGER);
-$highLoadManager = new HighLoadManager($highLoadGenerator);
-
-$highLoadGenerator->setHighLoadBlockId($arParams['HLBLOCK_ID']);
-if (!$highLoadGenerator->initHighLoadBlock()) {
-    return ShowError(sprintf('Highloadblock with ID = %d not found', $arParams['HLBLOCK_ID']));
+$form->buildForm();
+$form->handleRequest($app->getContext()->getRequest());
+if ($form->isValid()) {
+    $form->save();
 }
 
-// Validatation data in a form
-if ($request->isPost() && $request->getPost('component_id') == $componentId) {
-    $postData = array_map('strip_tags', $request->getPostList()->toArray());
-    $highLoadManager->checkValueSelected($postData);
+$result->set('BUILDER', $form->getBuilder()->getBuilderData());
+$result->set('VIEW', $form->getViewData());
+$result->set('SUCCESS', $form->isValid());
+$result->set('ERRORS', $form->getErrors(false));
+$result->set('REQUEST', $form->getRequestData());
+$result->set('CSRF', $form->getCsrfToken());
+$result->set('CAPTCHA', $form->getCaptchaToken());
+$result->set('COMPONENT_ID', $form->getIdentifierToken());
+$result->set('IS_POST', $form->getRequest()->isPost());
+$result->set('IS_AJAX', (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'));
 
-    if ($arParams['USE_CAPTCHA'] == 'Y') {
-        if (!$applicationOld->CaptchaCheckCode($postData['captcha_word'], $postData['captcha_sid'])) {
-            $errorList['captcha_word'] = Loc::getMessage('ERROR_CAPTCHA');
-        }
-    }
+if ($result->get('IS_AJAX') && $form->isSubmitted()) {
+    $GLOBALS['APPLICATION']->restartBuffer();
+    header('Content-Type: application/json');
 
-    $postData = array_intersect_key($postData, $highLoadGenerator->getHighLoadBlockFields());
-    $USER_FIELD_MANAGER->EditFormAddFields(sprintf('HLBLOCK_%d', $arParams['HLBLOCK_ID']), $postData);
-
-    if (!$USER_FIELD_MANAGER->CheckFields(sprintf('HLBLOCK_%d', $arParams['HLBLOCK_ID']), null, $postData)) {
-        $errorList['internal'] = $applicationOld->GetException();
-    }
-
-    if (!is_array($errorList)) {
-        foreach (GetModuleEvents('citfact.form', 'onBeforeHighElementAdd', true) as $event) {
-            ExecuteModuleEventEx($event, array(&$postData, $highLoadGenerator->getHighLoadBlockData()));
-        }
-
-        $enityBase = $highLoadGenerator->getCompileBlock();
-        $result = $enityBase::add($postData);
-
-        if (!$result->isSuccess()) {
-            $errorList = $result->getErrorMessages();
-        } else {
-            foreach (GetModuleEvents('citfact.form', 'onAfterHighElementAdd', true) as $event) {
-                ExecuteModuleEventEx($event, array($result->getId(), &$postData, $highLoadGenerator->getHighLoadBlockData()));
-            }
-
-            $highLoadManager->addEmailEvent($arParams['EVENT_NAME'], $arParams['EVENT_TEMPLATE'], $postData);
-            $arResult['SUCCESS'] = true;
-        }
-
-        if ($result->isSuccess() && $arParams['AJAX'] != 'Y') {
-            if (strlen($arParams['REDIRECT_PATH']) > 0) {
-                LocalRedirect($arParams['REDIRECT_PATH']);
-            }
-
-            $redirectPath = $application
-                ->getContext()
-                ->getServer()
-                ->getRequestUri();
-
-            $_SESSION[sprintf('form_success_%s', $componentId)] = true;
-            LocalRedirect($redirectPath);
-        }
-    }
-}
-
-// If after adding a redirect occurred at the same page
-if (array_key_exists(sprintf('form_success_%s', $componentId), $_SESSION)) {
-    unset($_SESSION[sprintf('form_success_%s', $componentId)]);
-    $arResult['SUCCESS'] = true;
-}
-
-$postData = array_map('htmlspecialchars', (isset($postData)) ? $postData : array());
-$errorList = (isset($errorList)) ? $highLoadManager->parseErrorList($errorList) : array();
-
-$arResult = array_merge(array(
-    'IS_POST' => $request->isPost(),
-    'IS_AJAX' => (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'),
-    'SUCCESS' => false,
-    'ERRORS' => $errorList,
-    'HLBLOCK' => array(
-        'DATA' => $highLoadGenerator->getHighLoadBlockData(),
-        'FIELDS' => $highLoadGenerator->getHighLoadBlockFields(),
-        'DISPLAY_FIELDS' => $highLoadManager->getDisplayFields((array)$arParams['DISPLAY_FIELDS'], (array)$arParams['TEXTAREA_FIELDS']),
-    )
-), $arResult);
-
-$arResult['FORM']['COMPONENT_ID'] = $componentId;
-foreach ($arResult['HLBLOCK']['DISPLAY_FIELDS'] as $name => $value) {
-    $arResult['FORM'][$name] = array_key_exists($name, $postData) ? $postData[$name] : '';
-}
-
-if ($arParams['USE_CAPTCHA'] == 'Y') {
-    $arResult['CAPTCHA_CODE'] = $applicationOld->CaptchaGetCode();
-    $arResult['FORM']['CAPTCHA'] = array_key_exists('captcha_word', $postData) ? $postData['captcha_word'] : '';
-}
-
-// If enabled ajax mod check that it belongs to the current component
-// If yes then look at the return type
-if ($arResult['IS_AJAX'] && $request->getPost('component_id') == $componentId) {
     ob_start();
-    $this->IncludeComponentTemplate();
-    $componentTemplate = ob_get_contents();
-    ob_end_clean();
-
-    if (strtolower(LANG_CHARSET) != 'utf-8') {
-        $componentTemplate = iconv(LANG_CHARSET, 'utf-8', $componentTemplate);
-        foreach ($arResult['ERRORS'] as $key => $error) {
-            $arResult['ERRORS'][$key] = iconv(LANG_CHARSET, 'utf-8', $error);
-        }
-    }
+    $arResult = $result->toArray();
+    $this->includeComponentTemplate();
+    $bufferTemplate = ob_get_contents();
+    ob_clean();
 
     $response = array(
-        'success' => $arResult['SUCCESS'],
-        'errors' => $arResult['ERRORS'],
-        'redirect_path' => $arParams['REDIRECT_PATH'],
-        'captcha' => $arResult['CAPTCHA_CODE'],
-        'html' => $componentTemplate,
+        'success' => $result->get('SUCCESS'),
+        'errors' => $result->get('ERRORS'),
+        'captcha' => $result->get('CAPTCHA'),
+        'html' => $bufferTemplate,
     );
 
-    $applicationOld->RestartBuffer();
-    header('Content-Type: application/json');
     exit(json_encode($response));
 }
 
-$this->IncludeComponentTemplate();
+$arResult = $result->toArray();
+$this->includeComponentTemplate();
