@@ -20,6 +20,6 @@
 
 ## Документация
 
- - [Установка](https://github.com/studiofact/citfact.core/blob/master/docs/installation.rst)
- - [Пример использования](https://github.com/studiofact/citfact.core/blob/master/docs/usage.rst)
- - [Пользовательские события](https://github.com/studiofact/citfact.core/blob/master/docs/events.rst)
+ - [Установка](https://github.com/studiofact/citfact.form/blob/master/docs/installation.md)
+ - [Пример использования](https://github.com/studiofact/citfact.form/blob/master/docs/usage.md)
+ - [Пользовательские события](https://github.com/studiofact/citfact.form/blob/master/docs/events.md)

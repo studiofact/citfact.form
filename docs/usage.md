@@ -1,25 +1,23 @@
-Пример использования
-~~~~~~~~~~
+## Пример использования
 
-.. code-block:: php
+``` php
+$APPLICATION->IncludeComponent("citfact:form", "", array(
+    "ID" => "2",
+    "EVENT_NAME" => "FEEDBACK",
+    "EVENT_TEMPLATE" => "",
+    "EVENT_TYPE" => "",
+    "BUILDER" => "",
+    "STORAGE" => "",
+    "VALIDATOR" => "",
+    "AJAX" => "N",
+    "USE_CAPTCHA" => "Y",
+    "REDIRECT_PATH" => ""
+    ),
+    false
+);
+```
 
-    $APPLICATION->IncludeComponent("citfact:form", "", array(
-        "ID" => "2",
-        "EVENT_NAME" => "FEEDBACK",
-        "EVENT_TEMPLATE" => "",
-        "EVENT_TYPE" => "",
-        "BUILDER" => "",
-        "STORAGE" => "",
-        "VALIDATOR" => "",
-        "AJAX" => "N",
-        "USE_CAPTCHA" => "Y",
-        "REDIRECT_PATH" => ""
-        ),
-        false
-    );
-
-Описание параметров
-~~~~~~~~~~
+## Описание параметров
 
 * **ID** - Идентификатор HL блока или обычного инфоблока
 * **EVENT_NAME** - Название почтового события
