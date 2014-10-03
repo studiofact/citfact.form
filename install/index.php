@@ -57,7 +57,7 @@ class citfact_form extends CModule
     public $MODULE_PATH;
 
     /**
-     * @var \Bitrix\Main\EventManage
+     * @var \Bitrix\Main\EventManager
      */
     private $eventManager;
 
