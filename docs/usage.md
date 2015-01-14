@@ -24,7 +24,7 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
 * **EVENT_TEMPLATE** - Идентификатор почтового шаблона
 * **EVENT_TYPE** - Тип почтового события, при значение "IMMEDIATE" используется метод CEvent::SendImmediate иначе CEvent::Send
 * **BUILDER** - Класс реализующий интерфейс ``Citfact\Form\FormBuilderInterface``, который в дальнейшем используется для генерации веб-формы, по умолчанию ``Citfact\Form\Builder\UserFieldBuilder``
-* **STORAGE** - Класс реализующий интерфейс ``Citfact\Form\StorageInterface``, который в дальнейшем используется для сохронения данных веб-формы, по умолчанию ``Citfact\Form\Storage\HighLoadBlockStorage``
+* **STORAGE** - Класс реализующий интерфейс ``Citfact\Form\StorageInterface``, который в дальнейшем используется для сохранения данных веб-формы, по умолчанию ``Citfact\Form\Storage\HighLoadBlockStorage``
 * **VALIDATOR** - Класс реализующий интерфейс ``Citfact\Form\FormValidatorInterface``, который используется для валидации данных веб-формы, по умолчанию ``Citfact\Form\Validator\UserFieldValidator``
 * **AJAX** -  Включить AJAX режим
 * **USE_CAPTCHA** - Использовать каптчу
