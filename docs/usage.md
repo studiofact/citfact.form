@@ -30,5 +30,5 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
 * **VALIDATOR** - Класс реализующий интерфейс ``Citfact\Form\FormValidatorInterface``, который используется для валидации данных веб-формы, по умолчанию ``Citfact\Form\Validator\UserFieldValidator``
 * **AJAX** -  Включить AJAX режим
 * **USE_CAPTCHA** - Использовать каптчу
-* **ALIAS_FIELDS** - Словарь для замены стандартных наименование полей
+* **ALIAS_FIELDS** - Словарь для замены стандартных наименований полей
 * **DISPLAY_FIELDS** - Словарь со списком полей которые нужно отобразить, если пустой отображаются все
