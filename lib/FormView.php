@@ -11,7 +11,13 @@
 
 namespace Citfact\Form;
 
-use Citfact\Form\View;
+use Citfact\Form\View\InputType;
+use Citfact\Form\View\TextareaType;
+use Citfact\Form\View\DateType;
+use Citfact\Form\View\FileType;
+use Citfact\Form\View\SelectType;
+use Citfact\Form\View\CheckboxType;
+use Citfact\Form\View\RadioType;
 use Citfact\Form\View\ViewInterface;
 use Citfact\Form\Type\ParameterDictionary;
 
@@ -19,6 +25,8 @@ class FormView
 {
     private $viewType = array();
     private $viewData = array();
+    private $aliasFields = array();
+    private $displayFields = array();
     private $formBuilder;
     private $parameters;
 
@@ -29,13 +37,12 @@ class FormView
     {
         $this->formBuilder = $formBuilder;
         $this->parameters = $parameters;
-        $this->addViewType(new View\InputType());
-        $this->addViewType(new View\TextareaType());
-        $this->addViewType(new View\DateType());
-        $this->addViewType(new View\FileType());
-        $this->addViewType(new View\SelectType());
-        $this->addViewType(new View\CheckboxType());
-        $this->addViewType(new View\RadioType());
+        $this->aliasFields = array_merge($this->aliasFields, (array)$this->parameters->get('ALIAS_FIELDS'));
+        $this->displayFields = array_merge_recursive($this->displayFields, (array)$this->parameters->get('DISPLAY_FIELDS'));
+
+        foreach ($this->getDefaultViewTypes() as $type) {
+            $this->addViewType($type);
+        }
     }
 
     /**
@@ -64,7 +71,7 @@ class FormView
 
         foreach ($builderData['FIELDS'] as $fieldName => $field) {
             foreach ($this->viewType as $type) {
-                if (!$type->detected($field, $builderType)) {
+                if (!$type->detected($field, $builderType) || !$this->isDisplayField($field)) {
                     continue;
                 }
 
@@ -72,7 +79,7 @@ class FormView
                     'TYPE' => $type->getName(),
                     'REQUIRED' => $this->getRequired($field),
                     'MULTIPLE' => $field['MULTIPLE'],
-                    'NAME' => $this->getControlName($field),
+                    'NAME' => $this->prepareControlName($field),
                     'LABEL' => $this->getLabel($field),
                     'VALUE_LIST' => $this->getValue($field),
                 );
@@ -97,6 +104,11 @@ class FormView
      */
     protected function getLabel($field)
     {
+        $controlName = $this->getControlName($field);
+        if (isset($this->aliasFields[$controlName])) {
+            return (string)$this->aliasFields[$controlName];
+        }
+
         return ($this->formBuilder->getType() == 'iblock') ? $field['NAME'] : $field['LIST_COLUMN_LABEL'];
     }
 
@@ -110,6 +122,16 @@ class FormView
             ? $field['CODE']
             : $field['FIELD_NAME'];
 
+        return $controlName;
+    }
+
+    /**
+     * @param array $field
+     * @return string
+     */
+    protected function prepareControlName($field)
+    {
+        $controlName = $this->getControlName($field);
         if ($field['MULTIPLE'] == 'Y') {
             $controlName = sprintf('%s%s', $controlName, '[]');
         }
@@ -134,12 +156,33 @@ class FormView
     }
 
     /**
-     * @param string $fieldName
+     * @return ViewInterface[]
+     */
+    protected function getDefaultViewTypes()
+    {
+        return array(
+            new InputType(),
+            new TextareaType(),
+            new DateType(),
+            new FileType(),
+            new SelectType(),
+            new CheckboxType(),
+            new RadioType(),
+        );
+    }
+
+    /**
+     * @param array $fieldName
      * @return bool
      */
-    protected function isDisplayField($fieldName)
+    protected function isDisplayField($field)
     {
-        return in_array($fieldName, $this->parameters->get('DISPLAY_FIELDS'));
+        $fieldName = $this->getControlName($field);
+        if (empty($this->displayFields) || $this->getRequired($field) == 'Y') {
+            return true;
+        }
+
+        return in_array($fieldName, $this->displayFields);
     }
 
     /**

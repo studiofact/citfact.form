@@ -12,6 +12,8 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
     "AJAX" => "N",
     "USE_CAPTCHA" => "Y",
     "REDIRECT_PATH" => ""
+    "ALIAS_FIELDS" => array("NAME" => "NameAlias", "CODE" => "CodeAlias"),
+    "DISPLAY_FIELDS" => array("NAME", "UF_NAME"),
     ),
     false
 );
@@ -28,4 +30,5 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
 * **VALIDATOR** - Класс реализующий интерфейс ``Citfact\Form\FormValidatorInterface``, который используется для валидации данных веб-формы, по умолчанию ``Citfact\Form\Validator\UserFieldValidator``
 * **AJAX** -  Включить AJAX режим
 * **USE_CAPTCHA** - Использовать каптчу
-* **REDIRECT_PATH** - УРЛ адрес для перенаправления после успешного добавления, по умолчанию на эту же страницу
+* **ALIAS_FIELDS** - Словарь для замены стандартных наименование полей
+* **DISPLAY_FIELDS** - Словарь со списком полей которые нужно отобразить, если пустой отображаются все

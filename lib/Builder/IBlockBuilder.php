@@ -49,7 +49,7 @@ class IBlockBuilder implements FormBuilderInterface
 
         $iblockDataFields = array();
         while ($field = $iblockDataResult->fetch()) {
-            $iblockDataFields[$field['CODE']] = $field;
+            $iblockDataFields[$field['FIELD_ID']] = $field;
         }
 
         $queryBuilder = new Entity\Query(Iblock\PropertyTable::getEntity());
