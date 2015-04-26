@@ -49,6 +49,10 @@ class IBlockBuilder implements FormBuilderInterface
 
         $iblockDataFields = array();
         while ($field = $iblockDataResult->fetch()) {
+            if (!empty($field['DEFAULT_VALUE'])) {
+                $field['DEFAULT_VALUE'] = (($unserialize = @unserialize($field['DEFAULT_VALUE'])) !== false) ? $unserialize : $field['DEFAULT_VALUE'];
+            }
+
             $iblockDataFields[$field['FIELD_ID']] = $field;
         }
 
@@ -60,6 +64,12 @@ class IBlockBuilder implements FormBuilderInterface
 
         $propertyList = array();
         while ($property = $propertyResult->fetch()) {
+            if (!empty($property['USER_TYPE_SETTINGS'])) {
+                $property['USER_TYPE_SETTINGS'] = (($unserialize = @unserialize($property['USER_TYPE_SETTINGS'])) === false)
+                    ? $property['USER_TYPE_SETTINGS']
+                    : $unserialize;
+            }
+
             $propertyList[$property['CODE']] = $property;
         }
 
@@ -116,6 +126,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'ACTIVE',
                 'FIELD_TYPE' => 'checkbox',
                 'IS_REQUIRED' => $settings['ACTIVE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['ACTIVE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
                 'VALUE_LIST' => array(array(
                     'ID' => 'Y',
@@ -127,6 +138,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'ACTIVE_FROM',
                 'FIELD_TYPE' => 'date',
                 'IS_REQUIRED' => $settings['ACTIVE_FROM']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['ACTIVE_FROM']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'ACTIVE_TO' => array(
@@ -134,6 +146,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'ACTIVE_TO',
                 'FIELD_TYPE' => 'date',
                 'IS_REQUIRED' => $settings['ACTIVE_TO']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['ACTIVE_TO']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'NAME' => array(
@@ -141,6 +154,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'NAME',
                 'FIELD_TYPE' => 'string',
                 'IS_REQUIRED' => $settings['NAME']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['NAME']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'CODE' => array(
@@ -148,6 +162,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'CODE',
                 'FIELD_TYPE' => 'string',
                 'IS_REQUIRED' => $settings['CODE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['CODE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'SORT' => array(
@@ -155,6 +170,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'SORT',
                 'FIELD_TYPE' => 'string',
                 'IS_REQUIRED' => $settings['SORT']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['SORT']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'IBLOCK_SECTION_ID' => array(
@@ -162,6 +178,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'IBLOCK_SECTION_ID',
                 'FIELD_TYPE' => 'select',
                 'IS_REQUIRED' => $settings['IBLOCK_SECTION_ID']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['IBLOCK_SECTION_ID']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'Y',
                 'VALUE_LIST' => $sectionValue,
             ),
@@ -170,6 +187,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'PREVIEW_PICTURE',
                 'FIELD_TYPE' => 'file',
                 'IS_REQUIRED' => $settings['PREVIEW_PICTURE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['PREVIEW_PICTURE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'DETAIL_PICTURE' => array(
@@ -177,6 +195,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'DETAIL_PICTURE',
                 'FIELD_TYPE' => 'file',
                 'IS_REQUIRED' => $settings['DETAIL_PICTURE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['DETAIL_PICTURE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'PREVIEW_TEXT' => array(
@@ -184,6 +203,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'PREVIEW_TEXT',
                 'FIELD_TYPE' => 'textarea',
                 'IS_REQUIRED' => $settings['PREVIEW_TEXT']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['PREVIEW_TEXT']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'DETAIL_TEXT' => array(
@@ -191,6 +211,7 @@ class IBlockBuilder implements FormBuilderInterface
                 'CODE' => 'DETAIL_TEXT',
                 'FIELD_TYPE' => 'textarea',
                 'IS_REQUIRED' => $settings['DETAIL_TEXT']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['DETAIL_TEXT']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
         );

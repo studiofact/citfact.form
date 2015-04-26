@@ -48,6 +48,20 @@ $arComponentParameters = array(
                 'CUSTOM' => Loc::getMessage('TYPE_CUSTOM'),
             ),
         ),
+        'ALIAS_FIELDS' => array(
+            'NAME' => Loc::getMessage('ALIAS_FIELDS'),
+            'TYPE' => 'CUSTOM',
+            'ADDITIONAL_VALUES' => 'Y',
+            'MULTIPLE' => 'Y',
+            'VALUES' => array(),
+        ),
+        'DISPLAY_FIELDS' => array(
+            'NAME' => Loc::getMessage('DISPLAY_FIELDS'),
+            'TYPE' => 'STRING',
+            'ADDITIONAL_VALUES' => 'Y',
+            'MULTIPLE' => 'Y',
+            'VALUES' => array(),
+        ),
         'EVENT_NAME' => array(
             'NAME' => Loc::getMessage('EVENT_NAME'),
             'TYPE' => 'LIST',
@@ -97,6 +111,15 @@ $arComponentParameters = array(
             'NAME' => Loc::getMessage('REDIRECT_PATH'),
             'TYPE' => 'STRING',
             'DEFAULT' => '',
+        ),
+        'CACHE_TIME' => array(
+            'DEFAULT' => 36000000
+        ),
+        'CACHE_GROUPS' => array(
+            'PARENT' => 'CACHE_SETTINGS',
+            'NAME' => Loc::getMessage('CACHE_GROUPS'),
+            'TYPE' => 'CHECKBOX',
+            'DEFAULT' => 'Y',
         ),
     )
 );
