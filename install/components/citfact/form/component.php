@@ -16,7 +16,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Config;
-use Citfact\Form;
+use Citfact\Form\Form;
+use Citfact\Form\FormBuilder;
 use Citfact\Form\Type\ParameterDictionary;
 
 Loader::includeModule('citfact.form');
@@ -43,12 +44,22 @@ if ($params->get('TYPE') == 'IBLOCK') {
     $validator = $params->get('VALIDATOR') ?: Config\Option::get('citfact.form', 'VALIDATOR');
 }
 
-$form = new Form\Form($params);
+$form = new Form($params);
 $form->register('builder', $builder);
 $form->register('validator', $validator);
 $form->register('storage', $storage);
 
-$form->buildForm();
+$builderStrategy = $form->getServices('builder');
+$formBuilder = new FormBuilder(new $builderStrategy, $params);
+
+if ($this->startResultCache()) {
+    $formBuilder->create();
+    $arResult['BUILDER_DATA'] = $formBuilder->getBuilderData();
+    $this->endResultCache();
+}
+
+$formBuilder->setBuilderData($arResult['BUILDER_DATA']);
+$form->setBuildForm($formBuilder);
 $form->handleRequest($app->getContext()->getRequest());
 if ($form->isValid()) {
     $form->save();

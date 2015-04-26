@@ -82,6 +82,7 @@ class FormView
                     'NAME' => $this->prepareControlName($field),
                     'LABEL' => $this->getLabel($field),
                     'VALUE_LIST' => $this->getValue($field),
+                    'DEFAULT_VALUE' => $this->getDefaultValue($field),
                 );
             }
         }
@@ -110,6 +111,22 @@ class FormView
         }
 
         return ($this->formBuilder->getType() == 'iblock') ? $field['NAME'] : $field['LIST_COLUMN_LABEL'];
+    }
+
+    /**
+     * @param array $field
+     * @return string
+     */
+    protected function getDefaultValue($field)
+    {
+        $defaultValue = '';
+        if ($this->formBuilder->getType() == 'iblock' && !is_array($field['DEFAULT_VALUE'])) {
+            $defaultValue = $field['DEFAULT_VALUE'];
+        } elseif (isset($field['SETTINGS']['DEFAULT_VALUE'])) {
+            $defaultValue = $field['SETTINGS']['DEFAULT_VALUE'];
+        }
+
+        return $defaultValue;
     }
 
     /**

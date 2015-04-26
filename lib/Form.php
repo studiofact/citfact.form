@@ -76,15 +76,14 @@ class Form
     }
 
     /**
-     * Get the data on which you can collect form
+     * Set the data on which you can collect form
      *
+     * @param FormBuilder $builder
      * @return $this
      */
-    public function buildForm()
+    public function setBuildForm(FormBuilder $builder)
     {
-        $builderStrategy = $this->getServices('builder');
-        $this->builder = new FormBuilder(new $builderStrategy, $this->params);
-        $this->builder->create();
+        $this->builder = $builder;
 
         return $this;
     }

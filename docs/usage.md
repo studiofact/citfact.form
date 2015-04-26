@@ -14,6 +14,10 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
     "REDIRECT_PATH" => ""
     "ALIAS_FIELDS" => array("NAME" => "NameAlias", "CODE" => "CodeAlias"),
     "DISPLAY_FIELDS" => array("NAME", "UF_NAME"),
+    "TYPE" => "CUSTOM",
+    "CACHE_TYPE" => "Y",
+    "CACHE_TIME" => "3600",
+    "CACHE_GROUPS" => "Y"
     ),
     false
 );
@@ -32,3 +36,4 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
 * **USE_CAPTCHA** - Использовать каптчу
 * **ALIAS_FIELDS** - Словарь для замены стандартных наименований полей
 * **DISPLAY_FIELDS** - Словарь со списком полей которые нужно отобразить, если пустой отображаются все
+* **TYPE** - Тип формы: IBLOCK/HLBLOCK/CUSTOM. При значение "CUSTOM" берет настройки из параметров компонента BUILDER/STORAGE/VALIDATOR, иначе из настроек модуля.
