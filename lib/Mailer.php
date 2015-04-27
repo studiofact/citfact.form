@@ -13,7 +13,7 @@ namespace Citfact\Form;
 
 use Citfact\Form\Type\ParameterDictionary;
 
-class Mailer
+class Mailer implements MailerInterface
 {
     /**
      * @var \Citfact\Form\Type\ParameterDictionary
@@ -21,11 +21,25 @@ class Mailer
     protected $parameters;
 
     /**
+     * @var \CEventType
+     */
+    protected $eventType;
+
+    /**
+     * @var \CEvent
+     */
+    protected $event;
+
+    /**
+     * @param \CEventType $eventType
+     * @param \CEvent $event
      * @param ParameterDictionary $parameters
      */
-    public function __construct(ParameterDictionary $parameters)
+    public function __construct(ParameterDictionary $parameters, \CEventType $eventType, \CEvent $event)
     {
         $this->parameters = $parameters;
+        $this->eventType = $eventType;
+        $this->event = $event;
     }
 
     /**
@@ -34,14 +48,14 @@ class Mailer
      * @param array $data
      * @return mixed
      */
-    public function send($data)
+    public function send(array $data)
     {
         $eventName = $this->parameters->get('EVENT_NAME');
         $eventTemplate = (is_numeric($this->parameters->get('EVENT_TEMPLATE')))
             ? $this->parameters->get('EVENT_TEMPLATE')
             : '';
 
-        $eventType = $this->getEventType()->getList(array('EVENT_NAME' => $eventName))->getNext();
+        $eventType = $this->eventType->getList(array('EVENT_NAME' => $eventName))->getNext();
         if ($eventName && !is_array($eventType)) {
             return false;
         }
@@ -63,7 +77,7 @@ class Mailer
      */
     protected function sendDefault($event, $template, $data)
     {
-        return $this->getEvent()->send($event, SITE_ID, $data, 'Y', $template);
+        return $this->event->send($event, SITE_ID, $data, 'Y', $template);
     }
 
     /**
@@ -76,22 +90,6 @@ class Mailer
      */
     protected function sendImmediate($event, $template, $data)
     {
-        return $this->getEvent()->sendImmediate($event, SITE_ID, $data, 'Y', $template);
-    }
-
-    /**
-     * @return \CEventType
-     */
-    protected function getEventType()
-    {
-        return new \CEventType();
-    }
-
-    /**
-     * @return \CEvent
-     */
-    protected function getEvent()
-    {
-        return new \CEvent();
+        return $this->event->sendImmediate($event, SITE_ID, $data, 'Y', $template);
     }
 }

@@ -65,6 +65,11 @@ class Form
     private $identifier;
 
     /**
+     * @var MailerInterface
+     */
+    private $mailer;
+
+    /**
      * @param ParameterDictionary $params
      */
     public function __construct(ParameterDictionary $params)
@@ -84,6 +89,17 @@ class Form
     public function setBuildForm(FormBuilder $builder)
     {
         $this->builder = $builder;
+
+        return $this;
+    }
+
+    /**
+     * @param MailerInterface $mailer
+     * @return $this
+     */
+    public function setMailer(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
 
         return $this;
     }
@@ -156,8 +172,9 @@ class Form
         if (!$storage->isSuccess()) {
             $this->addError('STORAGE', $storage->getErrors());
         } else {
-            $mailer = new Mailer($this->getParams());
-            $mailer->send($this->getRequestData(false));
+            if ($this->mailer) {
+                $this->mailer->send($this->getRequestData(false));
+            }
 
             if ($this->params->get('AJAX') != 'Y') {
                 if (strlen($this->params->get('REDIRECT_PATH')) > 0) {
