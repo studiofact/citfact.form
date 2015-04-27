@@ -17,6 +17,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Config;
 use Citfact\Form\Form;
+use Citfact\Form\Mailer;
 use Citfact\Form\FormBuilder;
 use Citfact\Form\Type\ParameterDictionary;
 
@@ -48,6 +49,9 @@ $form = new Form($params);
 $form->register('builder', $builder);
 $form->register('validator', $validator);
 $form->register('storage', $storage);
+
+$mailer = new Mailer($params, new CEventType, new CEvent);
+$form->setMailer($mailer);
 
 $builderStrategy = $form->getServices('builder');
 $formBuilder = new FormBuilder(new $builderStrategy, $params);

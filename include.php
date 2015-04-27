@@ -48,6 +48,7 @@ Loader::registerAutoLoadClasses('citfact.form', array(
     'Citfact\Form\FormValidatorInterface' => 'lib/FormValidatorInterface.php',
     'Citfact\Form\FormView' => 'lib/FormView.php',
     'Citfact\Form\Mailer' => 'lib/Mailer.php',
+    'Citfact\Form\MailerInterface' => 'lib/MailerInterface.php',
     'Citfact\Form\Storage' => 'lib/Storage.php',
     'Citfact\Form\StorageInterface' => 'lib/StorageInterface.php',
 ));
