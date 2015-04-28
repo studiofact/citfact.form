@@ -105,7 +105,12 @@ $arComponentParameters = array(
         'USE_CAPTCHA' => array(
             'NAME' => Loc::getMessage('USE_CAPTCHA'),
             'TYPE' => 'CHECKBOX',
-            'DEFAULT' => '',
+            'DEFAULT' => 'Y',
+        ),
+        'USE_CSRF' => array(
+            'NAME' => Loc::getMessage('USE_CSRF'),
+            'TYPE' => 'CHECKBOX',
+            'DEFAULT' => 'Y',
         ),
         'REDIRECT_PATH' => array(
             'NAME' => Loc::getMessage('REDIRECT_PATH'),
