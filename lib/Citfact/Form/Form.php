@@ -113,8 +113,9 @@ class Form
     public function handleRequest(Request $request)
     {
         $this->request = $request;
-        $componentId = $this->request->getPost('COMPONENT_ID');
-        if ($this->identifier->isIdentifierValid($componentId)) {
+        $requestData = $this->getRequestData();
+
+        if (!empty($requestData)) {
             $this->submitted = true;
         }
 
@@ -122,13 +123,14 @@ class Form
             return $this;
         }
 
-        if ($this->params->get('USE_CSRF') == 'Y' && !$this->csrf->isCsrfTokenValid($this->request->getPost('CSRF'))) {
+        $csrf = $requestData['CSRF'] ?: '';
+        if ($this->params->get('USE_CSRF') == 'Y' && !$this->csrf->isCsrfTokenValid($csrf)) {
             $this->addError('CSRF', 'CSRF_NOT_VALID');
         }
 
         if ($this->params->get('USE_CAPTCHA') == 'Y') {
-            $captchaResponse = $this->request->getPost('CAPTCHA');
-            $captchaToken = $this->request->getPost('CAPTCHA_TOKEN');
+            $captchaResponse = $requestData['CAPTCHA'] ?: '';
+            $captchaToken = $requestData['CAPTCHA_TOKEN'] ?: '';
             if (!$this->captcha->isCaptchaTokenValid($captchaResponse, $captchaToken)) {
                 $this->addError('CAPTCHA', 'CAPTCHA_NOT_VALID');
             }
@@ -137,7 +139,7 @@ class Form
         $validatorStrategy = $this->getServices('validator');
         $validator = new FormValidator(
             new $validatorStrategy,
-            $this->getRequest(),
+            $this->getRequestData(),
             $this->getBuilder()->getBuilderData()
         );
 
@@ -164,7 +166,7 @@ class Form
         $storageStrategy = $this->getServices('storage');
         $storage = new Storage(
             new $storageStrategy,
-            $this->getRequest(),
+            $this->getRequestData(),
             $this->getBuilder()->getBuilderData()
         );
 
@@ -173,7 +175,7 @@ class Form
             $this->addError('STORAGE', $storage->getErrors());
         } else {
             if ($this->mailer) {
-                $this->mailer->send($this->getRequestData(false));
+                $this->mailer->send($this->getRequestData());
             }
 
             if ($this->params->get('AJAX') != 'Y') {
@@ -258,26 +260,20 @@ class Form
     }
 
     /**
-     * Return current request
-     *
-     * @return Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
      * Return request data in an array
      *
      * @param bool $htmlspecial
      * @return array
      */
-    public function getRequestData($htmlspecial = true)
+    public function getRequestData($htmlspecial = false)
     {
-        $postList = ($this->isSubmitted())
-            ? $this->request->getPostList()->toArray()
-            : array();
+        $postList = array();
+        $formName = $this->getFormName();
+        $requestData = $this->request->getPostList()->toArray();
+
+        if (array_key_exists($formName, $requestData)) {
+            $postList = $requestData[$formName];
+        }
 
         if (!$htmlspecial) {
             return $postList;
@@ -291,11 +287,27 @@ class Form
     }
 
     /**
+     * @return string
+     */
+    public function getFormName()
+    {
+        return sprintf('FORM_%d', $this->getIdentifierToken());
+    }
+
+    /**
      * @return array
      */
     public function getViewData()
     {
-        $view = new FormView($this->builder, $this->getParams());
+        $errors = $this->getErrors(false);
+        $view = new FormView(
+            $this->builder,
+            $this->getParams(),
+            $this->getFormName(),
+            $this->getRequestData(true),
+            $errors['LIST']
+        );
+
         $view->create();
 
         return $view->getViewData();

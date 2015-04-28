@@ -11,8 +11,6 @@
 
 namespace Citfact\Form;
 
-use Bitrix\Main\Request;
-
 class FormValidator
 {
     /**
@@ -21,7 +19,7 @@ class FormValidator
     protected $validator;
 
     /**
-     * @var \Bitrix\Main\Request
+     * @var array
      */
     protected $request;
 
@@ -32,10 +30,10 @@ class FormValidator
 
     /**
      * @param FormValidatorInterface $validator
-     * @param Request $request
+     * @param array $request
      * @param array $builderData
      */
-    public function __construct(FormValidatorInterface $validator, Request $request, array $builderData)
+    public function __construct(FormValidatorInterface $validator, array $request, array $builderData)
     {
         $this->validator = $validator;
         $this->request = $request;

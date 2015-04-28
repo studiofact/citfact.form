@@ -11,7 +11,6 @@
 
 namespace Citfact\Form\Validator;
 
-use Bitrix\Main\Request;
 use Citfact\Form\FormValidatorInterface;
 
 class UserFieldValidator implements FormValidatorInterface
@@ -32,13 +31,12 @@ class UserFieldValidator implements FormValidatorInterface
     /**
      * @inheritdoc
      */
-    public function validate(Request $request, array $builderData)
+    public function validate(array $request, array $builderData)
     {
-        $postRequest = $request->getPostList()->toArray();
         $highLoadCode = sprintf('HLBLOCK_%d', $builderData['DATA']['ID']);
+        $this->getUserFieldManager()->editFormAddFields($highLoadCode, $request);
 
-        $this->getUserFieldManager()->editFormAddFields($highLoadCode, $postRequest);
-        if (!$this->getUserFieldManager()->checkFields($highLoadCode, null, $postRequest)) {
+        if (!$this->getUserFieldManager()->checkFields($highLoadCode, null, $request)) {
             $exception = $GLOBALS['APPLICATION']->getException();
             $this->parseErrorList($exception);
         }

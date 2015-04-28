@@ -11,8 +11,6 @@
 
 namespace Citfact\Form;
 
-use Bitrix\Main\Request;
-
 interface StorageInterface
 {
     /**
@@ -23,8 +21,8 @@ interface StorageInterface
     /**
      * Save data form
      *
-     * @param Request $request
+     * @param array $request
      * @param array $builderData
      */
-    public function save(Request $request, array $builderData);
+    public function save(array $request, array $builderData);
 }

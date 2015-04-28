@@ -21,6 +21,11 @@ class IBlockErrorParser
     /**
      * @var array
      */
+    private $defaultFields;
+
+    /**
+     * @var array
+     */
     protected $fieldToCode = array(
         'NAME'            => 'IBLOCK_BAD_ELEMENT_NAME',
         'ACTIVE_FROM'     => 'IBLOCK_BAD_ACTIVE_FROM',
@@ -29,14 +34,17 @@ class IBlockErrorParser
         'DETAIL_PICTURE'  => 'IBLOCK_ERR_DETAIL_PICTURE',
         'XML_ID'          => 'IBLOCK_BAD_EXTERNAL_CODE',
         'CODE'            => 'IBLOCK_DUP_ELEMENT_CODE',
+        'CODE'            => 'IBLOCK_DUP_ELEMENT_CODE',
     );
 
     /**
      * @param array $fields
+     * @param array $defaultFields
      */
-    public function __construct($fields)
+    public function __construct($fields, $defaultFields)
     {
         $this->fields = $fields;
+        $this->defaultFields = $defaultFields;
     }
 
     /**
@@ -55,6 +63,16 @@ class IBlockErrorParser
                     $errorsResult[$field] = $error;
                     unset($errorsList[$keyError]);
                     break;
+                }
+            }
+        }
+
+        foreach ($this->defaultFields as $field) {
+            foreach ($errorsList as $keyError => $error) {
+                $tmpTextError = GetMessage('IBLOCK_BAD_FIELD', array('#FIELD_NAME#' => $field['NAME']));
+                if ($tmpTextError == $error) {
+                    $errorsResult[$field['CODE']] = $error;
+                    unset($errorsList[$keyError]);
                 }
             }
         }

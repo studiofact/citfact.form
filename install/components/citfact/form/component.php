@@ -73,11 +73,9 @@ $result->set('BUILDER', $form->getBuilder()->getBuilderData());
 $result->set('VIEW', $form->getViewData());
 $result->set('SUCCESS', $form->isValid());
 $result->set('ERRORS', $form->getErrors(false));
-$result->set('REQUEST', $form->getRequestData());
 $result->set('CSRF', $form->getCsrfToken());
 $result->set('CAPTCHA', $form->getCaptchaToken());
-$result->set('COMPONENT_ID', $form->getIdentifierToken());
-$result->set('IS_POST', $form->getRequest()->isPost());
+$result->set('FORM_NAME', $form->getFormName());
 $result->set('IS_AJAX', (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'));
 
 if ($result->get('IS_AJAX') && $form->isSubmitted()) {
