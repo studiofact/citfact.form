@@ -11,7 +11,8 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
     "VALIDATOR" => "",
     "AJAX" => "N",
     "USE_CAPTCHA" => "Y",
-    "REDIRECT_PATH" => ""
+    "USE_CSRF" => "Y",
+    "REDIRECT_PATH" => "",
     "ALIAS_FIELDS" => array("NAME" => "NameAlias", "CODE" => "CodeAlias"),
     "DISPLAY_FIELDS" => array("NAME", "UF_NAME"),
     "TYPE" => "CUSTOM",
@@ -34,6 +35,7 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
 * **VALIDATOR** - Класс реализующий интерфейс ``Citfact\Form\FormValidatorInterface``, который используется для валидации данных веб-формы, по умолчанию ``Citfact\Form\Validator\UserFieldValidator``
 * **AJAX** -  Включить AJAX режим
 * **USE_CAPTCHA** - Использовать каптчу
+* **USE_CSRF** - Использовать CSRF
 * **ALIAS_FIELDS** - Словарь для замены стандартных наименований полей
 * **DISPLAY_FIELDS** - Словарь со списком полей которые нужно отобразить, если пустой отображаются все
 * **TYPE** - Тип формы: IBLOCK/HLBLOCK/CUSTOM. При значение "CUSTOM" берет настройки из параметров компонента BUILDER/STORAGE/VALIDATOR, иначе из настроек модуля.

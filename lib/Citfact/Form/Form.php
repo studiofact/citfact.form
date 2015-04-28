@@ -122,7 +122,7 @@ class Form
             return $this;
         }
 
-        if (!$this->csrf->isCsrfTokenValid($this->request->getPost('CSRF'))) {
+        if ($this->params->get('USE_CSRF') == 'Y' && !$this->csrf->isCsrfTokenValid($this->request->getPost('CSRF'))) {
             $this->addError('CSRF', 'CSRF_NOT_VALID');
         }
 

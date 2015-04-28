@@ -50,7 +50,10 @@ if (!$arResult['IS_AJAX']) {
             </div>
         <? endif; ?>
 
-        <input type="hidden" name="CSRF" value="<?= $arResult['CSRF'] ?>"/>
+        <? if ($arParams['USE_CSRF'] == 'Y'): ?>
+            <input type="hidden" name="CSRF" value="<?= $arResult['CSRF'] ?>"/>
+        <? endif; ?>
+
         <input type="hidden" name="COMPONENT_ID" value="<?= $arResult['COMPONENT_ID'] ?>"/>
         <input type="submit"
                data-send-text="<?= GetMessage('FILED_SEND_SUBMIT') ?>"
