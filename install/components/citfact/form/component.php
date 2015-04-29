@@ -19,6 +19,8 @@ use Bitrix\Main\Config;
 use Citfact\Form\Form;
 use Citfact\Form\Mailer;
 use Citfact\Form\FormBuilder;
+use Citfact\Form\FormValidator;
+use Citfact\Form\Storage;
 use Citfact\Form\Type\ParameterDictionary;
 
 Loader::includeModule('citfact.form');
@@ -45,17 +47,8 @@ if ($params->get('TYPE') == 'IBLOCK') {
     $validator = $params->get('VALIDATOR') ?: Config\Option::get('citfact.form', 'VALIDATOR');
 }
 
-$form = new Form($params);
-$form->register('builder', $builder);
-$form->register('validator', $validator);
-$form->register('storage', $storage);
-
 $mailer = new Mailer($params, new CEventType, new CEvent);
-$form->setMailer($mailer);
-
-$builderStrategy = $form->getServices('builder');
-$formBuilder = new FormBuilder(new $builderStrategy, $params);
-
+$formBuilder = new FormBuilder(new $builder, $params);
 if ($this->startResultCache()) {
     $formBuilder->create();
     $arResult['BUILDER_DATA'] = $formBuilder->getBuilderData();
@@ -63,7 +56,10 @@ if ($this->startResultCache()) {
 }
 
 $formBuilder->setBuilderData($arResult['BUILDER_DATA']);
-$form->setBuildForm($formBuilder);
+$validator = new FormValidator(new $validator, $arResult['BUILDER_DATA']);
+$storage = new Storage(new $storage, $arResult['BUILDER_DATA']);
+$form = new Form($params, $formBuilder, $validator, $storage);
+$form->setMailer($mailer);
 $form->handleRequest($app->getContext()->getRequest());
 if ($form->isValid()) {
     $form->save();

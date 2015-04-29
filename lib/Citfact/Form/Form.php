@@ -12,7 +12,9 @@
 namespace Citfact\Form;
 
 use Bitrix\Main\Request;
-use Citfact\Form\Extension;
+use Citfact\Form\Extension\CaptchaExtension;
+use Citfact\Form\Extension\CsrfExtension;
+use Citfact\Form\Extension\IdentifierExtension;
 use Citfact\Form\Exception\ValidateException;
 use Citfact\Form\Type\ParameterDictionary;
 
@@ -45,6 +47,16 @@ class Form
     private $builder;
 
     /**
+     * @var Storage
+     */
+    private $storage;
+
+    /**
+     * @var FormValidator
+     */
+    private $validator;
+
+    /**
      * @var \Bitrix\Main\Request;
      */
     private $request;
@@ -71,26 +83,19 @@ class Form
 
     /**
      * @param ParameterDictionary $params
+     * @param FormBuilder $builder
+     * @param FormValidator $validator
+     * @param Storage $storage
      */
-    public function __construct(ParameterDictionary $params)
+    public function __construct(ParameterDictionary $params, FormBuilder $builder, FormValidator $validator, Storage $storage)
     {
         $this->params = $params;
-        $this->captcha = new Extension\CaptchaExtension();
-        $this->csrf = new Extension\CsrfExtension();
-        $this->identifier = new Extension\IdentifierExtension();
-    }
-
-    /**
-     * Set the data on which you can collect form
-     *
-     * @param FormBuilder $builder
-     * @return $this
-     */
-    public function setBuildForm(FormBuilder $builder)
-    {
         $this->builder = $builder;
-
-        return $this;
+        $this->validator = $validator;
+        $this->storage = $storage;
+        $this->captcha = new CaptchaExtension();
+        $this->csrf = new CsrfExtension();
+        $this->identifier = new IdentifierExtension();
     }
 
     /**
@@ -136,16 +141,9 @@ class Form
             }
         }
 
-        $validatorStrategy = $this->getServices('validator');
-        $validator = new FormValidator(
-            new $validatorStrategy,
-            $this->getRequestData(),
-            $this->getBuilder()->getBuilderData()
-        );
-
-        $validator->validate();
-        if (!$validator->isValid()) {
-            $this->addError('VALIDATOR', $validator->getErrors());
+        $this->validator->validate($this->getRequestData());
+        if (!$this->validator->isValid()) {
+            $this->addError('VALIDATOR', $this->validator->getErrors());
         }
 
         return $this;
@@ -163,18 +161,11 @@ class Form
             throw new ValidateException('Request validation failed');
         }
 
-        $storageStrategy = $this->getServices('storage');
-        $storage = new Storage(
-            new $storageStrategy,
-            $this->getRequestData(),
-            $this->getBuilder()->getBuilderData()
-        );
-
-        $storage->save();
-        if (!$storage->isSuccess()) {
-            $this->addError('STORAGE', $storage->getErrors());
+        $this->storage->save($this->getRequestData());
+        if (!$this->storage->isSuccess()) {
+            $this->addError('STORAGE', $this->storage->getErrors());
         } else {
-            if ($this->mailer) {
+            if ($this->mailer instanceof MailerInterface) {
                 $this->mailer->send($this->getRequestData());
             }
 
@@ -361,45 +352,5 @@ class Form
     public function getIdentifierToken()
     {
         return $this->identifier->generateIdentifier();
-    }
-
-    /**
-     * Get services
-     *
-     * @param string $name
-     * @return string
-     * @throws \InvalidArgumentException When services not found
-     */
-    public function getServices($name)
-    {
-        if (array_key_exists($name, $this->services)) {
-            return $this->services[$name];
-        }
-
-        throw new \InvalidArgumentException('Not found services ' . $name);
-    }
-
-    /**
-     * Register services
-     *
-     * @param string $services
-     * @param string $class
-     * @return $this
-     * @throws \InvalidArgumentException When invalid services
-     */
-    public function register($services, $class)
-    {
-        switch ($services) {
-            case 'builder':
-            case 'storage':
-            case 'validator':
-                $this->services[$services] = $class;
-                break;
-
-            default:
-                throw new \InvalidArgumentException('Bad services ' . $services);
-        }
-
-        return $this;
     }
 }

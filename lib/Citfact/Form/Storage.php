@@ -21,31 +21,24 @@ class Storage
     /**
      * @var array
      */
-    protected $request;
-
-    /**
-     * @var array
-     */
     protected $builderData;
 
     /**
      * @param StorageInterface $storage
-     * @param array $request
      * @param array $builderData
      */
-    public function __construct(StorageInterface $storage, array $request, array $builderData)
+    public function __construct(StorageInterface $storage, array $builderData)
     {
         $this->storage = $storage;
-        $this->request = $request;
         $this->builderData = $builderData;
     }
 
     /**
-     * @inheritdoc
+     * @param array $request
      */
-    public function save()
+    public function save(array $request)
     {
-        $this->storage->save($this->request, $this->builderData);
+        $this->storage->save($request, $this->builderData);
     }
 
     /**
