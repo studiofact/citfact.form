@@ -49,23 +49,24 @@ if ($params->get('TYPE') == 'IBLOCK') {
 
 $mailer = new Mailer($params, new CEventType, new CEvent);
 $formBuilder = new FormBuilder(new $builder, $params);
+$formValidator = new FormValidator(new $validator);
+$formStorage = new Storage(new $storage);
+$form = new Form($params, $formBuilder, $formValidator, $formStorage);
+
+// Builder saves data to reduce the number of requests
 if ($this->startResultCache()) {
-    $formBuilder->create();
-    $arResult['BUILDER_DATA'] = $formBuilder->getBuilderData();
+    $arResult['BUILDER_DATA'] = $form->createBuilderData()->getBuilderData();
     $this->endResultCache();
 }
 
-$formBuilder->setBuilderData($arResult['BUILDER_DATA']);
-$validator = new FormValidator(new $validator, $arResult['BUILDER_DATA']);
-$storage = new Storage(new $storage, $arResult['BUILDER_DATA']);
-$form = new Form($params, $formBuilder, $validator, $storage);
+$form->setBuilderData($arResult['BUILDER_DATA']);
 $form->setMailer($mailer);
 $form->handleRequest($app->getContext()->getRequest());
 if ($form->isValid()) {
     $form->save();
 }
 
-$result->set('BUILDER', $form->getBuilder()->getBuilderData());
+$result->set('BUILDER', $form->getBuilderData());
 $result->set('VIEW', $form->getViewData());
 $result->set('SUCCESS', $form->isValid());
 $result->set('ERRORS', $form->getErrors(false));

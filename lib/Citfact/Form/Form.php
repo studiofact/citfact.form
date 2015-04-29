@@ -110,6 +110,32 @@ class Form
     }
 
     /**
+     * @return $this
+     */
+    public function createBuilderData()
+    {
+        $this->builder->create();
+
+        return $this;
+    }
+
+    /**
+     * @param array $builderData
+     */
+    public function setBuilderData(array $builderData)
+    {
+        $this->builder->setBuilderData($builderData);
+    }
+
+    /**
+     * @return array
+     */
+    public function getBuilderData()
+    {
+        return $this->builder->getBuilderData();
+    }
+
+    /**
      * Inspects the given request
      *
      * @param \Bitrix\Main\Request $request
@@ -141,7 +167,7 @@ class Form
             }
         }
 
-        $this->validator->validate($this->getRequestData());
+        $this->validator->validate($this->getRequestData(), $this->getBuilderData());
         if (!$this->validator->isValid()) {
             $this->addError('VALIDATOR', $this->validator->getErrors());
         }
@@ -161,7 +187,7 @@ class Form
             throw new ValidateException('Request validation failed');
         }
 
-        $this->storage->save($this->getRequestData());
+        $this->storage->save($this->getRequestData(), $this->getBuilderData());
         if (!$this->storage->isSuccess()) {
             $this->addError('STORAGE', $this->storage->getErrors());
         } else {

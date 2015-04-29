@@ -44,6 +44,7 @@ Loader::registerAutoLoadClasses('citfact.form', array(
     'Citfact\Form\Form' => 'lib/Citfact/Form/Form.php',
     'Citfact\Form\FormBuilder' => 'lib/Citfact/Form/FormBuilder.php',
     'Citfact\Form\FormBuilderInterface' => 'lib/Citfact/Form/FormBuilderInterface.php',
+    'Citfact\Form\FormEvents' => 'lib/Citfact/Form/FormEvents.php',
     'Citfact\Form\FormValidator' => 'lib/Citfact/Form/FormValidator.php',
     'Citfact\Form\FormValidatorInterface' => 'lib/Citfact/Form/FormValidatorInterface.php',
     'Citfact\Form\FormView' => 'lib/Citfact/Form/FormView.php',

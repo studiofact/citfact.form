@@ -19,26 +19,20 @@ class Storage
     protected $storage;
 
     /**
-     * @var array
-     */
-    protected $builderData;
-
-    /**
      * @param StorageInterface $storage
-     * @param array $builderData
      */
-    public function __construct(StorageInterface $storage, array $builderData)
+    public function __construct(StorageInterface $storage)
     {
         $this->storage = $storage;
-        $this->builderData = $builderData;
     }
 
     /**
      * @param array $request
+     * @param array $builderData
      */
-    public function save(array $request)
+    public function save(array $request, array $builderData)
     {
-        $this->storage->save($request, $this->builderData);
+        $this->storage->save($request, $builderData);
     }
 
     /**

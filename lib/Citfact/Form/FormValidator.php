@@ -18,28 +18,21 @@ class FormValidator
      */
     protected $validator;
 
-
-    /**
-     * @var array
-     */
-    protected $builderData;
-
     /**
      * @param FormValidatorInterface $validator
-     * @param array $builderData
      */
-    public function __construct(FormValidatorInterface $validator, array $builderData)
+    public function __construct(FormValidatorInterface $validator)
     {
         $this->validator = $validator;
-        $this->builderData = $builderData;
     }
 
     /**
      * @param array $request
+     * @param array $builderData
      */
-    public function validate(array $request)
+    public function validate(array $request, array $builderData)
     {
-        $this->validator->validate($request, $this->builderData);
+        $this->validator->validate($request, $builderData);
     }
 
     /**
