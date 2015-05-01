@@ -211,14 +211,6 @@ class Form
             if ($this->mailer instanceof MailerInterface) {
                 $this->mailer->send($requestData);
             }
-
-            if ($this->params->get('AJAX') != 'Y') {
-                if (strlen($this->params->get('REDIRECT_PATH')) > 0) {
-                    LocalRedirect($this->params->get('REDIRECT_PATH'));
-                }
-
-                LocalRedirect(getenv('REQUEST_URI'));
-            }
         }
 
         return $this;
@@ -296,10 +288,9 @@ class Form
     /**
      * Return request data in an array
      *
-     * @param bool $htmlspecial
      * @return array
      */
-    public function getRequestData($htmlspecial = false)
+    public function getRequestData()
     {
         $postList = array();
         $formName = $this->getFormName();
@@ -308,14 +299,6 @@ class Form
         if (array_key_exists($formName, $requestData)) {
             $postList = $requestData[$formName];
         }
-
-        if (!$htmlspecial) {
-            return $postList;
-        }
-
-        array_walk_recursive($postList, function (&$value) {
-            $value = htmlspecialchars($value);
-        });
 
         return $postList;
     }
@@ -335,7 +318,7 @@ class Form
     {
         $errors = $this->getErrors(false);
         $view = new FormView($this->builder, $this->getParams(), $this->getFormName());
-        $view->setRequest($this->getRequestData(true));
+        $view->setRequest($this->getRequestData());
         $view->setErrors($errors['LIST']);
         $view->create();
 

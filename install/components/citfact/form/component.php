@@ -64,6 +64,12 @@ $form->setMailer($mailer);
 $form->handleRequest($app->getContext()->getRequest());
 if ($form->isValid()) {
     $form->save();
+
+    // If the data is successfully preserved produce redirect
+    if ($params->get('AJAX') != 'Y') {
+        $redirectPath = $params->get('REDIRECT_PATH') ?: getenv('REQUEST_URI');
+        LocalRedirect($redirectPath);
+    }
 }
 
 $result->set('BUILDER', $form->getBuilderData());

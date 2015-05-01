@@ -122,10 +122,10 @@ class FormView
     {
         $controlName = $this->getControlName($field);
         if (isset($this->request[$controlName])) {
-            return $this->request[$controlName];
+            return htmlspecialchars($this->request[$controlName]);
         }
 
-        return $this->getDefaultValue($field);
+        return htmlspecialchars($this->getDefaultValue($field));
     }
 
     /**
