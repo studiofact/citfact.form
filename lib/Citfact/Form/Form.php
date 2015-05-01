@@ -12,7 +12,9 @@
 namespace Citfact\Form;
 
 use Bitrix\Main\Request;
-use Citfact\Form\Extension;
+use Citfact\Form\Extension\CaptchaExtension;
+use Citfact\Form\Extension\CsrfExtension;
+use Citfact\Form\Extension\IdentifierExtension;
 use Citfact\Form\Exception\ValidateException;
 use Citfact\Form\Type\ParameterDictionary;
 
@@ -45,6 +47,16 @@ class Form
     private $builder;
 
     /**
+     * @var Storage
+     */
+    private $storage;
+
+    /**
+     * @var FormValidator
+     */
+    private $validator;
+
+    /**
      * @var \Bitrix\Main\Request;
      */
     private $request;
@@ -71,26 +83,19 @@ class Form
 
     /**
      * @param ParameterDictionary $params
+     * @param FormBuilder $builder
+     * @param FormValidator $validator
+     * @param Storage $storage
      */
-    public function __construct(ParameterDictionary $params)
+    public function __construct(ParameterDictionary $params, FormBuilder $builder, FormValidator $validator, Storage $storage)
     {
         $this->params = $params;
-        $this->captcha = new Extension\CaptchaExtension();
-        $this->csrf = new Extension\CsrfExtension();
-        $this->identifier = new Extension\IdentifierExtension();
-    }
-
-    /**
-     * Set the data on which you can collect form
-     *
-     * @param FormBuilder $builder
-     * @return $this
-     */
-    public function setBuildForm(FormBuilder $builder)
-    {
         $this->builder = $builder;
-
-        return $this;
+        $this->validator = $validator;
+        $this->storage = $storage;
+        $this->captcha = new CaptchaExtension();
+        $this->csrf = new CsrfExtension();
+        $this->identifier = new IdentifierExtension();
     }
 
     /**
@@ -105,6 +110,39 @@ class Form
     }
 
     /**
+     * @return $this
+     */
+    public function createBuilderData()
+    {
+        $this->builder->create();
+
+        $builderData = $this->getBuilderData();
+        $event = new Event(FormEvents::BUILD, $builderData);
+        $event->send();
+
+        $builderData = $event->mergeFields($builderData);
+        $this->setBuilderData($builderData);
+
+        return $this;
+    }
+
+    /**
+     * @param array $builderData
+     */
+    public function setBuilderData(array $builderData)
+    {
+        $this->builder->setBuilderData($builderData);
+    }
+
+    /**
+     * @return array
+     */
+    public function getBuilderData()
+    {
+        return $this->builder->getBuilderData();
+    }
+
+    /**
      * Inspects the given request
      *
      * @param \Bitrix\Main\Request $request
@@ -113,8 +151,9 @@ class Form
     public function handleRequest(Request $request)
     {
         $this->request = $request;
-        $componentId = $this->request->getPost('COMPONENT_ID');
-        if ($this->identifier->isIdentifierValid($componentId)) {
+        $requestData = $this->getRequestData();
+
+        if (!empty($requestData)) {
             $this->submitted = true;
         }
 
@@ -122,28 +161,22 @@ class Form
             return $this;
         }
 
-        if ($this->params->get('USE_CSRF') == 'Y' && !$this->csrf->isCsrfTokenValid($this->request->getPost('CSRF'))) {
+        $csrf = $requestData['CSRF'] ?: '';
+        if ($this->params->get('USE_CSRF') == 'Y' && !$this->csrf->isCsrfTokenValid($csrf)) {
             $this->addError('CSRF', 'CSRF_NOT_VALID');
         }
 
         if ($this->params->get('USE_CAPTCHA') == 'Y') {
-            $captchaResponse = $this->request->getPost('CAPTCHA');
-            $captchaToken = $this->request->getPost('CAPTCHA_TOKEN');
+            $captchaResponse = $requestData['CAPTCHA'] ?: '';
+            $captchaToken = $requestData['CAPTCHA_TOKEN'] ?: '';
             if (!$this->captcha->isCaptchaTokenValid($captchaResponse, $captchaToken)) {
                 $this->addError('CAPTCHA', 'CAPTCHA_NOT_VALID');
             }
         }
 
-        $validatorStrategy = $this->getServices('validator');
-        $validator = new FormValidator(
-            new $validatorStrategy,
-            $this->getRequest(),
-            $this->getBuilder()->getBuilderData()
-        );
-
-        $validator->validate();
-        if (!$validator->isValid()) {
-            $this->addError('VALIDATOR', $validator->getErrors());
+        $this->validator->validate($this->getRequestData(), $this->getBuilderData());
+        if (!$this->validator->isValid()) {
+            $this->addError('VALIDATOR', $this->validator->getErrors());
         }
 
         return $this;
@@ -161,27 +194,22 @@ class Form
             throw new ValidateException('Request validation failed');
         }
 
-        $storageStrategy = $this->getServices('storage');
-        $storage = new Storage(
-            new $storageStrategy,
-            $this->getRequest(),
-            $this->getBuilder()->getBuilderData()
-        );
+        $requestData = $this->getRequestData();
+        $event = new Event(FormEvents::PRE_STORAGE, $requestData);
+        $event->send();
 
-        $storage->save();
-        if (!$storage->isSuccess()) {
-            $this->addError('STORAGE', $storage->getErrors());
+        $requestData = $event->mergeFields($requestData);
+        $this->storage->save($requestData, $this->getBuilderData());
+
+        if (!$this->storage->isSuccess()) {
+            $this->addError('STORAGE', $this->storage->getErrors());
         } else {
-            if ($this->mailer) {
-                $this->mailer->send($this->getRequestData(false));
-            }
+            $event = new Event(FormEvents::STORAGE, $requestData);
+            $event->send();
 
-            if ($this->params->get('AJAX') != 'Y') {
-                if (strlen($this->params->get('REDIRECT_PATH')) > 0) {
-                    LocalRedirect($this->params->get('REDIRECT_PATH'));
-                }
-
-                LocalRedirect(getenv('REQUEST_URI'));
+            $requestData = $event->mergeFields($requestData);
+            if ($this->mailer instanceof MailerInterface) {
+                $this->mailer->send($requestData);
             }
         }
 
@@ -258,36 +286,29 @@ class Form
     }
 
     /**
-     * Return current request
+     * Return request data in an array
      *
-     * @return Request
+     * @return array
      */
-    public function getRequest()
+    public function getRequestData()
     {
-        return $this->request;
+        $postList = array();
+        $formName = $this->getFormName();
+        $requestData = $this->request->getPostList()->toArray();
+
+        if (array_key_exists($formName, $requestData)) {
+            $postList = $requestData[$formName];
+        }
+
+        return $postList;
     }
 
     /**
-     * Return request data in an array
-     *
-     * @param bool $htmlspecial
-     * @return array
+     * @return string
      */
-    public function getRequestData($htmlspecial = true)
+    public function getFormName()
     {
-        $postList = ($this->isSubmitted())
-            ? $this->request->getPostList()->toArray()
-            : array();
-
-        if (!$htmlspecial) {
-            return $postList;
-        }
-
-        array_walk_recursive($postList, function (&$value) {
-            $value = htmlspecialchars($value);
-        });
-
-        return $postList;
+        return sprintf('FORM_%d', $this->getIdentifierToken());
     }
 
     /**
@@ -295,7 +316,10 @@ class Form
      */
     public function getViewData()
     {
-        $view = new FormView($this->builder, $this->getParams());
+        $errors = $this->getErrors(false);
+        $view = new FormView($this->builder, $this->getParams(), $this->getFormName());
+        $view->setRequest($this->getRequestData());
+        $view->setErrors($errors['LIST']);
         $view->create();
 
         return $view->getViewData();
@@ -349,45 +373,5 @@ class Form
     public function getIdentifierToken()
     {
         return $this->identifier->generateIdentifier();
-    }
-
-    /**
-     * Get services
-     *
-     * @param string $name
-     * @return string
-     * @throws \InvalidArgumentException When services not found
-     */
-    public function getServices($name)
-    {
-        if (array_key_exists($name, $this->services)) {
-            return $this->services[$name];
-        }
-
-        throw new \InvalidArgumentException('Not found services ' . $name);
-    }
-
-    /**
-     * Register services
-     *
-     * @param string $services
-     * @param string $class
-     * @return $this
-     * @throws \InvalidArgumentException When invalid services
-     */
-    public function register($services, $class)
-    {
-        switch ($services) {
-            case 'builder':
-            case 'storage':
-            case 'validator':
-                $this->services[$services] = $class;
-                break;
-
-            default:
-                throw new \InvalidArgumentException('Bad services ' . $services);
-        }
-
-        return $this;
     }
 }

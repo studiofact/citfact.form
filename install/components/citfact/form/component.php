@@ -19,6 +19,8 @@ use Bitrix\Main\Config;
 use Citfact\Form\Form;
 use Citfact\Form\Mailer;
 use Citfact\Form\FormBuilder;
+use Citfact\Form\FormValidator;
+use Citfact\Form\Storage;
 use Citfact\Form\Type\ParameterDictionary;
 
 Loader::includeModule('citfact.form');
@@ -45,39 +47,38 @@ if ($params->get('TYPE') == 'IBLOCK') {
     $validator = $params->get('VALIDATOR') ?: Config\Option::get('citfact.form', 'VALIDATOR');
 }
 
-$form = new Form($params);
-$form->register('builder', $builder);
-$form->register('validator', $validator);
-$form->register('storage', $storage);
-
 $mailer = new Mailer($params, new CEventType, new CEvent);
-$form->setMailer($mailer);
+$formBuilder = new FormBuilder(new $builder, $params);
+$formValidator = new FormValidator(new $validator);
+$formStorage = new Storage(new $storage);
+$form = new Form($params, $formBuilder, $formValidator, $formStorage);
 
-$builderStrategy = $form->getServices('builder');
-$formBuilder = new FormBuilder(new $builderStrategy, $params);
-
+// Builder saves data to reduce the number of requests
 if ($this->startResultCache()) {
-    $formBuilder->create();
-    $arResult['BUILDER_DATA'] = $formBuilder->getBuilderData();
+    $arResult['BUILDER_DATA'] = $form->createBuilderData()->getBuilderData();
     $this->endResultCache();
 }
 
-$formBuilder->setBuilderData($arResult['BUILDER_DATA']);
-$form->setBuildForm($formBuilder);
+$form->setBuilderData($arResult['BUILDER_DATA']);
+$form->setMailer($mailer);
 $form->handleRequest($app->getContext()->getRequest());
 if ($form->isValid()) {
     $form->save();
+
+    // If the data is successfully preserved produce redirect
+    if ($params->get('AJAX') != 'Y') {
+        $redirectPath = $params->get('REDIRECT_PATH') ?: getenv('REQUEST_URI');
+        LocalRedirect($redirectPath);
+    }
 }
 
-$result->set('BUILDER', $form->getBuilder()->getBuilderData());
+$result->set('BUILDER', $form->getBuilderData());
 $result->set('VIEW', $form->getViewData());
 $result->set('SUCCESS', $form->isValid());
 $result->set('ERRORS', $form->getErrors(false));
-$result->set('REQUEST', $form->getRequestData());
 $result->set('CSRF', $form->getCsrfToken());
 $result->set('CAPTCHA', $form->getCaptchaToken());
-$result->set('COMPONENT_ID', $form->getIdentifierToken());
-$result->set('IS_POST', $form->getRequest()->isPost());
+$result->set('FORM_NAME', $form->getFormName());
 $result->set('IS_AJAX', (getenv('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'));
 
 if ($result->get('IS_AJAX') && $form->isSubmitted()) {

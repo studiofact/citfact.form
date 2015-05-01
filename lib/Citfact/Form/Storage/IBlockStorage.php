@@ -11,7 +11,6 @@
 
 namespace Citfact\Form\Storage;
 
-use Bitrix\Main\Request;
 use Citfact\Form\StorageInterface;
 use Citfact\Form\Validator\IBlockErrorParser;
 
@@ -33,18 +32,21 @@ class IblockStorage implements StorageInterface
     /**
      * @inheritdoc
      */
-    public function save(Request $request, array $builderData)
+    public function save(array $request, array $builderData)
     {
         $iblockElement = new \CIBlockElement();
-        $postRequest = $request->getPostList()->toArray();
-
         $fields['IBLOCK_ID'] = $builderData['DATA']['ID'];
+
         foreach ($builderData['DEFAULT_FIELDS'] as $fieldName => $field) {
-            $fields[$fieldName] = $postRequest[$fieldName];
+            if (isset($request[$fieldName])) {
+                $fields[$fieldName] = $request[$fieldName];
+            }
         }
 
         foreach ($builderData['FIELDS'] as $fieldName => $field) {
-            $fields['PROPERTY_VALUES'][$fieldName] = $postRequest[$fieldName];
+            if (isset($request[$fieldName])) {
+                $fields['PROPERTY_VALUES'][$fieldName] = $request[$fieldName];
+            }
         }
 
         $result = $iblockElement->Add($fields);
@@ -52,7 +54,7 @@ class IblockStorage implements StorageInterface
             return $result;
         }
 
-        $iblockErrorParser = new IBlockErrorParser($builderData['FIELDS']);
+        $iblockErrorParser = new IBlockErrorParser($builderData['FIELDS'], $builderData['DEFAULT_FIELDS']);
         $this->errorList = $iblockErrorParser->parse($iblockElement->LAST_ERROR);
 
         return false;

@@ -12,7 +12,6 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
  */
 $userTypePrint = function ($arResult) {
     $fieldList = $arResult['VIEW'];
-    $valueList = $arResult['REQUEST'];
     ?>
     <? foreach ($fieldList as $feildName => $fieldValue): ?>
         <?switch ($fieldValue['TYPE']):
@@ -21,7 +20,7 @@ $userTypePrint = function ($arResult) {
                 <div class="form-group">
                     <label><?= $fieldValue['LABEL'] ?></label>
                     <input type="text" class="form-control" name="<?= $fieldValue['NAME'] ?>"
-                           value="<?= $valueList[$fieldValue['NAME']] ?>"/>
+                           value="<?= $fieldValue['VALUE'] ?>"/>
                 </div>
                 <? break; ?>
 
@@ -30,7 +29,7 @@ $userTypePrint = function ($arResult) {
                     <label><?= $fieldValue['LABEL'] ?></label>
                     <div class="calendar-container">
                         <input type="text" class="form-control" name="<?= $fieldValue['NAME'] ?>"
-                               value="<?= $valueList[$feildName] ?>"/>
+                               value="<?= $fieldValue['VALUE'] ?>"/>
                         <span class="calendar" title="<?= GetMessage('CHOOSE_DATE') ?>"
                               onclick="BX.calendar({ node: this, field: '<?= $fieldValue['NAME'] ?>', bTime: true, bHideTime: false });"></span>
                     </div>
@@ -41,7 +40,7 @@ $userTypePrint = function ($arResult) {
                 <div class="form-group">
                     <label><?= $fieldValue['LABEL'] ?></label>
                     <textarea class="form-control"
-                              name="<?= $fieldValue['NAME'] ?>"><?= $valueList[$feildName] ?></textarea>
+                              name="<?= $fieldValue['NAME'] ?>"><?= $fieldValue['VALUE'] ?></textarea>
                 </div>
                 <? break; ?>
 
@@ -52,8 +51,8 @@ $userTypePrint = function ($arResult) {
                     <select class="form-control" name="<?= $fieldValue['NAME'] ?>" <?= $multiple ?>>
                         <? foreach ($fieldValue['VALUE_LIST'] as $value): ?>
                             <? $selected = ($fieldValue['MULTIPLE'] == 'Y')
-                                ? (in_array($value['ID'], $valueList[$feildName])) ? 'selected="selected"' : ''
-                                : ($value['ID'] == $valueList[$feildName]) ? 'selected="selected"' : '';
+                                ? (in_array($value['ID'], $fieldValue['VALUE'])) ? 'selected="selected"' : ''
+                                : ($value['ID'] == $fieldValue['VALUE']) ? 'selected="selected"' : '';
                             ?>
                             <option value="<?= $value['ID'] ?>" <?= $selected ?>><?= $value['VALUE'] ?></option>
                         <? endforeach; ?>
@@ -66,8 +65,8 @@ $userTypePrint = function ($arResult) {
                     <label><?= $fieldValue['LABEL'] ?></label>
                     <? foreach ($fieldValue['VALUE_LIST'] as $value): ?>
                         <? $checked = ($fieldValue['MULTIPLE'] == 'Y')
-                            ? (in_array($value['ID'], $valueList[$feildName])) ? 'checked="checked"' : ''
-                            : ($value['ID'] == $valueList[$feildName]) ? 'checked="checked"' : '';
+                            ? (in_array($value['ID'], $fieldValue['VALUE'])) ? 'checked="checked"' : ''
+                            : ($value['ID'] == $fieldValue['VALUE']) ? 'checked="checked"' : '';
                         ?>
                         <input type="checkbox" name="<?= $fieldValue['NAME'] ?>"
                                value="<?= $value['ID'] ?>" <?= $checked ?>/> <?= $value['VALUE'] ?>
@@ -79,7 +78,7 @@ $userTypePrint = function ($arResult) {
                 <div class="form-group">
                     <label><?= $fieldValue['LABEL'] ?></label>
                     <? foreach ($fieldValue['VALUE_LIST'] as $value): ?>
-                        <? $checked = ($value['ID'] == $valueList[$feildName]) ? 'checked="checked"' : ''; ?>
+                        <? $checked = ($value['ID'] == $fieldValue['VALUE']) ? 'checked="checked"' : ''; ?>
                         <input type="radio" name="<?= $fieldValue['NAME'] ?>"
                                value="<?= $value['ID'] ?>" <?= $checked ?>/> <?= $value['VALUE'] ?>
                     <? endforeach; ?>

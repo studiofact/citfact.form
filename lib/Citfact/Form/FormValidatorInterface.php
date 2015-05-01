@@ -11,8 +11,6 @@
 
 namespace Citfact\Form;
 
-use Bitrix\Main\Request;
-
 interface FormValidatorInterface
 {
     /**
@@ -25,9 +23,9 @@ interface FormValidatorInterface
     /**
      * Validate request
      *
-     * @param Request $request
+     * @param array $request
      * @param array $builderData
      */
-    public function validate(Request $request, array $builderData);
+    public function validate(array $request, array $builderData);
 
 }

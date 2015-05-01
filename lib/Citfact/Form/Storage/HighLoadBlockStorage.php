@@ -12,7 +12,6 @@
 namespace Citfact\Form\Storage;
 
 use Bitrix\Highloadblock as HL;
-use Bitrix\Main\Request;
 use Citfact\Form\StorageInterface;
 
 class HighLoadBlockStorage implements StorageInterface
@@ -33,16 +32,15 @@ class HighLoadBlockStorage implements StorageInterface
     /**
      * @inheritdoc
      */
-    public function save(Request $request, array $builderData)
+    public function save(array $request, array $builderData)
     {
         // Get entity exteden DataManager
         $entity = $this->getCompileBlock($builderData['DATA']);
 
         // Reserve available to her field
-        $postRequest = $request->getPostList()->toArray();
-        $postRequest = array_intersect_key($postRequest, $builderData['FIELDS']);
+        $request = array_intersect_key($request, $builderData['FIELDS']);
 
-        $result = $entity::add($postRequest);
+        $result = $entity::add($request);
 
         // If exists errors parse their
         if (!$result->isSuccess()) {

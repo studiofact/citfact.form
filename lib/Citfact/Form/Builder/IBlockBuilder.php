@@ -41,20 +41,8 @@ class IBlockBuilder implements FormBuilderInterface
             throw new BuilderException(sprintf('Not found iblock with id = %d', $iblockId));
         }
 
-        $queryBuilder = new Entity\Query(Iblock\IblockFieldTable::getEntity());
-        $iblockDataResult = $queryBuilder->setSelect(array('*'))
-            ->setFilter(array('IBLOCK_ID' => $iblockData['ID']))
-            ->setOrder(array())
-            ->exec();
-
-        $iblockDataFields = array();
-        while ($field = $iblockDataResult->fetch()) {
-            if (!empty($field['DEFAULT_VALUE'])) {
-                $field['DEFAULT_VALUE'] = (($unserialize = @unserialize($field['DEFAULT_VALUE'])) !== false) ? $unserialize : $field['DEFAULT_VALUE'];
-            }
-
-            $iblockDataFields[$field['FIELD_ID']] = $field;
-        }
+        // Get settings iblock
+        $iblockDataFields = \CIBlock::GetArrayByID($iblockData['ID']);
 
         $queryBuilder = new Entity\Query(Iblock\PropertyTable::getEntity());
         $propertyResult = $queryBuilder->setSelect(array('*'))
@@ -122,11 +110,11 @@ class IBlockBuilder implements FormBuilderInterface
     {
         return array(
             'ACTIVE' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_ACTIVE'),
+                'NAME' => $settings['FIELDS']['ACTIVE']['NAME'],
                 'CODE' => 'ACTIVE',
                 'FIELD_TYPE' => 'checkbox',
-                'IS_REQUIRED' => $settings['ACTIVE']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['ACTIVE']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['ACTIVE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['ACTIVE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
                 'VALUE_LIST' => array(array(
                     'ID' => 'Y',
@@ -134,84 +122,84 @@ class IBlockBuilder implements FormBuilderInterface
                 )),
             ),
             'ACTIVE_FROM' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_ACTIVE_FROM'),
+                'NAME' => $settings['FIELDS']['ACTIVE_FROM']['NAME'],
                 'CODE' => 'ACTIVE_FROM',
                 'FIELD_TYPE' => 'date',
-                'IS_REQUIRED' => $settings['ACTIVE_FROM']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['ACTIVE_FROM']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['ACTIVE_FROM']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['ACTIVE_FROM']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'ACTIVE_TO' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_ACTIVE_TO'),
+                'NAME' => $settings['FIELDS']['ACTIVE_TO']['NAME'],
                 'CODE' => 'ACTIVE_TO',
                 'FIELD_TYPE' => 'date',
-                'IS_REQUIRED' => $settings['ACTIVE_TO']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['ACTIVE_TO']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['ACTIVE_TO']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['ACTIVE_TO']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'NAME' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_NAME'),
+                'NAME' => $settings['FIELDS']['NAME']['NAME'],
                 'CODE' => 'NAME',
                 'FIELD_TYPE' => 'string',
-                'IS_REQUIRED' => $settings['NAME']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['NAME']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['NAME']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['NAME']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'CODE' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_CODE'),
+                'NAME' => $settings['FIELDS']['CODE']['NAME'],
                 'CODE' => 'CODE',
                 'FIELD_TYPE' => 'string',
-                'IS_REQUIRED' => $settings['CODE']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['CODE']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['CODE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['CODE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'SORT' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_SORT'),
+                'NAME' => $settings['FIELDS']['SORT']['NAME'],
                 'CODE' => 'SORT',
                 'FIELD_TYPE' => 'string',
-                'IS_REQUIRED' => $settings['SORT']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['SORT']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['SORT']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['SORT']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
-            'IBLOCK_SECTION_ID' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_SECTION_ID'),
-                'CODE' => 'IBLOCK_SECTION_ID',
+            'IBLOCK_SECTION' => array(
+                'NAME' => $settings['FIELDS']['IBLOCK_SECTION']['NAME'],
+                'CODE' => 'IBLOCK_SECTION',
                 'FIELD_TYPE' => 'select',
-                'IS_REQUIRED' => $settings['IBLOCK_SECTION_ID']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['IBLOCK_SECTION_ID']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['IBLOCK_SECTION']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['IBLOCK_SECTION']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'Y',
                 'VALUE_LIST' => $sectionValue,
             ),
             'PREVIEW_PICTURE' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_PREVIEW_PICTURE'),
+                'NAME' => $settings['FIELDS']['PREVIEW_PICTURE']['NAME'],
                 'CODE' => 'PREVIEW_PICTURE',
                 'FIELD_TYPE' => 'file',
-                'IS_REQUIRED' => $settings['PREVIEW_PICTURE']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['PREVIEW_PICTURE']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['PREVIEW_PICTURE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['PREVIEW_PICTURE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'DETAIL_PICTURE' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_DETAIL_PICTURE'),
+                'NAME' => $settings['FIELDS']['DETAIL_PICTURE']['NAME'],
                 'CODE' => 'DETAIL_PICTURE',
                 'FIELD_TYPE' => 'file',
-                'IS_REQUIRED' => $settings['DETAIL_PICTURE']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['DETAIL_PICTURE']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['DETAIL_PICTURE']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['DETAIL_PICTURE']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'PREVIEW_TEXT' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_PREVIEW_TEXT'),
+                'NAME' => $settings['FIELDS']['PREVIEW_TEXT']['NAME'],
                 'CODE' => 'PREVIEW_TEXT',
                 'FIELD_TYPE' => 'textarea',
-                'IS_REQUIRED' => $settings['PREVIEW_TEXT']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['PREVIEW_TEXT']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['PREVIEW_TEXT']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['PREVIEW_TEXT']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
             'DETAIL_TEXT' => array(
-                'NAME' => GetMessage('IBLOCK_FIELD_DETAIL_TEXT'),
+                'NAME' => $settings['FIELDS']['DETAIL_TEXT']['NAME'],
                 'CODE' => 'DETAIL_TEXT',
                 'FIELD_TYPE' => 'textarea',
-                'IS_REQUIRED' => $settings['DETAIL_TEXT']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['DETAIL_TEXT']['DEFAULT_VALUE'],
+                'IS_REQUIRED' => $settings['FIELDS']['DETAIL_TEXT']['IS_REQUIRED'],
+                'DEFAULT_VALUE' => $settings['FIELDS']['DETAIL_TEXT']['DEFAULT_VALUE'],
                 'MULTIPLE' => 'N',
             ),
         );

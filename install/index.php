@@ -10,7 +10,6 @@
  */
 
 use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\EventManager;
 
 Loc::loadMessages(__FILE__);
 
@@ -57,11 +56,6 @@ class citfact_form extends CModule
     public $MODULE_PATH;
 
     /**
-     * @var \Bitrix\Main\EventManager
-     */
-    private $eventManager;
-
-    /**
      * Construct object
      */
     public function __construct()
@@ -77,8 +71,6 @@ class citfact_form extends CModule
 
         $this->MODULE_VERSION = $arModuleVersion['VERSION'];
         $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
-
-        $this->eventManager = EventManager::getInstance();
     }
 
     /**
@@ -171,9 +163,6 @@ class citfact_form extends CModule
      */
     public function InstallEvents()
     {
-        $this->eventManager->registerEventHandler($this->MODULE_ID, 'onBeforeHighElementAdd');
-        $this->eventManager->registerEventHandler($this->MODULE_ID, 'onAfterHighElementAdd');
-
         return true;
     }
 
@@ -185,9 +174,6 @@ class citfact_form extends CModule
      */
     public function UnInstallEvents()
     {
-        $this->eventManager->unRegisterEventHandler($this->MODULE_ID, 'onBeforeHighElementAdd');
-        $this->eventManager->unRegisterEventHandler($this->MODULE_ID, 'onAfterHighElementAdd');
-
         return true;
     }
 

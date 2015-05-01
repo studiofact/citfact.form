@@ -13,7 +13,7 @@ namespace Citfact\Form;
 
 use Bitrix\Main\Event as BaseEvent;
 
-class Event
+class Event extends BaseEvent
 {
     /**
      * Store ID module for which will caused by events
@@ -21,36 +21,41 @@ class Event
     const MODULE_ID = 'citfact.form';
 
     /**
-     * Trigger event
-     *
-     * @param string $name
-     * @param array $params
+     * @param string $eventName
+     * @param array $parameters
      */
-    protected function trigger($name, $params)
+    public function __construct($eventName, array $parameters = array())
     {
-        $event = new BaseEvent(self::MODULE_ID, $name);
-        $event->setParameters($params);
-        $event->send();
+        parent::__construct(self::MODULE_ID, $eventName, $parameters);
     }
 
     /**
-     * Magic finders.
+     * Merges the data fields set in the event handlers with the source fields.
+     * Returns a merged array of the data fields from the all event handlers.
      *
-     * @param string $method
-     * @param array $arguments
-     * @throws \BadMethodCallException If the method called is an invalid find* method.
+     * @param array $data
+     * @return array
      */
-    public function __call($method, $arguments)
+    public function mergeFields(array $data)
     {
-        switch ($method) {
-            case 'onAfterBuilder':
-            case 'onBeforeStorage':
-            case 'onAfterStorage':
-                $this->trigger($method, $arguments);
-                break;
-
-            default:
-                throw new \BadMethodCallException('Undefined method '.$method);
+        if ($this->getResults() == null) {
+            return $data;
         }
+
+        foreach ($this->getResults() as $evenResult) {
+            if ($evenResult->getResultType() !== EventResult::ERROR) {
+                $removed = $evenResult->getUnset();
+                foreach ($removed as $val) {
+                    unset($data[$val]);
+                }
+
+                $modified = $evenResult->getModified();
+                if (!empty($modified)) {
+                    $data = array_merge($data, $modified);
+                }
+            }
+        }
+
+        return $data;
     }
 }

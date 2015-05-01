@@ -11,8 +11,6 @@
 
 namespace Citfact\Form;
 
-use Bitrix\Main\Request;
-
 class Storage
 {
     /**
@@ -21,33 +19,20 @@ class Storage
     protected $storage;
 
     /**
-     * @var \Bitrix\Main\Request
-     */
-    protected $request;
-
-    /**
-     * @var array
-     */
-    protected $builderData;
-
-    /**
      * @param StorageInterface $storage
-     * @param Request $request
-     * @param array $builderData
      */
-    public function __construct(StorageInterface $storage, Request $request, array $builderData)
+    public function __construct(StorageInterface $storage)
     {
         $this->storage = $storage;
-        $this->request = $request;
-        $this->builderData = $builderData;
     }
 
     /**
-     * @inheritdoc
+     * @param array $request
+     * @param array $builderData
      */
-    public function save()
+    public function save(array $request, array $builderData)
     {
-        $this->storage->save($this->request, $this->builderData);
+        $this->storage->save($request, $builderData);
     }
 
     /**

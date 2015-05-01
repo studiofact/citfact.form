@@ -27,22 +27,44 @@ class FormView
     private $viewData = array();
     private $aliasFields = array();
     private $displayFields = array();
+    private $request = array();
+    private $errors = array();
     private $formBuilder;
     private $parameters;
+    private $formName;
 
     /**
      * @param FormBuilder $formBuilder
+     * @param ParameterDictionary $parameters
+     * @param string $formName
      */
-    public function __construct(FormBuilder $formBuilder, ParameterDictionary $parameters)
+    public function __construct(FormBuilder $formBuilder, ParameterDictionary $parameters, $formName)
     {
         $this->formBuilder = $formBuilder;
         $this->parameters = $parameters;
+        $this->formName = $formName;
         $this->aliasFields = array_merge($this->aliasFields, (array)$this->parameters->get('ALIAS_FIELDS'));
         $this->displayFields = array_merge_recursive($this->displayFields, (array)$this->parameters->get('DISPLAY_FIELDS'));
 
         foreach ($this->getDefaultViewTypes() as $type) {
             $this->addViewType($type);
         }
+    }
+
+    /**
+     * @param array $request
+     */
+    public function setRequest(array $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * @param array $errors
+     */
+    public function setErrors(array $errors)
+    {
+        $this->errors = $errors;
     }
 
     /**
@@ -83,11 +105,38 @@ class FormView
                     'LABEL' => $this->getLabel($field),
                     'VALUE_LIST' => $this->getValue($field),
                     'DEFAULT_VALUE' => $this->getDefaultValue($field),
+                    'ERROR' => $this->getError($field),
+                    'VALUE' => $this->getRequestValue($field),
                 );
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $field
+     * @return mixed
+     */
+    protected function getRequestValue($field)
+    {
+        $controlName = $this->getControlName($field);
+        if (isset($this->request[$controlName])) {
+            return htmlspecialchars($this->request[$controlName]);
+        }
+
+        return htmlspecialchars($this->getDefaultValue($field));
+    }
+
+    /**
+     * @param array $field
+     * @return string
+     */
+    protected function getError($field)
+    {
+        $controlName = $this->getControlName($field);
+
+        return $this->errors[$controlName] ?: '';
     }
 
     /**
@@ -149,6 +198,7 @@ class FormView
     protected function prepareControlName($field)
     {
         $controlName = $this->getControlName($field);
+        $controlName = sprintf('%s[%s]', $this->formName, $controlName);
         if ($field['MULTIPLE'] == 'Y') {
             $controlName = sprintf('%s%s', $controlName, '[]');
         }
