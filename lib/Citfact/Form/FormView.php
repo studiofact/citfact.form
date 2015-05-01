@@ -37,22 +37,34 @@ class FormView
      * @param FormBuilder $formBuilder
      * @param ParameterDictionary $parameters
      * @param string $formName
-     * @param array $errors
-     * @param array $request
      */
-    public function __construct(FormBuilder $formBuilder, ParameterDictionary $parameters, $formName, array $request, array $errors)
+    public function __construct(FormBuilder $formBuilder, ParameterDictionary $parameters, $formName)
     {
         $this->formBuilder = $formBuilder;
         $this->parameters = $parameters;
         $this->formName = $formName;
-        $this->request = $request;
-        $this->errors = $errors;
         $this->aliasFields = array_merge($this->aliasFields, (array)$this->parameters->get('ALIAS_FIELDS'));
         $this->displayFields = array_merge_recursive($this->displayFields, (array)$this->parameters->get('DISPLAY_FIELDS'));
 
         foreach ($this->getDefaultViewTypes() as $type) {
             $this->addViewType($type);
         }
+    }
+
+    /**
+     * @param array $request
+     */
+    public function setRequest(array $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * @param array $errors
+     */
+    public function setErrors(array $errors)
+    {
+        $this->errors = $errors;
     }
 
     /**

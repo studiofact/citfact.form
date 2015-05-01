@@ -41,6 +41,7 @@ Loader::registerAutoLoadClasses('citfact.form', array(
     'Citfact\Form\View\TextareaType' => 'lib/Citfact/Form/View/TextareaType.php',
     'Citfact\Form\View\ViewInterface' => 'lib/Citfact/Form/View/ViewInterface.php',
     'Citfact\Form\Event' => 'lib/Citfact/Form/Event.php',
+    'Citfact\Form\EventResult' => 'lib/Citfact/Form/EventResult.php',
     'Citfact\Form\Form' => 'lib/Citfact/Form/Form.php',
     'Citfact\Form\FormBuilder' => 'lib/Citfact/Form/FormBuilder.php',
     'Citfact\Form\FormBuilderInterface' => 'lib/Citfact/Form/FormBuilderInterface.php',

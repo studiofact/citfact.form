@@ -116,6 +116,13 @@ class Form
     {
         $this->builder->create();
 
+        $builderData = $this->getBuilderData();
+        $event = new Event(FormEvents::BUILD, $builderData);
+        $event->send();
+
+        $builderData = $event->mergeFields($builderData);
+        $this->setBuilderData($builderData);
+
         return $this;
     }
 
@@ -187,12 +194,22 @@ class Form
             throw new ValidateException('Request validation failed');
         }
 
-        $this->storage->save($this->getRequestData(), $this->getBuilderData());
+        $requestData = $this->getRequestData();
+        $event = new Event(FormEvents::PRE_STORAGE, $requestData);
+        $event->send();
+
+        $requestData = $event->mergeFields($requestData);
+        $this->storage->save($requestData, $this->getBuilderData());
+
         if (!$this->storage->isSuccess()) {
             $this->addError('STORAGE', $this->storage->getErrors());
         } else {
+            $event = new Event(FormEvents::STORAGE, $requestData);
+            $event->send();
+
+            $requestData = $event->mergeFields($requestData);
             if ($this->mailer instanceof MailerInterface) {
-                $this->mailer->send($this->getRequestData());
+                $this->mailer->send($requestData);
             }
 
             if ($this->params->get('AJAX') != 'Y') {
@@ -317,14 +334,9 @@ class Form
     public function getViewData()
     {
         $errors = $this->getErrors(false);
-        $view = new FormView(
-            $this->builder,
-            $this->getParams(),
-            $this->getFormName(),
-            $this->getRequestData(true),
-            $errors['LIST']
-        );
-
+        $view = new FormView($this->builder, $this->getParams(), $this->getFormName());
+        $view->setRequest($this->getRequestData(true));
+        $view->setErrors($errors['LIST']);
         $view->create();
 
         return $view->getViewData();

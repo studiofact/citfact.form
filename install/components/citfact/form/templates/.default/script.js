@@ -3,11 +3,10 @@
 
   /**
    * Construct object
-   *
-   * @param object params
+   * @param {object} params
    * @constructor
    */
-  var FormGenerator = function (params) {
+  window.FormGenerator = function (params) {
     this.form = params.formContainer;
     this.ajaxMode = params.ajaxMode;
     this.captchaImg = params.captchaImg;
@@ -17,6 +16,7 @@
 
   /**
    * Init events
+   * @return {*}
    */
   FormGenerator.prototype.init = function () {
     this.reloadCaptcha();
@@ -27,6 +27,7 @@
 
   /**
    * Event submit form when ajaxMode = true
+   * @return {*}
    */
   FormGenerator.prototype.submitForm = function () {
     var self = this;
@@ -42,6 +43,7 @@
 
   /**
    * Event reload captcha
+   * @return {*}
    */
   FormGenerator.prototype.reloadCaptcha = function () {
     var self = this;
@@ -56,8 +58,8 @@
 
   /**
    * Set new captcha
-   *
-   * @param string code
+   * @param {string} code
+   * @return {*}
    */
   FormGenerator.prototype.setCaptcha = function (code) {
     $(this.form).find('input[name*=captcha_sid]').val(code);

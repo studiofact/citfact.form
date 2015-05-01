@@ -22,10 +22,40 @@ class Event extends BaseEvent
 
     /**
      * @param string $eventName
-     * @param array  $parameters
+     * @param array $parameters
      */
     public function __construct($eventName, array $parameters = array())
     {
         parent::__construct(self::MODULE_ID, $eventName, $parameters);
+    }
+
+    /**
+     * Merges the data fields set in the event handlers with the source fields.
+     * Returns a merged array of the data fields from the all event handlers.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function mergeFields(array $data)
+    {
+        if ($this->getResults() == null) {
+            return $data;
+        }
+
+        foreach ($this->getResults() as $evenResult) {
+            if ($evenResult->getResultType() !== EventResult::ERROR) {
+                $removed = $evenResult->getUnset();
+                foreach ($removed as $val) {
+                    unset($data[$val]);
+                }
+
+                $modified = $evenResult->getModified();
+                if (!empty($modified)) {
+                    $data = array_merge($data, $modified);
+                }
+            }
+        }
+
+        return $data;
     }
 }

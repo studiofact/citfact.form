@@ -53,6 +53,6 @@ class IdentifierExtension
             }
         }
         
-        return (string)crc32(sprintf('%s_%s', $caller[$trace_current]['file'], $caller[$trace_current]['line']));
+        return (string)abs(crc32(sprintf('%s_%s', $caller[$trace_current]['file'], $caller[$trace_current]['line'])));
     }
 }
