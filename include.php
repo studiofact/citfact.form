@@ -15,6 +15,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
 
 use Bitrix\Main\Loader;
 
+require_once $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/main/classes/general/captcha.php';
+
 Loader::includeModule('iblock');
 Loader::includeModule('highloadblock');
 
