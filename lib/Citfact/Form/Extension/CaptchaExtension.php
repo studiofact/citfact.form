@@ -14,16 +14,16 @@ namespace Citfact\Form\Extension;
 class CaptchaExtension
 {
     /**
-     * @var \CMain
+     * @var \CCaptcha
      */
-    private $CMain;
+    private $captcha;
 
     /**
      * Construct object
      */
     public function __construct()
     {
-        $this->CMain = new \CMain();
+        $this->captcha = new \CCaptcha();
     }
 
     /**
@@ -37,6 +37,14 @@ class CaptchaExtension
     }
 
     /**
+     * @return string
+     */
+    public function getCaptchaCode()
+    {
+        return $this->captcha->code;
+    }
+
+    /**
      * Validates a Captcha token
      *
      * @param string $response
@@ -45,7 +53,7 @@ class CaptchaExtension
      */
     public function isCaptchaTokenValid($response, $token)
     {
-        return $this->CMain->captchaCheckCode($response, $token);
+        return $this->captcha->checkCode($response, $token);
     }
 
     /**
@@ -55,7 +63,8 @@ class CaptchaExtension
      */
     protected function getCaptchaToken()
     {
-        return $this->CMain->captchaGetCode();
-    }
+        $this->captcha->setCode();
 
+        return $this->captcha->getSID();
+    }
 }
