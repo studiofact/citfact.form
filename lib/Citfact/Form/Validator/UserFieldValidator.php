@@ -11,23 +11,10 @@
 
 namespace Citfact\Form\Validator;
 
-use Citfact\Form\FormValidatorInterface;
+use Citfact\Form\FormValidator;
 
-class UserFieldValidator implements FormValidatorInterface
+class UserFieldValidator extends FormValidator
 {
-    /**
-     * @var array
-     */
-    protected $errorList = array();
-
-    /**
-     * @inheritdoc
-     */
-    public function getErrors()
-    {
-        return $this->errorList;
-    }
-
     /**
      * @inheritdoc
      */

@@ -9,24 +9,15 @@ php composer.phar require citfact/form
 Вам будет предложено набрать версию модуля
 
 ``` bash
-  # 0.5.3-RC stable
-  Please provide a version constraint for the citfact/form requirement: 0.5.3-RC
+  Please provide a version constraint for the citfact/form requirement: dev-master
 ```
-  
-## Альтернативная установка
 
-``` bash
-# Переходим в корень проекта
-cd /path/to/project/
+```
+Подключите composer автолоадер 
+``` php
+// init.php
 
-# Клонируем репозиторий
-git clone https://github.com/studiofact/citfact.form.git
-
-# Cоздадим папку local/modules и переносим туда модуль
-mkdir local && mkdir local/modules
-cp -rf citfact.form local/modules
-
-rm -rf citfact.form
+require_once $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 ```
 
 Далее в административной панели в разделе "Marketplace > Установленные решения" устанавливаем модуль.  

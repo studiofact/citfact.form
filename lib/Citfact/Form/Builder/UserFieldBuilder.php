@@ -17,8 +17,10 @@ use Bitrix\Highloadblock as HL;
 use Citfact\Form\FormBuilderInterface;
 use Citfact\Form\Type\ParameterDictionary;
 use Citfact\Form\Exception\BuilderException;
+use Citfact\Form\View\UserFieldView;
+use Citfact\Form\FormBuilder;
 
-class UserFieldBuilder implements FormBuilderInterface
+class UserFieldBuilder extends FormBuilder
 {
     /**
      * @var array
@@ -48,6 +50,14 @@ class UserFieldBuilder implements FormBuilderInterface
             'DATA' => $highLoadBlock,
             'FIELDS' => $this->getHighLoadBlockFields(),
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getView()
+    {
+        return new UserFieldView($this);
     }
 
     /**

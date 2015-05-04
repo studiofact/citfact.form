@@ -9,22 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Citfact\Form\View;
+namespace Citfact\Form\View\Type\UserField;
 
-class TextareaType implements ViewInterface
+class CheckboxType extends BaseUserFieldType
 {
     /**
      * @inheritdoc
      */
-    public function detected($field, $typeBuilder)
+    public function detected()
     {
-        if ($typeBuilder == 'iblock') {
-            // For default fields
-            if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'textarea') {
-                return true;
-            }
-
-            if ($field['PROPERTY_TYPE'] == 'S' && $field['USER_TYPE'] == 'HTML') {
+        if (in_array($this->field['USER_TYPE_ID'], array('iblock_element', 'iblock_section', 'enumeration'))) {
+            if ($this->field['SETTINGS']['DISPLAY'] == 'CHECKBOX' && $this->field['MULTIPLE'] == 'Y') {
                 return true;
             }
         }
@@ -37,6 +32,6 @@ class TextareaType implements ViewInterface
      */
     public function getName()
     {
-        return 'textarea';
+        return 'checkbox';
     }
 }

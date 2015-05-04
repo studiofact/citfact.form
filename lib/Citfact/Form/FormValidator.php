@@ -11,28 +11,19 @@
 
 namespace Citfact\Form;
 
-class FormValidator
+abstract class FormValidator implements FormValidatorInterface
 {
     /**
-     * @var FormValidatorInterface
+     * @var array
      */
-    protected $validator;
+    protected $errorList = array();
 
     /**
-     * @param FormValidatorInterface $validator
+     * @inheritdoc
      */
-    public function __construct(FormValidatorInterface $validator)
+    public function getErrors()
     {
-        $this->validator = $validator;
-    }
-
-    /**
-     * @param array $request
-     * @param array $builderData
-     */
-    public function validate(array $request, array $builderData)
-    {
-        $this->validator->validate($request, $builderData);
+        return $this->errorList;
     }
 
     /**
@@ -42,14 +33,6 @@ class FormValidator
      */
     public function isValid()
     {
-        return (sizeof($this->getErrors()) > 0) ? false : true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getErrors()
-    {
-        return $this->validator->getErrors();
+        return (sizeof($this->errorList) > 0) ? false : true;
     }
 }

@@ -48,10 +48,7 @@ if ($params->get('TYPE') == 'IBLOCK') {
 }
 
 $mailer = new Mailer($params, new CEventType, new CEvent);
-$formBuilder = new FormBuilder(new $builder, $params);
-$formValidator = new FormValidator(new $validator);
-$formStorage = new Storage(new $storage);
-$form = new Form($params, $formBuilder, $formValidator, $formStorage);
+$form = new Form($params, new $builder, new $validator, new $storage);
 
 // Builder saves data to reduce the number of requests
 if ($this->startResultCache()) {

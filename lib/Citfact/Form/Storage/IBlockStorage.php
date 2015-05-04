@@ -11,24 +11,11 @@
 
 namespace Citfact\Form\Storage;
 
-use Citfact\Form\StorageInterface;
 use Citfact\Form\Validator\IBlockErrorParser;
+use Citfact\Form\Storage as BaseStorage;
 
-class IblockStorage implements StorageInterface
+class IblockStorage extends BaseStorage
 {
-    /**
-     * @var array
-     */
-    protected $errorList = array();
-
-    /**
-     * @inheritdoc
-     */
-    public function getErrors()
-    {
-        return $this->errorList;
-    }
-
     /**
      * @inheritdoc
      */
@@ -59,5 +46,4 @@ class IblockStorage implements StorageInterface
 
         return false;
     }
-
 }

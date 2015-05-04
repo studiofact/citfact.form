@@ -11,23 +11,10 @@
 
 namespace Citfact\Form\Validator;
 
-use Citfact\Form\FormValidatorInterface;
+use Citfact\Form\FormValidator;
 
-class IBlockValidator implements FormValidatorInterface
+class IBlockValidator extends FormValidator
 {
-    /**
-     * @var array
-     */
-    protected $errorList = array();
-
-    /**
-     * @inheritdoc
-     */
-    public function getErrors()
-    {
-        return $this->errorList;
-    }
-
     /**
      * @inheritdoc
      */

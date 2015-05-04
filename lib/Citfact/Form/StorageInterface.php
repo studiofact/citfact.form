@@ -25,4 +25,9 @@ interface StorageInterface
      * @param array $builderData
      */
     public function save(array $request, array $builderData);
+
+    /**
+     * @return bool
+     */
+    public function isSuccess();
 }

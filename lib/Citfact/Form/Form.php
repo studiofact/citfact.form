@@ -42,17 +42,17 @@ class Form
     private $submitted = false;
 
     /**
-     * @var FormBuilder
+     * @var FormBuilderInterface
      */
     private $builder;
 
     /**
-     * @var Storage
+     * @var StorageInterface
      */
     private $storage;
 
     /**
-     * @var FormValidator
+     * @var FormValidatorInterface
      */
     private $validator;
 
@@ -83,11 +83,11 @@ class Form
 
     /**
      * @param ParameterDictionary $params
-     * @param FormBuilder $builder
-     * @param FormValidator $validator
-     * @param Storage $storage
+     * @param BuilderInterface $builder
+     * @param ValidatorInterface $validator
+     * @param StorageInterface $storage
      */
-    public function __construct(ParameterDictionary $params, FormBuilder $builder, FormValidator $validator, Storage $storage)
+    public function __construct(ParameterDictionary $params, FormBuilderInterface $builder, FormValidatorInterface $validator, StorageInterface $storage)
     {
         $this->params = $params;
         $this->builder = $builder;
@@ -114,9 +114,7 @@ class Form
      */
     public function createBuilderData()
     {
-        $this->builder->create();
-
-        $builderData = $this->getBuilderData();
+        $builderData = $this->builder->create($this->params);
         $event = new Event(FormEvents::BUILD, $builderData);
         $event->send();
 
@@ -317,12 +315,15 @@ class Form
     public function getViewData()
     {
         $errors = $this->getErrors(false);
-        $view = new FormView($this->builder, $this->getParams(), $this->getFormName());
-        $view->setRequest($this->getRequestData());
-        $view->setErrors($errors['LIST']);
-        $view->create();
+        $view = $this->builder->getView();
 
-        return $view->getViewData();
+        return $view->setRequest($this->getRequestData())
+            ->setErrors($errors['LIST'])
+            ->setFormName($this->getFormName())
+            ->setAliasFields((array)$this->params->get('ALIAS_FIELDS'))
+            ->setDisplayFields((array)$this->params->get('DISPLAY_FIELDS'))
+            ->create()
+            ->getViewData();
     }
 
     /**

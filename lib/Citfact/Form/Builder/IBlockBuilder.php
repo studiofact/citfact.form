@@ -13,11 +13,12 @@ namespace Citfact\Form\Builder;
 
 use Bitrix\Iblock;
 use Bitrix\Main\Entity;
-use Citfact\Form\FormBuilderInterface;
 use Citfact\Form\Type\ParameterDictionary;
 use Citfact\Form\Exception\BuilderException;
+use Citfact\Form\View\IBlockView;
+use Citfact\Form\FormBuilder;
 
-class IBlockBuilder implements FormBuilderInterface
+class IBlockBuilder extends FormBuilder
 {
     /**
      * @var array
@@ -91,6 +92,14 @@ class IBlockBuilder implements FormBuilderInterface
             'DEFAULT_FIELDS' => $this->getDefaultFields($iblockDataFields, $sectionValueList),
             'FIELDS' => $this->iblockProperty,
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getView()
+    {
+        return new IBlockView($this);
     }
 
     /**

@@ -11,44 +11,12 @@
 
 namespace Citfact\Form;
 
-use Citfact\Form\Type\ParameterDictionary;
-
-class FormBuilder
+abstract class FormBuilder implements FormBuilderInterface
 {
-    /**
-     * @var FormBuilderInterface
-     */
-    protected $builder;
-
-    /**
-     * @var \Citfact\Form\Type\ParameterDictionary
-     */
-    protected $parameters;
-
     /**
      * @var array
      */
     protected $builderData = array();
-
-    /**
-     * @param FormBuilderInterface $builder
-     * @param ParameterDictionary $parameters
-     */
-    public function __construct(FormBuilderInterface $builder, ParameterDictionary $parameters)
-    {
-        $this->builder = $builder;
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * Build form data
-     */
-    public function create()
-    {
-        $builderData = $this->builder->create($this->parameters);
-
-        $this->setBuilderData($builderData);
-    }
 
     /**
      * @param array $builderData
@@ -64,13 +32,5 @@ class FormBuilder
     public function getBuilderData()
     {
         return $this->builderData;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->builder->getType();
     }
 }

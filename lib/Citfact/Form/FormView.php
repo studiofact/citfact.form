@@ -11,44 +11,55 @@
 
 namespace Citfact\Form;
 
-use Citfact\Form\View\InputType;
-use Citfact\Form\View\TextareaType;
-use Citfact\Form\View\DateType;
-use Citfact\Form\View\FileType;
-use Citfact\Form\View\SelectType;
-use Citfact\Form\View\CheckboxType;
-use Citfact\Form\View\RadioType;
-use Citfact\Form\View\ViewInterface;
-use Citfact\Form\Type\ParameterDictionary;
+use Citfact\Form\View\Type\TypeInterface;
 
-class FormView
+abstract class FormView implements FormViewInterface
 {
-    private $viewType = array();
-    private $viewData = array();
-    private $aliasFields = array();
-    private $displayFields = array();
-    private $request = array();
-    private $errors = array();
-    private $formBuilder;
-    private $parameters;
-    private $formName;
+    protected $viewType = array();
+    protected $viewData = array();
+    protected $aliasFields = array();
+    protected $displayFields = array();
+    protected $request = array();
+    protected $errors = array();
+    protected $formBuilder;
+    protected $formName;
 
     /**
-     * @param FormBuilder $formBuilder
-     * @param ParameterDictionary $parameters
-     * @param string $formName
+     * @param FormBuilderInterface $formBuilder
      */
-    public function __construct(FormBuilder $formBuilder, ParameterDictionary $parameters, $formName)
+    public function __construct(FormBuilderInterface $formBuilder)
     {
         $this->formBuilder = $formBuilder;
-        $this->parameters = $parameters;
-        $this->formName = $formName;
-        $this->aliasFields = array_merge($this->aliasFields, (array)$this->parameters->get('ALIAS_FIELDS'));
-        $this->displayFields = array_merge_recursive($this->displayFields, (array)$this->parameters->get('DISPLAY_FIELDS'));
+    }
 
-        foreach ($this->getDefaultViewTypes() as $type) {
-            $this->addViewType($type);
-        }
+    /**
+     * @param string $formName
+     */
+    public function setFormName($formName)
+    {
+        $this->formName = $formName;
+
+        return $this;
+    }
+
+    /**
+     * @param array $aliasFields
+     */
+    public function setAliasFields(array $aliasFields)
+    {
+        $this->aliasFields = $aliasFields;
+
+        return $this;
+    }
+
+    /**
+     * @param array $displayFields
+     */
+    public function setDisplayFields(array $displayFields)
+    {
+        $this->displayFields = $displayFields;
+
+        return $this;
     }
 
     /**
@@ -57,6 +68,8 @@ class FormView
     public function setRequest(array $request)
     {
         $this->request = $request;
+
+        return $this;
     }
 
     /**
@@ -65,13 +78,15 @@ class FormView
     public function setErrors(array $errors)
     {
         $this->errors = $errors;
+
+        return $this;
     }
 
     /**
-     * @param ViewInterface $type
+     * @param TypeInterface $type
      * @return $this
      */
-    public function addViewType(ViewInterface $type)
+    public function addViewType(TypeInterface $type)
     {
         if (!isset($this->viewType[$type->getName()])) {
             $this->viewType[$type->getName()] = $type;
@@ -81,32 +96,43 @@ class FormView
     }
 
     /**
+     * return array
+     */
+    protected function getBuilderData()
+    {
+        return $this->formBuilder->getBuilderData();
+    }
+
+    /**
      * @return $this
      */
     public function create()
     {
-        $builderData = $this->formBuilder->getBuilderData();
-        $builderType = $this->formBuilder->getType();
-        if ($builderType == 'iblock') {
-            $builderData['FIELDS'] = $builderData['DEFAULT_FIELDS'] + $builderData['FIELDS'];
+        foreach ($this->getDefaultViewTypes() as $type) {
+            $this->addViewType($type);
         }
 
-        foreach ($builderData['FIELDS'] as $fieldName => $field) {
+        $builderData = $this->getBuilderData();
+        foreach ($builderData['FIELDS'] as $field) {
             foreach ($this->viewType as $type) {
-                if (!$type->detected($field, $builderType) || !$this->isDisplayField($field)) {
+                $type->setFieldData($field);
+                $controlName = $type->getControlName();
+                $required = $type->getRequired();
+                if (!$type->detected() || !$this->isDisplayField($controlName, $required)) {
                     continue;
                 }
 
-                $this->viewData[$fieldName] = array(
+                $defaultValue = $type->getDefaultValue();
+                $this->viewData[$controlName] = array(
                     'TYPE' => $type->getName(),
-                    'REQUIRED' => $this->getRequired($field),
-                    'MULTIPLE' => $field['MULTIPLE'],
-                    'NAME' => $this->prepareControlName($field),
-                    'LABEL' => $this->getLabel($field),
-                    'VALUE_LIST' => $this->getValue($field),
-                    'DEFAULT_VALUE' => $this->getDefaultValue($field),
-                    'ERROR' => $this->getError($field),
-                    'VALUE' => $this->getRequestValue($field),
+                    'REQUIRED' => $required,
+                    'MULTIPLE' => $type->getMultiple(),
+                    'NAME' => $this->prepareControlName($controlName),
+                    'LABEL' => $type->getLabel(),
+                    'VALUE_LIST' => $type->getValueList(),
+                    'DEFAULT_VALUE' => $defaultValue,
+                    'ERROR' => $this->getError($controlName, $defaultValue),
+                    'VALUE' => $this->getRequestValue($controlName, $defaultValue),
                 );
             }
         }
@@ -115,91 +141,41 @@ class FormView
     }
 
     /**
-     * @param array $field
+     * @param string $controlName
+     * @param string $defaultValue
      * @return mixed
      */
-    protected function getRequestValue($field)
+    protected function getRequestValue($controlName, $defaultValue)
     {
-        $controlName = $this->getControlName($field);
         if (isset($this->request[$controlName])) {
             return htmlspecialchars($this->request[$controlName]);
         }
 
-        return htmlspecialchars($this->getDefaultValue($field));
+        return htmlspecialchars($defaultValue);
     }
 
     /**
-     * @param array $field
+     * @param string $controlName
      * @return string
      */
-    protected function getError($field)
+    protected function getError($controlName)
     {
-        $controlName = $this->getControlName($field);
-
         return $this->errors[$controlName] ?: '';
     }
 
     /**
-     * @param array $field
+     * @param string $controlName
+     * @param string $multiple
      * @return string
      */
-    protected function getRequired($field)
+    protected function prepareControlName($controlName, $multiple)
     {
-        return ($this->formBuilder->getType() == 'iblock') ? $field['IS_REQUIRED'] : $field['MANDATORY'];
-    }
-
-    /**
-     * @param array $field
-     * @return string
-     */
-    protected function getLabel($field)
-    {
-        $controlName = $this->getControlName($field);
-        if (isset($this->aliasFields[$controlName])) {
-            return (string)$this->aliasFields[$controlName];
+        if (!$this->formName) {
+            throw new \RuntimeException('Form name empty, use setFormName()');
         }
 
-        return ($this->formBuilder->getType() == 'iblock') ? $field['NAME'] : $field['LIST_COLUMN_LABEL'];
-    }
-
-    /**
-     * @param array $field
-     * @return string
-     */
-    protected function getDefaultValue($field)
-    {
-        $defaultValue = '';
-        if ($this->formBuilder->getType() == 'iblock' && !is_array($field['DEFAULT_VALUE'])) {
-            $defaultValue = $field['DEFAULT_VALUE'];
-        } elseif (isset($field['SETTINGS']['DEFAULT_VALUE'])) {
-            $defaultValue = $field['SETTINGS']['DEFAULT_VALUE'];
-        }
-
-        return $defaultValue;
-    }
-
-    /**
-     * @param array $field
-     * @return string
-     */
-    protected function getControlName($field)
-    {
-        $controlName = ($this->formBuilder->getType() == 'iblock')
-            ? $field['CODE']
-            : $field['FIELD_NAME'];
-
-        return $controlName;
-    }
-
-    /**
-     * @param array $field
-     * @return string
-     */
-    protected function prepareControlName($field)
-    {
-        $controlName = $this->getControlName($field);
         $controlName = sprintf('%s[%s]', $this->formName, $controlName);
-        if ($field['MULTIPLE'] == 'Y') {
+        if ($multiple == 'Y') {
             $controlName = sprintf('%s%s', $controlName, '[]');
         }
 
@@ -207,49 +183,17 @@ class FormView
     }
 
     /**
-     * @param array $field
-     * @return array
-     */
-    protected function getValue($field)
-    {
-        $valueList = (isset($field['VALUE_LIST'])) ? $field['VALUE_LIST'] : array();
-        foreach ($valueList as $key => $value) {
-            if (!array_key_exists('VALUE', $value)) {
-                $valueList[$key]['VALUE'] = $value['NAME'];
-            }
-        }
-
-        return $valueList;
-    }
-
-    /**
-     * @return ViewInterface[]
-     */
-    protected function getDefaultViewTypes()
-    {
-        return array(
-            new InputType(),
-            new TextareaType(),
-            new DateType(),
-            new FileType(),
-            new SelectType(),
-            new CheckboxType(),
-            new RadioType(),
-        );
-    }
-
-    /**
-     * @param array $fieldName
+     * @param string $controlName
+     * @param string $required
      * @return bool
      */
-    protected function isDisplayField($field)
+    protected function isDisplayField($controlName, $required)
     {
-        $fieldName = $this->getControlName($field);
-        if (empty($this->displayFields) || $this->getRequired($field) == 'Y') {
+        if (empty($this->displayFields) || $required == 'Y') {
             return true;
         }
 
-        return in_array($fieldName, $this->displayFields);
+        return in_array($controlName, $this->displayFields);
     }
 
     /**

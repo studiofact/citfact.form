@@ -9,28 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace Citfact\Form;
+namespace Citfact\Form\View\Type\UserField;
 
-abstract class Storage implements StorageInterface
+class FileType extends BaseUserFieldType
 {
     /**
-     * @var array
+     * @inheritdoc
      */
-    protected $errorList = array();
+    public function detected()
+    {
+        return $this->field['USER_TYPE_ID'] == 'file';
+    }
 
     /**
      * @inheritdoc
      */
-    public function getErrors()
+    public function getName()
     {
-        return $this->errorList;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSuccess()
-    {
-        return (sizeof($this->errorList) > 0) ? false : true;
+        return 'file';
     }
 }

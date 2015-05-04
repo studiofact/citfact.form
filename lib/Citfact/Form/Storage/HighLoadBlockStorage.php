@@ -12,23 +12,10 @@
 namespace Citfact\Form\Storage;
 
 use Bitrix\Highloadblock as HL;
-use Citfact\Form\StorageInterface;
+use Citfact\Form\Storage as BaseStorage;
 
-class HighLoadBlockStorage implements StorageInterface
+class HighLoadBlockStorage extends BaseStorage
 {
-    /**
-     * @var array
-     */
-    protected $errorList = array();
-
-    /**
-     * @inheritdoc
-     */
-    public function getErrors()
-    {
-        return $this->errorList;
-    }
-
     /**
      * @inheritdoc
      */

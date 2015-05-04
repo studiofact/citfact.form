@@ -28,4 +28,8 @@ interface FormValidatorInterface
      */
     public function validate(array $request, array $builderData);
 
+    /**
+     * @return bool
+     */
+    public function isValid();
 }
