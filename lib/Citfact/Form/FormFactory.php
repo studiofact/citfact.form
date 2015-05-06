@@ -30,7 +30,6 @@ class FormFactory
     }
 
     /**
-     * @param ParameterDictionary $params
      * @return Form
      */
     public function create()
