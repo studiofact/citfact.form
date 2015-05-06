@@ -3,15 +3,9 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-$path = sprintf('%s%s', getenv('DOCUMENT_ROOT'), $templateFolder);
-if (file_exists($path . '/user_type.php')) {
-    include $path . '/user_type.php';
-}
-
 if (!$arResult['IS_AJAX']) {
     $GLOBALS['APPLICATION']->AddHeadScript($templateFolder . '/script.js');
     $GLOBALS['APPLICATION']->SetAdditionalCSS($templateFolder . '/style.css');
-    CJSCore::Init(array('date'));
 }
 ?>
 
@@ -35,7 +29,10 @@ if (!$arResult['IS_AJAX']) {
         </div>
     <? endif; ?>
 
-    <? $userTypePrint($arResult); ?>
+    <? foreach($arResult['VIEW'] as $field): ?>
+        <? $APPLICATION->IncludeComponent('citfact:form.view', $field['TYPE'], $field, false); ?>
+    <? endforeach; ?>
+
     <? if ($arParams['USE_CAPTCHA'] == 'Y'): ?>
         <div class="form-group" data-required="true">
             <label><?= GetMessage('CAPTCHA_LABEL') ?></label>

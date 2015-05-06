@@ -110,6 +110,14 @@ class Form
     }
 
     /**
+     * @return MailerInterface
+     */
+    public function getMailer()
+    {
+        return $this->mailer;
+    }
+
+    /**
      * @return $this
      */
     public function createBuilderData()
@@ -339,11 +347,27 @@ class Form
     /**
      * Return builder of this form
      *
-     * @return FormBuilder
+     * @return FormBuilderInterface
      */
     public function getBuilder()
     {
         return $this->builder;
+    }
+
+    /**
+     * @return StorageInterface
+     */
+    public function getStorage()
+    {
+        return $this->storage;
+    }
+
+    /**
+     * @return FormValidatorInterface
+     */
+    public function getValidator()
+    {
+        return $this->validator;
     }
 
     /**

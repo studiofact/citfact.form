@@ -23,7 +23,8 @@ Loader::includeModule('citfact.form');
 $app = Application::getInstance();
 $params = new ParameterDictionary($arParams);
 $result = new ParameterDictionary();
-$form = FormFactory::create($params);
+$formFactory = new FormFactory($params);
+$form = $formFactory->create();
 
 // Builder saves data to reduce the number of requests
 if ($this->startResultCache()) {
