@@ -26,6 +26,13 @@ class Event extends BaseEvent
      */
     public function __construct($eventName, array $parameters = array())
     {
+        if (FormEvents::BUILD != $eventName ||
+            FormEvents::PRE_STORAGE != $eventName ||
+            FormEvents::STORAGE != $eventName
+        ) {
+            throw new \InvalidArgumentException('Invalid event name, see FormEvents');
+        }
+
         parent::__construct(self::MODULE_ID, $eventName, $parameters);
     }
 
