@@ -26,7 +26,6 @@ class Event extends BaseEvent
      */
     public function __construct($eventName, array $parameters = array())
     {
-				echo $eventName;
         if (FormEvents::BUILD != $eventName &&
             FormEvents::PRE_STORAGE != $eventName &&
             FormEvents::STORAGE != $eventName
