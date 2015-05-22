@@ -325,11 +325,14 @@ class Form
         $errors = $this->getErrors(false);
         $view = $this->builder->getView();
 
+        $aliasFields = array_diff((array)$this->params->get('ALIAS_FIELDS'), array(null));
+        $displayFields = array_diff((array)$this->params->get('DISPLAY_FIELDS'), array(null));
+
         return $view->setRequest($this->getRequestData())
             ->setErrors($errors['LIST'])
             ->setFormName($this->getFormName())
-            ->setAliasFields((array)$this->params->get('ALIAS_FIELDS'))
-            ->setDisplayFields((array)$this->params->get('DISPLAY_FIELDS'))
+            ->setAliasFields($aliasFields)
+            ->setDisplayFields($displayFields)
             ->create()
             ->getViewData();
     }
