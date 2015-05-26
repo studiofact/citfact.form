@@ -131,7 +131,7 @@ abstract class FormView implements FormViewInterface
                     'LABEL' => $type->getLabel(),
                     'VALUE_LIST' => $type->getValueList(),
                     'DEFAULT_VALUE' => $defaultValue,
-                    'ERROR' => $this->getError($controlName, $defaultValue),
+                    'ERROR' => $this->getError($controlName),
                     'VALUE' => $this->getRequestValue($controlName, $defaultValue),
                 );
             }
