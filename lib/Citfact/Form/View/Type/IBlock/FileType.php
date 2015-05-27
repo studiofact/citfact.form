@@ -19,11 +19,11 @@ class FileType extends BaseIBlockType
     public function detected()
     {
         // For default fields
-        if (isset($field['FIELD_TYPE']) && $field['FIELD_TYPE'] == 'file') {
+        if (isset($this->field['FIELD_TYPE']) && $this->field['FIELD_TYPE'] == 'file') {
             return true;
         }
 
-        if ($field['PROPERTY_TYPE'] == 'F') {
+        if ($this->field['PROPERTY_TYPE'] == 'F') {
             return true;
         }
 
