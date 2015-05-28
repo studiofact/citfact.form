@@ -31,8 +31,8 @@ class Mailer implements MailerInterface
     protected $event;
 
     /**
-     * @param \CEventType $eventType
-     * @param \CEvent $event
+     * @param \CEventType         $eventType
+     * @param \CEvent             $event
      * @param ParameterDictionary $parameters
      */
     public function __construct(ParameterDictionary $parameters, \CEventType $eventType, \CEvent $event)
@@ -43,9 +43,10 @@ class Mailer implements MailerInterface
     }
 
     /**
-     * Send message
+     * Send message.
      *
      * @param array $data
+     *
      * @return mixed
      */
     public function send(array $data)
@@ -68,11 +69,12 @@ class Mailer implements MailerInterface
     }
 
     /**
-     * Creates a post event which will subsequently be sent as email message
+     * Creates a post event which will subsequently be sent as email message.
      *
      * @param string $event
-     * @param mixed $template
-     * @param array $data
+     * @param mixed  $template
+     * @param array  $data
+     *
      * @return mixed
      */
     protected function sendDefault($event, $template, $data)
@@ -81,11 +83,12 @@ class Mailer implements MailerInterface
     }
 
     /**
-     * Sends the message immediately
+     * Sends the message immediately.
      *
      * @param string $event
-     * @param mixed $template
-     * @param array $data
+     * @param mixed  $template
+     * @param array  $data
+     *
      * @return mixed
      */
     protected function sendImmediate($event, $template, $data)

@@ -84,6 +84,7 @@ abstract class FormView implements FormViewInterface
 
     /**
      * @param TypeInterface $type
+     *
      * @return $this
      */
     public function addViewType(TypeInterface $type)
@@ -96,7 +97,7 @@ abstract class FormView implements FormViewInterface
     }
 
     /**
-     * return array
+     * return array.
      */
     protected function getBuilderData()
     {
@@ -143,6 +144,7 @@ abstract class FormView implements FormViewInterface
     /**
      * @param string $controlName
      * @param string $defaultValue
+     *
      * @return mixed
      */
     protected function getRequestValue($controlName, $defaultValue)
@@ -156,6 +158,7 @@ abstract class FormView implements FormViewInterface
 
     /**
      * @param string $controlName
+     *
      * @return string
      */
     protected function getError($controlName)
@@ -166,6 +169,7 @@ abstract class FormView implements FormViewInterface
     /**
      * @param string $controlName
      * @param string $multiple
+     *
      * @return string
      */
     protected function prepareControlName($controlName, $multiple)
@@ -185,6 +189,7 @@ abstract class FormView implements FormViewInterface
     /**
      * @param string $controlName
      * @param string $required
+     *
      * @return bool
      */
     protected function isDisplayField($controlName, $required)

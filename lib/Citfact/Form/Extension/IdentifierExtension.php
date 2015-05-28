@@ -14,7 +14,7 @@ namespace Citfact\Form\Extension;
 class IdentifierExtension
 {
     /**
-     * Generates a identifier
+     * Generates a identifier.
      *
      * @return string
      */
@@ -24,18 +24,19 @@ class IdentifierExtension
     }
 
     /**
-     * Validates a identifier token
+     * Validates a identifier token.
      *
      * @param string $identifier
+     *
      * @return bool
      */
-    public function  isIdentifierValid($identifier)
+    public function isIdentifierValid($identifier)
     {
         return $identifier === $this->generateIdentifier();
     }
 
     /**
-     * Return identifier token
+     * Return identifier token.
      *
      * @return string
      */
@@ -52,7 +53,7 @@ class IdentifierExtension
                 break;
             }
         }
-        
-        return (string)abs(crc32(sprintf('%s_%s', $caller[$trace_current]['file'], $caller[$trace_current]['line'])));
+
+        return (string) abs(crc32(sprintf('%s_%s', $caller[$trace_current]['file'], $caller[$trace_current]['line'])));
     }
 }

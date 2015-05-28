@@ -14,7 +14,6 @@ namespace Citfact\Form\Builder;
 use Bitrix\Iblock;
 use Bitrix\Main\Entity;
 use Bitrix\Highloadblock as HL;
-use Citfact\Form\FormBuilderInterface;
 use Citfact\Form\Type\ParameterDictionary;
 use Citfact\Form\Exception\BuilderException;
 use Citfact\Form\View\UserFieldView;
@@ -32,7 +31,7 @@ class UserFieldBuilder extends FormBuilder
      */
     public function create(ParameterDictionary $parameters)
     {
-        $highLoadBlockId = (int)$parameters->get('ID');
+        $highLoadBlockId = (int) $parameters->get('ID');
         $highLoadBlock = HL\HighloadBlockTable::getById($highLoadBlockId)->fetch();
         if (empty($highLoadBlock)) {
             throw new BuilderException(sprintf('Not found highloadblock with id = %d', $highLoadBlockId));
@@ -69,9 +68,7 @@ class UserFieldBuilder extends FormBuilder
     }
 
     /**
-     * Set values for fields type enumeration
-     *
-     * @return void
+     * Set values for fields type enumeration.
      */
     protected function setEnumValue()
     {
@@ -87,9 +84,7 @@ class UserFieldBuilder extends FormBuilder
     }
 
     /**
-     * Set values for fields type iblock_element
-     *
-     * @return void
+     * Set values for fields type iblock_element.
      */
     protected function setElementValue()
     {
@@ -114,9 +109,7 @@ class UserFieldBuilder extends FormBuilder
     }
 
     /**
-     * Set values for fields type iblock_section
-     *
-     * @return void
+     * Set values for fields type iblock_section.
      */
     protected function setSectionValue()
     {
@@ -142,6 +135,7 @@ class UserFieldBuilder extends FormBuilder
 
     /**
      * @param string $type
+     *
      * @return array
      */
     protected function getListByType($type)
@@ -167,7 +161,7 @@ class UserFieldBuilder extends FormBuilder
     }
 
     /**
-     * Set highload block fields
+     * Set highload block fields.
      *
      * @param array $fields
      */
@@ -176,9 +170,8 @@ class UserFieldBuilder extends FormBuilder
         $this->highLoadBlockFields = $fields;
     }
 
-
     /**
-     * Return highload block fields
+     * Return highload block fields.
      *
      * @return array
      */

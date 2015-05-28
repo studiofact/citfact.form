@@ -23,7 +23,7 @@ use Citfact\Form\View\Type\IBlock\TextareaType;
 class IBlockView extends FormView
 {
     /**
-     * return array
+     * return array.
      */
     protected function getBuilderData()
     {

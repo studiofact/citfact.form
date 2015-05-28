@@ -13,5 +13,4 @@ namespace Citfact\Form\Exception;
 
 class ValidateException extends \RuntimeException implements ExceptionInterface
 {
-
 }

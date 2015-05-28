@@ -14,7 +14,7 @@ namespace Citfact\Form\View\Type;
 interface TypeInterface
 {
     /**
-     * Determines whether the field data type
+     * Determines whether the field data type.
      *
      * @return bool
      */
@@ -26,7 +26,7 @@ interface TypeInterface
     public function setFieldData(array $field);
 
     /**
-     * Return type name
+     * Return type name.
      *
      * @return string
      */

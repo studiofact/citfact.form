@@ -49,6 +49,7 @@ class IBlockErrorParser
 
     /**
      * @param string
+     *
      * @return array
      */
     public function parse($errors)
@@ -103,6 +104,7 @@ class IBlockErrorParser
     /**
      * @param string $errors
      * @param string $delimiter
+     *
      * @return array
      */
     protected function toArray($errors, $delimiter = '<br>')

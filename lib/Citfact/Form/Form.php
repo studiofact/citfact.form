@@ -21,21 +21,21 @@ use Citfact\Form\Type\ParameterDictionary;
 class Form
 {
     /**
-     * The errors of this form
+     * The errors of this form.
      *
      * @var array
      */
     private $errors = array();
 
     /**
-     * Store register services
+     * Store register services.
      *
      * @var array
      */
     private $services = array();
 
     /**
-     * Whether this form was submitted
+     * Whether this form was submitted.
      *
      * @var bool
      */
@@ -83,9 +83,9 @@ class Form
 
     /**
      * @param ParameterDictionary $params
-     * @param BuilderInterface $builder
-     * @param ValidatorInterface $validator
-     * @param StorageInterface $storage
+     * @param BuilderInterface    $builder
+     * @param ValidatorInterface  $validator
+     * @param StorageInterface    $storage
      */
     public function __construct(ParameterDictionary $params, FormBuilderInterface $builder, FormValidatorInterface $validator, StorageInterface $storage)
     {
@@ -100,6 +100,7 @@ class Form
 
     /**
      * @param MailerInterface $mailer
+     *
      * @return $this
      */
     public function setMailer(MailerInterface $mailer)
@@ -149,9 +150,10 @@ class Form
     }
 
     /**
-     * Inspects the given request
+     * Inspects the given request.
      *
      * @param \Bitrix\Main\Request $request
+     *
      * @return $this
      */
     public function handleRequest(Request $request)
@@ -189,9 +191,10 @@ class Form
     }
 
     /**
-     * Save request form in storage
+     * Save request form in storage.
      *
      * @return $this
+     *
      * @throws ValidateException When not valid request
      */
     public function save()
@@ -223,10 +226,11 @@ class Form
     }
 
     /**
-     * Add errors of this form
+     * Add errors of this form.
      *
      * @param mixed $type
      * @param mixed $error
+     *
      * @return $this
      */
     public function addError($type, $error)
@@ -237,9 +241,10 @@ class Form
     }
 
     /**
-     * Return errors of this form
+     * Return errors of this form.
      *
      * @param bool $original
+     *
      * @return array
      */
     public function getErrors($original = true)
@@ -292,7 +297,7 @@ class Form
     }
 
     /**
-     * Return request data in an array
+     * Return request data in an array.
      *
      * @return array
      */
@@ -325,8 +330,8 @@ class Form
         $errors = $this->getErrors(false);
         $view = $this->builder->getView();
 
-        $aliasFields = array_diff((array)$this->params->get('ALIAS_FIELDS'), array(null));
-        $displayFields = array_diff((array)$this->params->get('DISPLAY_FIELDS'), array(null));
+        $aliasFields = array_diff((array) $this->params->get('ALIAS_FIELDS'), array(null));
+        $displayFields = array_diff((array) $this->params->get('DISPLAY_FIELDS'), array(null));
 
         return $view->setRequest($this->getRequestData())
             ->setErrors($errors['LIST'])
@@ -338,7 +343,7 @@ class Form
     }
 
     /**
-     * Return params component
+     * Return params component.
      *
      * @return ParameterDictionary
      */
@@ -348,7 +353,7 @@ class Form
     }
 
     /**
-     * Return builder of this form
+     * Return builder of this form.
      *
      * @return FormBuilderInterface
      */
@@ -374,7 +379,7 @@ class Form
     }
 
     /**
-     * Return a CSRF token
+     * Return a CSRF token.
      *
      * @return string
      */
@@ -384,7 +389,7 @@ class Form
     }
 
     /**
-     * Return a CAPTCHA token
+     * Return a CAPTCHA token.
      *
      * @return string
      */
@@ -394,7 +399,7 @@ class Form
     }
 
     /**
-     * Return form ID token
+     * Return form ID token.
      *
      * @return string
      */

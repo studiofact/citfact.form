@@ -30,7 +30,7 @@ class IBlockBuilder extends FormBuilder
      */
     public function create(ParameterDictionary $parameters)
     {
-        $iblockId = (int)$parameters->get('ID');
+        $iblockId = (int) $parameters->get('ID');
         $queryBuilder = new Entity\Query(Iblock\IblockTable::getEntity());
         $iblockData = $queryBuilder->setSelect(array('ID', 'NAME'))
             ->setFilter(array('ID' => $iblockId))
@@ -113,6 +113,7 @@ class IBlockBuilder extends FormBuilder
     /**
      * @param array $settings
      * @param array $sectionValue
+     *
      * @return array
      */
     protected function getDefaultFields($settings, $sectionValue)
@@ -127,7 +128,7 @@ class IBlockBuilder extends FormBuilder
                 'MULTIPLE' => 'N',
                 'VALUE_LIST' => array(array(
                     'ID' => 'Y',
-                    'NAME' => ''
+                    'NAME' => '',
                 )),
             ),
             'ACTIVE_FROM' => array(
@@ -215,9 +216,7 @@ class IBlockBuilder extends FormBuilder
     }
 
     /**
-     * Set values for property with type L
-     *
-     * @return void
+     * Set values for property with type L.
      */
     protected function setEnumValue()
     {
@@ -242,9 +241,7 @@ class IBlockBuilder extends FormBuilder
     }
 
     /**
-     * Set values for property with type E(link to element)
-     *
-     * @return void
+     * Set values for property with type E(link to element).
      */
     protected function setElementValue()
     {
@@ -269,9 +266,7 @@ class IBlockBuilder extends FormBuilder
     }
 
     /**
-     * Set values for property with type G(link to section)
-     *
-     * @return void
+     * Set values for property with type G(link to section).
      */
     protected function setSectionValue()
     {
@@ -297,6 +292,7 @@ class IBlockBuilder extends FormBuilder
 
     /**
      * @param string $type
+     *
      * @return array
      */
     protected function getListByType($type)

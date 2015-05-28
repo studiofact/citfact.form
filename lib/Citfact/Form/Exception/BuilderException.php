@@ -13,5 +13,4 @@ namespace Citfact\Form\Exception;
 
 class BuilderException extends \RuntimeException implements ExceptionInterface
 {
-
 }

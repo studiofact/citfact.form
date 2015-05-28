@@ -19,7 +19,7 @@ class CsrfExtension
     protected $secret;
 
     /**
-     * Construct object
+     * Construct object.
      *
      * @param string $secret
      */
@@ -29,7 +29,7 @@ class CsrfExtension
     }
 
     /**
-     * Generates a CSRF token
+     * Generates a CSRF token.
      *
      * @return string
      */
@@ -42,6 +42,7 @@ class CsrfExtension
      * Validates a CSRF token.
      *
      * @param string $token
+     *
      * @return bool
      */
     public function isCsrfTokenValid($token)
@@ -66,5 +67,4 @@ class CsrfExtension
 
         return session_id();
     }
-
 }
