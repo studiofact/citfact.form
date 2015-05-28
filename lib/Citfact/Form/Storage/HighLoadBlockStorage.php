@@ -46,7 +46,7 @@ class HighLoadBlockStorage extends BaseStorage
         $result = array();
         foreach ($builderData['FIELDS'] as $name => $field) {
             foreach ($errorList as $error) {
-                if (!preg_match('#' . $field['EDIT_FORM_LABEL'] . '#', $error) && $field['ERROR_MESSAGE'] != $error) {
+                if (!preg_match('#'.$field['EDIT_FORM_LABEL'].'#', $error) && $field['ERROR_MESSAGE'] != $error) {
                     continue;
                 }
 
@@ -60,9 +60,10 @@ class HighLoadBlockStorage extends BaseStorage
     }
 
     /**
-     * Return compiled class exteden DataManager
+     * Return compiled class exteden DataManager.
      *
      * @param array $highloadData
+     *
      * @return mixed
      */
     protected function getCompileBlock($highloadData)

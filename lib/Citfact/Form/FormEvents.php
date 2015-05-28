@@ -14,17 +14,17 @@ namespace Citfact\Form;
 final class FormEvents
 {
     /**
-     * Activated after a successful data collection forms
+     * Activated after a successful data collection forms.
      */
     const BUILD = 'onAfterBuilder';
 
     /**
-     * Activated before to add an entry to storage
+     * Activated before to add an entry to storage.
      */
     const PRE_STORAGE = 'onBeforeStorage';
 
     /**
-     * Activated after a successful record in storage before calling the mail event
+     * Activated after a successful record in storage before calling the mail event.
      */
     const STORAGE = 'onAfterStorage';
 }

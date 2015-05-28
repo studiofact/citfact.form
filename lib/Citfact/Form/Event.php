@@ -16,13 +16,13 @@ use Bitrix\Main\Event as BaseEvent;
 class Event extends BaseEvent
 {
     /**
-     * Store ID module for which will caused by events
+     * Store ID module for which will caused by events.
      */
     const MODULE_ID = 'citfact.form';
 
     /**
      * @param string $eventName
-     * @param array $parameters
+     * @param array  $parameters
      */
     public function __construct($eventName, array $parameters = array())
     {
@@ -41,6 +41,7 @@ class Event extends BaseEvent
      * Returns a merged array of the data fields from the all event handlers.
      *
      * @param array $data
+     *
      * @return array
      */
     public function mergeFields(array $data)

@@ -14,7 +14,7 @@ namespace Citfact\Form\Storage;
 use Citfact\Form\Validator\IBlockErrorParser;
 use Citfact\Form\Storage as BaseStorage;
 
-class IblockStorage extends BaseStorage
+class IBlockStorage extends BaseStorage
 {
     /**
      * @inheritdoc

@@ -26,7 +26,7 @@ class EventResult extends BaseEventResult
     protected $unset = array();
 
     /**
-     * Construct object
+     * Construct object.
      */
     public function __construct()
     {
@@ -34,7 +34,7 @@ class EventResult extends BaseEventResult
     }
 
     /**
-     * Sets the array of fields to modify data in the Bitrix\Main\Entity\Event
+     * Sets the array of fields to modify data in the Bitrix\Main\Entity\Event.
      *
      * @param array $fields
      */
@@ -52,7 +52,7 @@ class EventResult extends BaseEventResult
     }
 
     /**
-     * Sets the array of fields names to unset data in the Bitrix\Main\Entity\Event
+     * Sets the array of fields names to unset data in the Bitrix\Main\Entity\Event.
      *
      * @param array $fields
      */

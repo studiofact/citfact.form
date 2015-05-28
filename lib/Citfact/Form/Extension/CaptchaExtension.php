@@ -19,7 +19,7 @@ class CaptchaExtension
     private $captcha;
 
     /**
-     * Construct object
+     * Construct object.
      */
     public function __construct()
     {
@@ -27,7 +27,7 @@ class CaptchaExtension
     }
 
     /**
-     * Generates a Captcha token
+     * Generates a Captcha token.
      *
      * @return string
      */
@@ -45,10 +45,11 @@ class CaptchaExtension
     }
 
     /**
-     * Validates a Captcha token
+     * Validates a Captcha token.
      *
      * @param string $response
      * @param string $token
+     *
      * @return bool
      */
     public function isCaptchaTokenValid($response, $token)
@@ -57,7 +58,7 @@ class CaptchaExtension
     }
 
     /**
-     * Return a captcha token
+     * Return a captcha token.
      *
      * @return string
      */

@@ -14,14 +14,14 @@ namespace Citfact\Form;
 interface FormValidatorInterface
 {
     /**
-     * Return list errors after validate form
+     * Return list errors after validate form.
      *
      * @return array
      */
     public function getErrors();
 
     /**
-     * Validate request
+     * Validate request.
      *
      * @param array $request
      * @param array $builderData

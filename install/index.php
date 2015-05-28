@@ -56,7 +56,7 @@ class citfact_form extends CModule
     public $MODULE_PATH;
 
     /**
-     * Construct object
+     * Construct object.
      */
     public function __construct()
     {
@@ -67,14 +67,14 @@ class citfact_form extends CModule
         $this->MODULE_PATH = $this->getModulePath();
 
         $arModuleVersion = array();
-        include $this->MODULE_PATH . '/install/version.php';
+        include $this->MODULE_PATH.'/install/version.php';
 
         $this->MODULE_VERSION = $arModuleVersion['VERSION'];
         $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
     }
 
     /**
-     * Return path module
+     * Return path module.
      *
      * @return string
      */
@@ -83,13 +83,14 @@ class citfact_form extends CModule
         $modulePath = explode('/', __FILE__);
         $modulePath = array_slice($modulePath, 0, array_search($this->MODULE_ID, $modulePath) + 1);
 
-        return join('/', $modulePath);
+        return implode('/', $modulePath);
     }
 
     /**
-     * Return components path for install
+     * Return components path for install.
      *
      * @param bool $absolute
+     *
      * @return string
      */
     protected function getComponentsPath($absolute = true)
@@ -109,9 +110,7 @@ class citfact_form extends CModule
     }
 
     /**
-     * Install module
-     *
-     * @return void
+     * Install module.
      */
     public function DoInstall()
     {
@@ -123,9 +122,7 @@ class citfact_form extends CModule
     }
 
     /**
-     * Remove module
-     *
-     * @return void
+     * Remove module.
      */
     public function DoUninstall()
     {
@@ -137,7 +134,7 @@ class citfact_form extends CModule
     }
 
     /**
-     * Add tables to the database
+     * Add tables to the database.
      *
      * @return bool
      */
@@ -147,7 +144,7 @@ class citfact_form extends CModule
     }
 
     /**
-     * Remove tables from the database
+     * Remove tables from the database.
      *
      * @return bool
      */
@@ -157,7 +154,7 @@ class citfact_form extends CModule
     }
 
     /**
-     * Add post events
+     * Add post events.
      *
      * @return bool
      */
@@ -166,9 +163,8 @@ class citfact_form extends CModule
         return true;
     }
 
-
     /**
-     * Delete post events
+     * Delete post events.
      *
      * @return bool
      */
@@ -178,27 +174,27 @@ class citfact_form extends CModule
     }
 
     /**
-     * Copy files module
+     * Copy files module.
      *
      * @return bool
      */
     public function InstallFiles()
     {
-        CopyDirFiles($this->MODULE_PATH . '/install/components', $this->getComponentsPath(), true, true);
+        CopyDirFiles($this->MODULE_PATH.'/install/components', $this->getComponentsPath(), true, true);
 
         return true;
     }
 
     /**
-     * Remove files module
+     * Remove files module.
      *
      * @return bool
      */
     public function UnInstallFiles()
     {
-        DeleteDirFilesEx($this->getComponentsPath(false) . '/citfact/form');
-        if (!glob($this->getComponentsPath() . '/citfact/*')) {
-            @rmdir($this->getComponentsPath() . '/citfact/');
+        DeleteDirFilesEx($this->getComponentsPath(false).'/citfact/form');
+        if (!glob($this->getComponentsPath().'/citfact/*')) {
+            @rmdir($this->getComponentsPath().'/citfact/');
         }
 
         return true;

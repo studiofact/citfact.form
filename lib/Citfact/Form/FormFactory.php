@@ -56,8 +56,8 @@ class FormFactory
                 break;
         }
 
-        $mailer = new Mailer($this->params, new \CEventType, new \CEvent);
-        $form = new Form($this->params, new $builder, new $validator, new $storage);
+        $mailer = new Mailer($this->params, new \CEventType(), new \CEvent());
+        $form = new Form($this->params, new $builder(), new $validator(), new $storage());
         $form->setMailer($mailer);
 
         return $form;

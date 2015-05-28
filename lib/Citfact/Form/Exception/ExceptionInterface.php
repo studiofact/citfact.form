@@ -13,5 +13,4 @@ namespace Citfact\Form\Exception;
 
 interface ExceptionInterface
 {
-
 }

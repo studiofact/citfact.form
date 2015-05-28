@@ -14,9 +14,10 @@ namespace Citfact\Form;
 interface MailerInterface
 {
     /**
-     * Send message
+     * Send message.
      *
      * @param array $data
+     *
      * @return mixed
      */
     public function send(array $data);

@@ -16,7 +16,7 @@ use Bitrix\Main\Type\ParameterDictionary as BaseParameterDictionary;
 class ParameterDictionary extends BaseParameterDictionary
 {
     /**
-     * Set cell dictionary
+     * Set cell dictionary.
      *
      * @param mixed $key
      * @param mixed $value
