@@ -1,4 +1,4 @@
-<?
+<?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
@@ -13,27 +13,27 @@ if (!$arResult['IS_AJAX']) {
       enctype="multipart/form-data" class="form-generator"
       id="form-container">
 
-    <? if ($arResult['SUCCESS'] === true): ?>
+    <?php if ($arResult['SUCCESS'] === true): ?>
         <div class="alert alert-success"><?= GetMessage('SUCCESS_MESSAGE') ?></div>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? if (sizeof($arResult['ERRORS']['LIST']) > 0): ?>
+    <?php if (sizeof($arResult['ERRORS']['LIST']) > 0): ?>
         <div class="alert alert-danger">
-            <? foreach ($arResult['ERRORS']['LIST'] as $type => $value): ?>
-                <? if ($type == 'CAPTCHA' || $type == 'CSRF'): ?>
+            <?php foreach ($arResult['ERRORS']['LIST'] as $type => $value): ?>
+                <?php if ($type == 'CAPTCHA' || $type == 'CSRF'): ?>
                     <div><?= GetMessage($value) ?></div>
-                <? else: ?>
+                <?php else: ?>
                     <div><?= $value ?></div>
-                <? endif; ?>
-            <? endforeach; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
         </div>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? foreach($arResult['VIEW'] as $field): ?>
-        <? $APPLICATION->IncludeComponent('citfact:form.view', $field['TYPE'], $field, false); ?>
-    <? endforeach; ?>
+    <?php foreach ($arResult['VIEW'] as $field): ?>
+        <?php $APPLICATION->IncludeComponent('citfact:form.view', $field['TYPE'], $field, false); ?>
+    <?php endforeach; ?>
 
-    <? if ($arParams['USE_CAPTCHA'] == 'Y'): ?>
+    <?php if ($arParams['USE_CAPTCHA'] == 'Y'): ?>
         <div class="form-group" data-required="true">
             <label><?= GetMessage('CAPTCHA_LABEL') ?></label>
             <img class="captcha-image captcha-reload"
@@ -47,11 +47,11 @@ if (!$arResult['IS_AJAX']) {
             <input type="text" class="form-control" name="<?= $arResult['FORM_NAME'] ?>[CAPTCHA]"
                    value="<?= $arResult['FORM']['CAPTCHA'] ?>"/>
         </div>
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? if ($arParams['USE_CSRF'] == 'Y'): ?>
+    <?php if ($arParams['USE_CSRF'] == 'Y'): ?>
         <input type="hidden" name="<?= $arResult['FORM_NAME'] ?>[CSRF]" value="<?= $arResult['CSRF'] ?>"/>
-    <? endif; ?>
+    <?php endif; ?>
 
     <input type="submit"
            data-send-text="<?= GetMessage('FILED_SEND_SUBMIT') ?>"
@@ -59,7 +59,7 @@ if (!$arResult['IS_AJAX']) {
            value="<?= GetMessage('FILED_SUBMIT') ?>"/>
 </form>
 
-<? if (!$arResult['IS_AJAX']): ?>
+<?php if (!$arResult['IS_AJAX']): ?>
     <script type="text/javascript">
         var formGenerator = new FormGenerator({
             formContainer: '#form-container',
@@ -70,4 +70,4 @@ if (!$arResult['IS_AJAX']) {
         });
         formGenerator.init();
     </script>
-<? endif; ?>
+<?php endif; ?>
