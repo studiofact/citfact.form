@@ -6,8 +6,7 @@ use Symfony\CS\Config\Config;
 $finder = DefaultFinder::create()
     ->files()
     ->name('*.php')
-    ->in(__DIR__.'/lib')
-    ->in(__DIR__.'/tests')
+    ->in(__DIR__)
 ;
 
 return Config::create()
