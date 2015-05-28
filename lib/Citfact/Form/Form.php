@@ -26,7 +26,7 @@ class Form
      * @var array
      */
     private $errors = array();
-    
+
     /**
      * Whether this form was submitted.
      *
@@ -50,7 +50,7 @@ class Form
     private $validator;
 
     /**
-     * @var \Bitrix\Main\Request;
+     * @var \Bitrix\Main\Request
      */
     private $request;
 
