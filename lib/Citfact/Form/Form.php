@@ -26,14 +26,7 @@ class Form
      * @var array
      */
     private $errors = array();
-
-    /**
-     * Store register services.
-     *
-     * @var array
-     */
-    private $services = array();
-
+    
     /**
      * Whether this form was submitted.
      *
