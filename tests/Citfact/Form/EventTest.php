@@ -16,7 +16,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
     public function testMergeFields()
     {
         $fields = array('NAME' => 'NAME', 'CODE' => 'CODE', 'SORT' => 500);
-        $event = new Event('test_module', $fields);
+        $event = new Event(FormEvents::BUILD, $fields);
         $eventResult = new EventResult();
         $eventResult->modifyFields(array('NAME' => 'NAME_CHANGE'));
         $eventResult->unsetFields(array('CODE'));
