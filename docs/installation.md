@@ -6,12 +6,6 @@
 php composer.phar require citfact/form
 ```
 
-Вам будет предложено набрать версию модуля
-
-``` bash
-  Please provide a version constraint for the citfact/form requirement: dev-master
-```
-
 Подключите composer автолоадер 
 ``` php
 // init.php
