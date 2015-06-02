@@ -34,6 +34,8 @@ abstract class FormView implements FormViewInterface
 
     /**
      * @param string $formName
+     *
+     * @return $this
      */
     public function setFormName($formName)
     {
@@ -44,6 +46,8 @@ abstract class FormView implements FormViewInterface
 
     /**
      * @param array $aliasFields
+     *
+     * @return $this
      */
     public function setAliasFields(array $aliasFields)
     {
@@ -54,6 +58,8 @@ abstract class FormView implements FormViewInterface
 
     /**
      * @param array $displayFields
+     *
+     * @return $this
      */
     public function setDisplayFields(array $displayFields)
     {
@@ -64,6 +70,8 @@ abstract class FormView implements FormViewInterface
 
     /**
      * @param array $request
+     *
+     * @return $this
      */
     public function setRequest(array $request)
     {
@@ -74,6 +82,8 @@ abstract class FormView implements FormViewInterface
 
     /**
      * @param array $errors
+     *
+     * @return $this
      */
     public function setErrors(array $errors)
     {
@@ -128,8 +138,8 @@ abstract class FormView implements FormViewInterface
                     'TYPE' => $type->getName(),
                     'REQUIRED' => $required,
                     'MULTIPLE' => $type->getMultiple(),
-                    'NAME' => $this->prepareControlName($controlName),
-                    'LABEL' => $type->getLabel(),
+                    'NAME' => $this->prepareControlName($controlName, $type->getMultiple()),
+                    'LABEL' => $this->aliasFields[$controlName] ?: $type->getLabel(),
                     'VALUE_LIST' => $type->getValueList(),
                     'DEFAULT_VALUE' => $defaultValue,
                     'ERROR' => $this->getError($controlName),
@@ -150,10 +160,10 @@ abstract class FormView implements FormViewInterface
     protected function getRequestValue($controlName, $defaultValue)
     {
         if (isset($this->request[$controlName])) {
-            return htmlspecialchars($this->request[$controlName]);
+            return $this->request[$controlName];
         }
 
-        return htmlspecialchars($defaultValue);
+        return $defaultValue;
     }
 
     /**
