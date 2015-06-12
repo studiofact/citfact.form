@@ -12,6 +12,7 @@
 namespace Citfact\Form;
 
 use Citfact\Form\Type\ParameterDictionary;
+use Citfact\Form\Attach\AttachInterface;
 
 interface FormBuilderInterface
 {
@@ -28,6 +29,11 @@ interface FormBuilderInterface
      * @return FormViewInterface
      */
     public function getView();
+
+    /**
+     * @return AttachInterface
+     */
+    public function getAttach();
 
     /**
      * Return type builder.

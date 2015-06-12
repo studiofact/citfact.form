@@ -21,6 +21,10 @@ Loader::includeModule('iblock');
 Loader::includeModule('highloadblock');
 
 Loader::registerAutoLoadClasses('citfact.form', array(
+    'Citfact\Form\Attach\AbstractAttach' => 'lib/Citfact/Form/Attach/AbstractAttach.php',
+    'Citfact\Form\Attach\AttachInterface' => 'lib/Citfact/Form/Attach/AttachInterface.php',
+    'Citfact\Form\Attach\IBlockAttach' => 'lib/Citfact/Form/Attach/IBlockAttach.php',
+    'Citfact\Form\Attach\UserFieldAttach' => 'lib/Citfact/Form/Attach/UserFieldAttach.php',
     'Citfact\Form\Builder\IBlockBuilder' => 'lib/Citfact/Form/Builder/IBlockBuilder.php',
     'Citfact\Form\Builder\UserFieldBuilder' => 'lib/Citfact/Form/Builder/UserFieldBuilder.php',
     'Citfact\Form\Exception\ExceptionInterface' => 'lib/Citfact/Form/Exception/ExceptionInterface.php',

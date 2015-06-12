@@ -14,6 +14,7 @@ namespace Citfact\Form\Builder;
 use Bitrix\Iblock;
 use Bitrix\Main\Entity;
 use Bitrix\Highloadblock as HL;
+use Citfact\Form\Attach\UserFieldAttach;
 use Citfact\Form\Type\ParameterDictionary;
 use Citfact\Form\Exception\BuilderException;
 use Citfact\Form\View\UserFieldView;
@@ -52,7 +53,7 @@ class UserFieldBuilder extends FormBuilder
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getView()
     {
@@ -60,7 +61,15 @@ class UserFieldBuilder extends FormBuilder
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     */
+    public function getAttach()
+    {
+        return new UserFieldAttach($this);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getType()
     {

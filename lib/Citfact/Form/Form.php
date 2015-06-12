@@ -201,7 +201,7 @@ class Form
         $event->send();
 
         $requestData = $event->mergeFields($requestData);
-        $this->storage->save($requestData, $this->getBuilderData());
+        $insertId = $this->storage->save($requestData, $this->getBuilderData());
 
         if (!$this->storage->isSuccess()) {
             $this->addError('STORAGE', $this->storage->getErrors());
@@ -211,7 +211,14 @@ class Form
 
             $requestData = $event->mergeFields($requestData);
             if ($this->mailer instanceof MailerInterface) {
-                $this->mailer->send($requestData);
+                $attachFiles = array();
+                // Attaching files is available from version 15.0.15
+                if ((int)str_replace('.', '', SM_VERSION) >= 15015) {
+                    $attach = $this->builder->getAttach();
+                    $attachFiles = $attach->getFiles($insertId, $this->params->get('ATTACH_FIELDS'));
+                }
+
+                $this->mailer->send($requestData, $attachFiles);
             }
         }
 
