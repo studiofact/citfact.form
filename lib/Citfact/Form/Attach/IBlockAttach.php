@@ -19,7 +19,7 @@ class IBlockAttach extends AbstractAttach
     public function getFiles($insertId, array $attachFields)
     {
         $filesList = array();
-        $iblockElement = new \CIBlockElement;
+        $iblockElement = new \CIBlockElement();
         $builderData = $this->builder->getBuilderData();
 
         $filter = array(
@@ -50,7 +50,6 @@ class IBlockAttach extends AbstractAttach
             } elseif (is_array($property['VALUE'])) {
                 $filesList = array_merge_recursive($filesList, $property['VALUE']);
             }
-
         }
 
         return $filesList;

@@ -213,7 +213,7 @@ class Form
             if ($this->mailer instanceof MailerInterface) {
                 $attachFiles = array();
                 // Attaching files is available from version 15.0.15
-                if ((int)str_replace('.', '', SM_VERSION) >= 15015) {
+                if ((int) str_replace('.', '', SM_VERSION) >= 15015) {
                     $attach = $this->builder->getAttach();
                     $attachFiles = $attach->getFiles($insertId, $this->params->get('ATTACH_FIELDS'));
                 }
@@ -322,6 +322,7 @@ class Form
 
     /**
      * @param array $filesData
+     *
      * @return array
      */
     private function normalizeFilesData($filesData)

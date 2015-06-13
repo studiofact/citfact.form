@@ -14,8 +14,9 @@ namespace Citfact\Form\Attach;
 interface AttachInterface
 {
     /**
-     * @param int $insertId
+     * @param int   $insertId
      * @param array $attachFields
+     *
      * @return array
      */
     public function getFiles($insertId, array $attachFields);
