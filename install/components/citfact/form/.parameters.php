@@ -62,6 +62,13 @@ $arComponentParameters = array(
             'MULTIPLE' => 'Y',
             'VALUES' => array(),
         ),
+        'ATTACH_FIELDS' => array(
+            'NAME' => Loc::getMessage('ATTACH_FIELDS'),
+            'TYPE' => 'STRING',
+            'ADDITIONAL_VALUES' => 'Y',
+            'MULTIPLE' => 'Y',
+            'VALUES' => array(),
+        ),
         'EVENT_NAME' => array(
             'NAME' => Loc::getMessage('EVENT_NAME'),
             'TYPE' => 'LIST',

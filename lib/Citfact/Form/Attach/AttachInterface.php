@@ -9,17 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Citfact\Form;
+namespace Citfact\Form\Attach;
 
-interface MailerInterface
+interface AttachInterface
 {
     /**
-     * Send message.
+     * @param int   $insertId
+     * @param array $attachFields
      *
-     * @param array $data
-     * @param array $attachFiles
-     *
-     * @return mixed
+     * @return array
      */
-    public function send(array $data, array $attachFiles = array());
+    public function getFiles($insertId, array $attachFields);
 }

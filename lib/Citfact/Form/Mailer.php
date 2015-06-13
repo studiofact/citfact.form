@@ -43,13 +43,9 @@ class Mailer implements MailerInterface
     }
 
     /**
-     * Send message.
-     *
-     * @param array $data
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function send(array $data)
+    public function send(array $data, array $attachFiles = array())
     {
         $eventName = $this->parameters->get('EVENT_NAME');
         $eventTemplate = (is_numeric($this->parameters->get('EVENT_TEMPLATE')))
@@ -62,10 +58,10 @@ class Mailer implements MailerInterface
         }
 
         if ($this->parameters->get('EVENT_TYPE') == 'IMMEDIATE') {
-            return $this->sendImmediate($eventName, $eventTemplate, $data);
+            return $this->sendImmediate($eventName, $eventTemplate, $data, $attachFiles);
         }
 
-        return $this->sendDefault($eventName, $eventTemplate, $data);
+        return $this->sendDefault($eventName, $eventTemplate, $data, $attachFiles);
     }
 
     /**
@@ -74,12 +70,13 @@ class Mailer implements MailerInterface
      * @param string $event
      * @param mixed  $template
      * @param array  $data
+     * @param array  $attachFiles
      *
      * @return mixed
      */
-    protected function sendDefault($event, $template, $data)
+    protected function sendDefault($event, $template, $data, $attachFiles)
     {
-        return $this->event->send($event, SITE_ID, $data, 'Y', $template);
+        return $this->event->send($event, SITE_ID, $data, 'Y', $template, $attachFiles);
     }
 
     /**
@@ -88,11 +85,12 @@ class Mailer implements MailerInterface
      * @param string $event
      * @param mixed  $template
      * @param array  $data
+     * @param array  $attachFiles
      *
      * @return mixed
      */
-    protected function sendImmediate($event, $template, $data)
+    protected function sendImmediate($event, $template, $data, $attachFiles)
     {
-        return $this->event->sendImmediate($event, SITE_ID, $data, 'Y', $template);
+        return $this->event->sendImmediate($event, SITE_ID, $data, 'Y', $template, $attachFiles);
     }
 }

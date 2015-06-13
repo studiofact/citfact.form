@@ -15,6 +15,7 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
     "REDIRECT_PATH" => "",
     "ALIAS_FIELDS" => array("NAME" => "NameAlias", "CODE" => "CodeAlias"),
     "DISPLAY_FIELDS" => array("NAME", "UF_NAME"),
+    "ATTACH_FIELDS" => array("UF_FILE", "DETAIL_PICTURE"),
     "TYPE" => "CUSTOM",
     "CACHE_TYPE" => "Y",
     "CACHE_TIME" => "3600",
@@ -38,4 +39,5 @@ $APPLICATION->IncludeComponent("citfact:form", "", array(
 * **USE_CSRF** - Использовать CSRF
 * **ALIAS_FIELDS** - Словарь для замены стандартных наименований полей
 * **DISPLAY_FIELDS** - Словарь со списком полей которые нужно отобразить, если пустой отображаются все
+* **ATTACH_FIELDS** - Список полей типа файл, которые в дальнейшем будут прикреплены к почтовому событию. Доступно с версии 1С-Bitrix 15.0.15
 * **TYPE** - Тип формы: IBLOCK/HLBLOCK/CUSTOM. При значение "CUSTOM" берет настройки из параметров компонента BUILDER/STORAGE/VALIDATOR, иначе из настроек модуля.
