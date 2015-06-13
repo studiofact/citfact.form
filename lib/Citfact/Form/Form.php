@@ -305,13 +305,43 @@ class Form
     {
         $postList = array();
         $formName = $this->getFormName();
-        $requestData = $this->request->getPostList()->toArray();
 
+        $requestData = $this->request->getPostList()->toArray();
         if (array_key_exists($formName, $requestData)) {
-            $postList = $requestData[$formName];
+            $postList = array_merge($postList, $requestData[$formName]);
+        }
+
+        $filesData = $this->request->getFileList()->toArray();
+        if (array_key_exists($formName, $filesData)) {
+            $filesData = $filesData[$formName];
+            $postList = array_merge($postList, $this->normalizeFilesData($filesData));
         }
 
         return $postList;
+    }
+
+    /**
+     * @param array $filesData
+     * @return array
+     */
+    private function normalizeFilesData($filesData)
+    {
+        $filesResult = array();
+        foreach ($filesData as $nameType => $valueData) {
+            foreach ($valueData as $fieldName => $fieldValue) {
+                // If property or field is not multiple
+                if (!is_array($fieldValue)) {
+                    $filesResult[$fieldName][$nameType] = $fieldValue;
+                    continue;
+                }
+
+                foreach ($fieldValue as $key => $value) {
+                    $filesResult[$fieldName][$key][$nameType] = $value;
+                }
+            }
+        }
+
+        return $filesResult;
     }
 
     /**

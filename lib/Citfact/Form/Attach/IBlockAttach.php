@@ -41,9 +41,16 @@ class IBlockAttach extends AbstractAttach
 
         $propertyList = $element->getProperties();
         foreach ($propertyList as $key => $property) {
-            if (in_array($key, $attachFields) && is_numeric($property['VALUE'])) {
-                $filesList[] = $property['VALUE'];
+            if (!in_array($key, $attachFields)) {
+                continue;
             }
+
+            if (is_numeric($property['VALUE'])) {
+                $filesList[] = $property['VALUE'];
+            } elseif (is_array($property['VALUE'])) {
+                $filesList = array_merge_recursive($filesList, $property['VALUE']);
+            }
+
         }
 
         return $filesList;

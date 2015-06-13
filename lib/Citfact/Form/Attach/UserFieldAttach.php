@@ -32,8 +32,14 @@ class UserFieldAttach extends AbstractAttach
         }
 
         foreach ($fields as $key => $value) {
-            if (in_array($key, $attachFields) && is_numeric($value)) {
+            if (!in_array($key, $attachFields)) {
+                continue;
+            }
+
+            if (is_numeric($value)) {
                 $filesList[] = $value;
+            } elseif (is_array($value)) {
+                $filesList = array_merge_recursive($filesList, $value);
             }
         }
 
