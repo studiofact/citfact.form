@@ -42,7 +42,7 @@ class IdentifierExtension
      * @param string $identifier
      * @return bool
      */
-    public function  isIdentifierValid($identifier)
+    public function isIdentifierValid($identifier)
     {
         return $identifier === $this->generateIdentifier();
     }
