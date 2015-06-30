@@ -14,7 +14,20 @@ namespace Citfact\Form\Extension;
 class IdentifierExtension
 {
     /**
-     * Generates a identifier.
+     * @var string
+     */
+    protected $paramsHash;
+    
+    /**
+     * @param string $paramsHash
+     */
+    public function __construct($paramsHash)
+    {
+        $this->paramsHash = (string) $paramsHash;
+    }
+    
+    /**
+     * Generates a identifier
      *
      * @return string
      */
@@ -24,10 +37,9 @@ class IdentifierExtension
     }
 
     /**
-     * Validates a identifier token.
+     * Validates a identifier token
      *
      * @param string $identifier
-     *
      * @return bool
      */
     public function isIdentifierValid($identifier)
@@ -36,7 +48,7 @@ class IdentifierExtension
     }
 
     /**
-     * Return identifier token.
+     * Return identifier token
      *
      * @return string
      */
@@ -44,16 +56,20 @@ class IdentifierExtension
     {
         $caller = defined('DEBUG_BACKTRACE_IGNORE_ARGS') ? debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS) : debug_backtrace(false);
 
-        $trace_count = count($caller);
-        $trace_current = $trace_count - 1;
+        $traceCount = count($caller);
+        $traceCurrent = $traceCount - 1;
 
-        for ($i = 0; $i < $trace_count; $i++) {
+        for ($i = 0; $i < $traceCount; $i++) {
             if (strtolower($caller[$i]['function']) == 'includecomponent' && (($c = strtolower($caller[$i]['class'])) == 'callmain' || $c == 'cmain')) {
-                $trace_current = $i;
+                $traceCurrent = $i;
                 break;
             }
         }
-
-        return (string) abs(crc32(sprintf('%s_%s', $caller[$trace_current]['file'], $caller[$trace_current]['line'])));
+        
+        return (string) abs(crc32(sprintf('%s_%s_%s', 
+            $caller[$traceCurrent]['file'], 
+            $caller[$traceCurrent]['line'],
+            $this->paramsHash
+        )));
     }
 }

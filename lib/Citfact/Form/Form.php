@@ -87,8 +87,10 @@ class Form
         $this->validator = $validator;
         $this->storage = $storage;
         $this->captcha = new CaptchaExtension();
-        $this->csrf = new CsrfExtension();
-        $this->identifier = new IdentifierExtension();
+
+        $paramsHash = md5(serialize($this->params->toArray()));
+        $this->csrf = new CsrfExtension($paramsHash);
+        $this->identifier = new IdentifierExtension($paramsHash);
     }
 
     /**
