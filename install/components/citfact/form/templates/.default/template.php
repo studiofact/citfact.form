@@ -3,6 +3,8 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
+$this->setFrameMode(true);
+
 if (!$arResult['IS_AJAX']) {
     $GLOBALS['APPLICATION']->AddHeadScript($templateFolder . '/script.js');
     $GLOBALS['APPLICATION']->SetAdditionalCSS($templateFolder . '/style.css');
