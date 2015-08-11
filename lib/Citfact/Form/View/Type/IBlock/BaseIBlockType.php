@@ -44,6 +44,6 @@ class BaseIBlockType extends BaseType
      */
     public function getDefaultValue()
     {
-        return !is_array($this->field['DEFAULT_VALUE']) ? $this->field['DEFAULT_VALUE'] : '';
+        return $this->field['DEFAULT_VALUE'];
     }
 }

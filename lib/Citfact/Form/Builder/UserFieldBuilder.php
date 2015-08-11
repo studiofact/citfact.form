@@ -100,7 +100,7 @@ class UserFieldBuilder extends FormBuilder
         $iblockList = $this->getListByType('iblock_element');
         $queryBuilder = new Entity\Query(Iblock\ElementTable::getEntity());
         $queryBuilder->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID'))
-            ->setFilter(array('IBLOCK_ID' => $iblockList))
+            ->setFilter(array('IBLOCK_ID' => $iblockList, 'ACTIVE' => 'Y'))
             ->setOrder(array());
 
         $elementResult = $queryBuilder->exec();
@@ -125,7 +125,7 @@ class UserFieldBuilder extends FormBuilder
         $iblockList = $this->getListByType('iblock_section');
         $queryBuilder = new Entity\Query(Iblock\SectionTable::getEntity());
         $queryBuilder->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'XML_ID'))
-            ->setFilter(array('IBLOCK_ID' => $iblockList))
+            ->setFilter(array('IBLOCK_ID' => $iblockList, 'ACTIVE' => 'Y'))
             ->setOrder(array());
 
         $sectionResult = $queryBuilder->exec();

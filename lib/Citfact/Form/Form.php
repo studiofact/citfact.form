@@ -188,7 +188,7 @@ class Form
     /**
      * Save request form in storage.
      *
-     * @return $this
+     * @return int|bool
      *
      * @throws ValidateException When not valid request
      */
@@ -224,7 +224,7 @@ class Form
             }
         }
 
-        return $this;
+        return $insertId;
     }
 
     /**

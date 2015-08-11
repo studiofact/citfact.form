@@ -257,7 +257,7 @@ class IBlockBuilder extends FormBuilder
         $iblockList = $this->getListByType('E');
         $queryBuilder = new Entity\Query(Iblock\ElementTable::getEntity());
         $queryBuilder->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID'))
-            ->setFilter(array('IBLOCK_ID' => $iblockList))
+            ->setFilter(array('IBLOCK_ID' => $iblockList, 'ACTIVE' => 'Y'))
             ->setOrder(array());
 
         $elementResult = $queryBuilder->exec();
@@ -282,7 +282,7 @@ class IBlockBuilder extends FormBuilder
         $iblockList = $this->getListByType('G');
         $queryBuilder = new Entity\Query(Iblock\SectionTable::getEntity());
         $queryBuilder->setSelect(array('ID', 'NAME', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'XML_ID'))
-            ->setFilter(array('IBLOCK_ID' => $iblockList))
+            ->setFilter(array('IBLOCK_ID' => $iblockList, 'ACTIVE' => 'Y'))
             ->setOrder(array());
 
         $sectionResult = $queryBuilder->exec();
