@@ -35,6 +35,7 @@ if ($this->startResultCache()) {
 $form->setBuilderData($arResult['BUILDER_DATA']);
 $form->handleRequest($app->getContext()->getRequest());
 $insertId = '';
+
 if ($form->isValid()) {
     $insertId = $form->save();
 
