@@ -34,8 +34,9 @@ if ($this->startResultCache()) {
 
 $form->setBuilderData($arResult['BUILDER_DATA']);
 $form->handleRequest($app->getContext()->getRequest());
+$insertId = '';
 if ($form->isValid()) {
-    $form->save();
+    $insertId = $form->save();
 
     // If the data is successfully preserved produce redirect
     if ($params->get('AJAX') != 'Y') {
@@ -68,6 +69,7 @@ if ($result->get('IS_AJAX') && $form->isSubmitted()) {
         'errors' => $result->get('ERRORS'),
         'captcha' => $result->get('CAPTCHA'),
         'html' => $bufferTemplate,
+        'order_id' => $insertId,
     );
 
     exit(json_encode($response));
