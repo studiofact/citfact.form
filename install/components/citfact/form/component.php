@@ -70,7 +70,7 @@ if ($result->get('IS_AJAX') && $form->isSubmitted()) {
         'errors' => $result->get('ERRORS'),
         'captcha' => $result->get('CAPTCHA'),
         'html' => $bufferTemplate,
-        'order_id' => $insertId,
+        'insert_id' => $insertId,
     );
 
     exit(json_encode($response));
