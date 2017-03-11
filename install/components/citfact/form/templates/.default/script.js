@@ -32,10 +32,30 @@
   FormGenerator.prototype.submitForm = function () {
     var self = this;
     $(document).on('submit', this.form, function () {
-      $.post(self.uri, $(self.form).serialize(), function (response) {
-        $(self.form).replaceWith(response.html);
-        self.reloadCaptcha();
-      });
+
+      if(typeof FormData === 'function'){
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+          url: self.uri,
+          type: 'POST',
+          data: formData,
+          async: true,
+          success: function (response) {
+            $(self.form).replaceWith(response.html);
+            self.reloadCaptcha();
+          },
+          cache: false,
+          contentType: false,
+          processData: false
+        });
+
+      } else {
+        $.post(self.uri, $(self.form).serialize(), function (response) {
+          $(self.form).replaceWith(response.html);
+          self.reloadCaptcha();
+        });
+      }
 
       return false;
     });
