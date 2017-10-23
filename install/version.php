@@ -10,6 +10,6 @@
  */
 
 $arModuleVersion = array(
-    'VERSION' => '0.9.9',
-    'VERSION_DATE' => '2017-03-13 12:00:00',
+    'VERSION' => '0.9.10',
+    'VERSION_DATE' => '2017-10-24 12:00:00',
 );
