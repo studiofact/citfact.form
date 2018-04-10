@@ -13,6 +13,9 @@ namespace Citfact\Form;
 
 use Bitrix\Main\Event as BaseEvent;
 
+/**
+ * {@internal}
+ */
 class Event extends BaseEvent
 {
     /**
@@ -21,19 +24,35 @@ class Event extends BaseEvent
     const MODULE_ID = 'citfact.form';
 
     /**
-     * @param string $eventName
-     * @param array  $parameters
+     * @var FormBuilderInterface
      */
-    public function __construct($eventName, array $parameters = array())
+    private $builder;
+
+    /**
+     * @param string               $eventName
+     * @param array                $parameters
+     * @param FormBuilderInterface $builder
+     */
+    public function __construct($eventName, array $parameters = array(), FormBuilderInterface $builder)
     {
         if (FormEvents::BUILD != $eventName &&
             FormEvents::PRE_STORAGE != $eventName &&
             FormEvents::STORAGE != $eventName
         ) {
-            throw new \InvalidArgumentException('Invalid event name, see FormEvents');
+            throw new \InvalidArgumentException(sprintf('Invalid event name, see %s', FormEvents::class));
         }
 
+        $this->builder = $builder;
+
         parent::__construct(self::MODULE_ID, $eventName, $parameters);
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    public function getBuilder()
+    {
+        return $this->builder;
     }
 
     /**
