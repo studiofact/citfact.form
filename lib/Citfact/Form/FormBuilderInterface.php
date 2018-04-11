@@ -41,4 +41,14 @@ interface FormBuilderInterface
      * @return string
      */
     public function getType();
+
+    /**
+     * @param array $builderData
+     */
+    public function setBuilderData($builderData);
+
+    /**
+     * @return array
+     */
+    public function getBuilderData();
 }

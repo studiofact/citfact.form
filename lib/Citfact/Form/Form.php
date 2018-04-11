@@ -75,10 +75,15 @@ class Form
     private $mailer;
 
     /**
-     * @param ParameterDictionary $params
-     * @param BuilderInterface    $builder
-     * @param ValidatorInterface  $validator
-     * @param StorageInterface    $storage
+     * @var ParameterDictionary
+     */
+    private $params;
+
+    /**
+     * @param ParameterDictionary     $params
+     * @param FormBuilderInterface    $builder
+     * @param FormValidatorInterface  $validator
+     * @param StorageInterface        $storage
      */
     public function __construct(ParameterDictionary $params, FormBuilderInterface $builder, FormValidatorInterface $validator, StorageInterface $storage)
     {
@@ -119,7 +124,7 @@ class Form
     public function createBuilderData()
     {
         $builderData = $this->builder->create($this->params);
-        $event = new Event(FormEvents::BUILD, $builderData);
+        $event = new Event(FormEvents::BUILD, $builderData, $this->builder);
         $event->send();
 
         $builderData = $event->mergeFields($builderData);
@@ -199,7 +204,7 @@ class Form
         }
 
         $requestData = $this->getRequestData();
-        $event = new Event(FormEvents::PRE_STORAGE, $requestData);
+        $event = new Event(FormEvents::PRE_STORAGE, $requestData, $this->builder);
         $event->send();
 
         $requestData = $event->mergeFields($requestData);
@@ -208,7 +213,7 @@ class Form
         if (!$this->storage->isSuccess()) {
             $this->addError('STORAGE', $this->storage->getErrors());
         } else {
-            $event = new Event(FormEvents::STORAGE, $requestData);
+            $event = new Event(FormEvents::STORAGE, $requestData, $this->builder);
             $event->send();
 
             $requestData = $event->mergeFields($requestData);

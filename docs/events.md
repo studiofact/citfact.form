@@ -1,6 +1,6 @@
 ## Пользовательские события
 
-- `onAfterBuilder` - срабатывает после cбора данных для формы
+- `onAfterBuilder` - срабатывает после сбора данных для формы
 - `onBeforeStorage` - срабатывает прежде чем добавить запись в слой хранения данных
 - `onAfterStorage` - срабатывает после успешной записи в слой хранения данных перед вызовом почтового события
 
@@ -46,7 +46,10 @@ function onBeforeStorageHandler(Event $event)
 {
     $requestData = $event->getParameters();
     $eventResult = new EventResult();
-
+    
+    // Если необходим builder, для доступа к ID инфоблока или highload
+    // $builder = $event->getBuilder();
+    
     $requestData['NAME'] = 'Change NAME';
     $eventResult->modifyFields($requestData);
 
