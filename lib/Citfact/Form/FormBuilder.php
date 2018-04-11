@@ -19,7 +19,7 @@ abstract class FormBuilder implements FormBuilderInterface
     protected $builderData = array();
 
     /**
-     * @param array $builderData
+     * {@inheritdoc}
      */
     public function setBuilderData($builderData)
     {
@@ -27,7 +27,7 @@ abstract class FormBuilder implements FormBuilderInterface
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getBuilderData()
     {
