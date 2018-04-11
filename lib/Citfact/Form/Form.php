@@ -220,7 +220,7 @@ class Form
             if ($this->mailer instanceof MailerInterface) {
                 $attachFiles = array();
                 // Attaching files is available from version 15.0.15
-                if ((int) str_replace('.', '', SM_VERSION) >= 15015) {
+                if (version_compare(SM_VERSION, '15.0.15', '>=')) {
                     $attach = $this->builder->getAttach();
                     $attachFiles = $attach->getFiles($insertId, $this->params->get('ATTACH_FIELDS'));
                 }
