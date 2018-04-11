@@ -169,7 +169,7 @@ class IBlockBuilder extends FormBuilder
                 'CODE' => 'CODE',
                 'FIELD_TYPE' => 'string',
                 'IS_REQUIRED' => $settings['FIELDS']['CODE']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['FIELDS']['CODE']['DEFAULT_VALUE'],
+                'DEFAULT_VALUE' => '',
                 'MULTIPLE' => 'N',
             ),
             'SORT' => array(
@@ -185,7 +185,7 @@ class IBlockBuilder extends FormBuilder
                 'CODE' => 'IBLOCK_SECTION',
                 'FIELD_TYPE' => 'select',
                 'IS_REQUIRED' => $settings['FIELDS']['IBLOCK_SECTION']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['FIELDS']['IBLOCK_SECTION']['DEFAULT_VALUE'],
+                'DEFAULT_VALUE' => '',
                 'MULTIPLE' => 'Y',
                 'VALUE_LIST' => $sectionValue,
             ),
@@ -194,7 +194,7 @@ class IBlockBuilder extends FormBuilder
                 'CODE' => 'PREVIEW_PICTURE',
                 'FIELD_TYPE' => 'file',
                 'IS_REQUIRED' => $settings['FIELDS']['PREVIEW_PICTURE']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['FIELDS']['PREVIEW_PICTURE']['DEFAULT_VALUE'],
+                'DEFAULT_VALUE' => '',
                 'MULTIPLE' => 'N',
             ),
             'DETAIL_PICTURE' => array(
@@ -202,7 +202,7 @@ class IBlockBuilder extends FormBuilder
                 'CODE' => 'DETAIL_PICTURE',
                 'FIELD_TYPE' => 'file',
                 'IS_REQUIRED' => $settings['FIELDS']['DETAIL_PICTURE']['IS_REQUIRED'],
-                'DEFAULT_VALUE' => $settings['FIELDS']['DETAIL_PICTURE']['DEFAULT_VALUE'],
+                'DEFAULT_VALUE' => '',
                 'MULTIPLE' => 'N',
             ),
             'PREVIEW_TEXT' => array(
