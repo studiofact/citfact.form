@@ -229,7 +229,8 @@ class Form
                     $this->mailer->setViewData($this->getViewData());
                 }
 
-                $this->mailer->send($requestData, $attachFiles);
+                $macrosData = array_merge($requestData, array('INSERT_ID' => $insertId));
+                $this->mailer->send($macrosData, $attachFiles);
             }
         }
 
