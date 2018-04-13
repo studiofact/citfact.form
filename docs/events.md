@@ -79,9 +79,9 @@ function onAfterStorageHandler(Event $event)
  */
 function onMacrosJoin(Event $event)
 {
-    $macros = $event->getParameters();
-    $viewData = $evet->getBuilder()->getView()->getViewData();
-    
+    $parameters = $event->getParameters();
+    $bilder = $event->getBuilder();
+
     $eventResult = new EventResult();
     $eventResult->setMacrosJoin('Change macros join');
     

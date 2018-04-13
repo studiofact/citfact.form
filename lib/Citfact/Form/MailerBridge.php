@@ -43,6 +43,7 @@ class MailerBridge implements MailerInterface
      */
     public function send(array $data, array $attachFiles = array())
     {
+        $data = $this->convertMacrosValueList($data);
         $data['MACROS_JOIN'] = $this->macrosJoin($data);
 
         $this->mailerInner->send($data, $attachFiles);
@@ -54,6 +55,45 @@ class MailerBridge implements MailerInterface
     public function setViewData(array $viewData)
     {
         $this->viewData = $viewData;
+    }
+
+    /**
+     * @param array $macrosData
+     *
+     * @return array
+     */
+    private function convertMacrosValueList(array $macrosData)
+    {
+        foreach ($macrosData as $key => $value) {
+            if (!isset($this->viewData[$key]) || is_array($value)) {
+                continue;
+            }
+
+            $macrosData[$key] = $this->resolveValue($this->viewData[$key], $value);
+        }
+
+        return $macrosData;
+    }
+
+    /**
+     * @param array      $viewData
+     * @param string|int $value
+     *
+     * @return string
+     */
+    private function resolveValue($viewData, $value)
+    {
+        if (empty($viewData['VALUE_LIST'])) {
+            return $value;
+        }
+
+        foreach ($viewData['VALUE_LIST'] as $valueItem) {
+            if ($valueItem['ID'] == $value) {
+                return $valueItem['NAME'];
+            }
+        }
+
+        return $value;
     }
 
     /**
