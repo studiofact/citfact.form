@@ -24,6 +24,11 @@ class MailerBridge implements MailerInterface
     private $builder;
 
     /**
+     * @var array
+     */
+    private $viewData = array();
+
+    /**
      * @param MailerInterface      $mailerInner
      * @param FormBuilderInterface $builder
      */
@@ -44,13 +49,26 @@ class MailerBridge implements MailerInterface
     }
 
     /**
+     * @param array $viewData
+     */
+    public function setViewData(array $viewData)
+    {
+        $this->viewData = $viewData;
+    }
+
+    /**
      * @param array $macrosData
      *
      * @return string
      */
     private function macrosJoin(array $macrosData)
     {
-        $event = new Event(FormEvents::MACROS_JOIN, $macrosData, $this->builder);
+        $parameters = array(
+            'VIEW_DATA' => $this->viewData,
+            'MACROS' => $macrosData,
+        );
+
+        $event = new Event(FormEvents::MACROS_JOIN, $parameters, $this->builder);
         $event->send();
 
         if ($overrideMacrosJoin = $event->getOverrideMacrosJoin()) {
@@ -58,14 +76,12 @@ class MailerBridge implements MailerInterface
         }
 
         $macrosJoin = '';
-        $viewData = $this->builder->getView()->getViewData();
-
         foreach ($macrosData as $key => $value) {
-            if (!isset($viewData[$key])) {
+            if (!isset($this->viewData[$key]) || is_array($value)) {
                 continue;
             }
 
-            $label = $viewData[$key]['LABEL'];
+            $label = $this->viewData[$key]['LABEL'];
             $macrosJoin .= sprintf('<strong>%s</strong> - %s<br/>', $label, $value);
         }
 

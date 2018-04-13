@@ -225,6 +225,10 @@ class Form
                     $attachFiles = $attach->getFiles($insertId, $this->params->get('ATTACH_FIELDS'));
                 }
 
+                if ($this->mailer instanceof MailerBridge) {
+                    $this->mailer->setViewData($this->getViewData());
+                }
+
                 $this->mailer->send($requestData, $attachFiles);
             }
         }
