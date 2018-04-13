@@ -3,6 +3,7 @@
 - `onAfterBuilder` - срабатывает после сбора данных для формы
 - `onBeforeStorage` - срабатывает прежде чем добавить запись в слой хранения данных
 - `onAfterStorage` - срабатывает после успешной записи в слой хранения данных перед вызовом почтового события
+- `onMacrosJoin` - срабатывает до объединения всех макросов в один, событие используется для своей реализации объединения макросов
 
 ## Пример использования
 
@@ -22,6 +23,7 @@ $eventManager = EventManager::getInstance();
 $eventManager->addEventHandler(Event::MODULE_ID, FormEvents::BUILD, 'onAfterBuilderHandler');
 $eventManager->addEventHandler(Event::MODULE_ID, FormEvents::PRE_STORAGE, 'onBeforeStorageHandler');
 $eventManager->addEventHandler(Event::MODULE_ID, FormEvents::STORAGE, 'onAfterStorageHandler');
+$eventManager->addEventHandler(Event::MODULE_ID, FormEvents::MACROS_JOIN, 'onMacrosJoin');
 
 /**
  * @param Event $event
@@ -68,6 +70,21 @@ function onAfterStorageHandler(Event $event)
     $requestData['NAME'] = 'Change NAME second time';
     $eventResult->modifyFields($requestData);
 
+    return $eventResult;
+}
+
+/**
+ * @param Event $event
+ * @return EventResult
+ */
+function onMacrosJoin(Event $event)
+{
+    $macros = $event->getParameters();
+    $viewData = $evet->getBuilder()->getView()->getViewData();
+    
+    $eventResult = new EventResult();
+    $eventResult->setMacrosJoin('Change macros join');
+    
     return $eventResult;
 }
 ```

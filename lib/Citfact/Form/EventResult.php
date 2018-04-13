@@ -26,11 +26,36 @@ class EventResult extends BaseEventResult
     protected $unset = array();
 
     /**
+     * @var string
+     */
+    protected $macrosJoin = null;
+
+    /**
      * Construct object.
      */
     public function __construct()
     {
         parent::__construct(parent::SUCCESS, $parameters = null, $moduleId = null, $handler = null);
+    }
+
+    /**
+     * @param string $macrosJoin
+     */
+    public function setMacrosJoin($macrosJoin)
+    {
+        if (false === is_string($macrosJoin)) {
+            throw new \InvalidArgumentException(sprintf('Override macros join must be string, now %s', gettype($macrosJoin)));
+        }
+
+        $this->macrosJoin = $macrosJoin;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMacrosJoin()
+    {
+        return $this->macrosJoin;
     }
 
     /**

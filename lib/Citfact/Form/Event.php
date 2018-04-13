@@ -37,6 +37,7 @@ class Event extends BaseEvent
     {
         if (FormEvents::BUILD != $eventName &&
             FormEvents::PRE_STORAGE != $eventName &&
+            FormEvents::MACROS_JOIN != $eventName &&
             FormEvents::STORAGE != $eventName
         ) {
             throw new \InvalidArgumentException(sprintf('Invalid event name, see %s', FormEvents::class));
@@ -56,6 +57,28 @@ class Event extends BaseEvent
     }
 
     /**
+     * @return null|string
+     */
+    public function getOverrideMacrosJoin()
+    {
+        $macrosJoin = null;
+        if ($this->getResults() == null) {
+            return $macrosJoin;
+        }
+
+        /** @var EventResult $evenResult */
+        foreach ($this->getResults() as $evenResult) {
+            if (!$evenResult instanceof EventResult) {
+                continue;
+            }
+
+            $macrosJoin = $evenResult->getMacrosJoin();
+        }
+
+        return $macrosJoin;
+    }
+
+    /**
      * Merges the data fields set in the event handlers with the source fields.
      * Returns a merged array of the data fields from the all event handlers.
      *
@@ -69,17 +92,20 @@ class Event extends BaseEvent
             return $data;
         }
 
+        /** @var EventResult $evenResult */
         foreach ($this->getResults() as $evenResult) {
-            if ($evenResult->getResultType() !== EventResult::ERROR) {
-                $removed = $evenResult->getUnset();
-                foreach ($removed as $val) {
-                    unset($data[$val]);
-                }
+            if (!$evenResult instanceof EventResult) {
+                continue;
+            }
 
-                $modified = $evenResult->getModified();
-                if (!empty($modified)) {
-                    $data = array_merge($data, $modified);
-                }
+            $removed = $evenResult->getUnset();
+            foreach ($removed as $val) {
+                unset($data[$val]);
+            }
+
+            $modified = $evenResult->getModified();
+            if (!empty($modified)) {
+                $data = array_merge($data, $modified);
             }
         }
 

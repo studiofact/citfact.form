@@ -38,6 +38,10 @@ class FormFactory
             $this->params->set('TYPE', 'CUSTOM');
         }
 
+        $builder = Config\Option::get('citfact.form', 'BUILDER');
+        $storage = Config\Option::get('citfact.form', 'STORAGE');
+        $validator = Config\Option::get('citfact.form', 'VALIDATOR');
+
         switch ($this->params->get('TYPE')) {
             case 'IBLOCK':
                 $builder = 'Citfact\\Form\\Builder\\IBlockBuilder';
@@ -50,14 +54,18 @@ class FormFactory
                 $validator = 'Citfact\\Form\\Validator\\UserFieldValidator';
                 break;
             case 'CUSTOM':
-                $builder = $this->params->get('BUILDER') ?: Config\Option::get('citfact.form', 'BUILDER');
-                $storage = $this->params->get('STORAGE') ?: Config\Option::get('citfact.form', 'STORAGE');
-                $validator = $this->params->get('VALIDATOR') ?: Config\Option::get('citfact.form', 'VALIDATOR');
+                $builder = $this->params->get('BUILDER') ?: $builder;
+                $storage = $this->params->get('STORAGE') ?: $storage;
+                $validator = $this->params->get('VALIDATOR') ?: $validator;
                 break;
         }
 
-        $mailer = new Mailer($this->params, new \CEventType(), new \CEvent());
-        $form = new Form($this->params, new $builder(), new $validator(), new $storage());
+        $builderInstance = new $builder();
+        $validatorInstance = new $validator();
+        $storageInstance = new $storage();
+
+        $mailer = new MailerBridge(new Mailer($this->params, new \CEventType(), new \CEvent()), $builderInstance);
+        $form = new Form($this->params, $builderInstance, $validatorInstance, $storageInstance);
         $form->setMailer($mailer);
 
         return $form;

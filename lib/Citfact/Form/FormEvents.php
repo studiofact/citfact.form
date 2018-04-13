@@ -27,4 +27,9 @@ final class FormEvents
      * Activated after a successful record in storage before calling the mail event.
      */
     const STORAGE = 'onAfterStorage';
+
+    /**
+     * Activated before macro merges
+     */
+    const MACROS_JOIN = 'onMacrosJoin';
 }
