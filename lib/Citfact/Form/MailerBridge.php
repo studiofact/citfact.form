@@ -65,11 +65,16 @@ class MailerBridge implements MailerInterface
     private function convertMacrosValueList(array $macrosData)
     {
         foreach ($macrosData as $key => $value) {
-            if (!isset($this->viewData[$key]) || is_array($value)) {
+            if (!isset($this->viewData[$key])) {
                 continue;
             }
 
-            $macrosData[$key] = $this->resolveValue($this->viewData[$key], $value);
+            $viewData = $this->viewData[$key];
+            if (is_array($value) && $viewData[$key]['MULTIPLE'] == 'N') {
+                continue;
+            }
+
+            $macrosData[$key] = $this->resolveValue($viewData, $value);
         }
 
         return $macrosData;
@@ -89,7 +94,14 @@ class MailerBridge implements MailerInterface
 
         foreach ($viewData['VALUE_LIST'] as $valueItem) {
             if ($valueItem['ID'] == $value) {
-                return $valueItem['NAME'];
+                $value = $valueItem['NAME'];
+            }
+
+            if (is_array($value)) {
+                $key = array_search($valueItem['ID'], $value);
+                if (false !== $key) {
+                    $value[$key] = $valueItem['NAME'];
+                }
             }
         }
 
@@ -117,12 +129,19 @@ class MailerBridge implements MailerInterface
 
         $macrosJoin = '';
         foreach ($macrosData as $key => $value) {
-            if (!isset($this->viewData[$key]) || is_array($value)) {
+            if (!isset($this->viewData[$key])) {
                 continue;
             }
 
-            $label = $this->viewData[$key]['LABEL'];
-            $macrosJoin .= sprintf('<strong>%s</strong> - %s<br/>', $label, $value);
+            $viewData = $this->viewData[$key];
+            if (is_array($value) && $viewData['MULTIPLE'] == 'N') {
+                continue;
+            }
+
+            $label = $viewData['LABEL'];
+            $printValue = is_array($value) ? implode('/', $value) : $value;
+
+            $macrosJoin .= sprintf('<strong>%s</strong> - %s<br/>', $label, $printValue);
         }
 
         return $macrosJoin;
