@@ -80,7 +80,7 @@ function onAfterStorageHandler(Event $event)
 function onMacrosJoin(Event $event)
 {
     $parameters = $event->getParameters();
-    $bilder = $event->getBuilder();
+    $builder = $event->getBuilder();
 
     $eventResult = new EventResult();
     $eventResult->setMacrosJoin('Change macros join');
