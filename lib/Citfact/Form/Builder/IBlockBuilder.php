@@ -13,7 +13,9 @@ namespace Citfact\Form\Builder;
 
 use Bitrix\Iblock;
 use Bitrix\Main\Entity;
+use Citfact\Form\Attach\AttachInterface;
 use Citfact\Form\Attach\IBlockAttach;
+use Citfact\Form\FormViewInterface;
 use Citfact\Form\Type\ParameterDictionary;
 use Citfact\Form\Exception\BuilderException;
 use Citfact\Form\View\IBlockView;
@@ -25,6 +27,16 @@ class IBlockBuilder extends FormBuilder
      * @var array
      */
     protected $iblockProperty;
+
+    /**
+     * @var FormViewInterface
+     */
+    protected $view;
+
+    /**
+     * @var AttachInterface
+     */
+    protected $attach;
 
     /**
      * @inheritdoc
@@ -100,7 +112,11 @@ class IBlockBuilder extends FormBuilder
      */
     public function getView()
     {
-        return new IBlockView($this);
+        if ($this->view instanceof FormViewInterface) {
+            return $this->view;
+        }
+
+        return $this->view = new IBlockView($this);
     }
 
     /**
@@ -108,7 +124,11 @@ class IBlockBuilder extends FormBuilder
      */
     public function getAttach()
     {
-        return new IBlockAttach($this);
+        if ($this->attach instanceof AttachInterface) {
+            return $this->attach;
+        }
+
+        return $this->attach = new IBlockAttach($this);
     }
 
     /**

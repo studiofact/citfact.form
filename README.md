@@ -21,3 +21,4 @@
  - [Установка](https://github.com/studiofact/citfact.form/blob/master/docs/installation.md)
  - [Пример использования](https://github.com/studiofact/citfact.form/blob/master/docs/usage.md)
  - [Пользовательские события](https://github.com/studiofact/citfact.form/blob/master/docs/events.md)
+ - [Почтовые события](https://github.com/studiofact/citfact.form/blob/master/docs/mail.md)

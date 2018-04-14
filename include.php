@@ -70,6 +70,7 @@ Loader::registerAutoLoadClasses('citfact.form', array(
     'Citfact\Form\FormView' => 'lib/Citfact/Form/FormView.php',
     'Citfact\Form\FormViewInterface' => 'lib/Citfact/Form/FormViewInterface.php',
     'Citfact\Form\Mailer' => 'lib/Citfact/Form/Mailer.php',
+    'Citfact\Form\MailerBridge' => 'lib/Citfact/Form/MailerBridge.php',
     'Citfact\Form\MailerInterface' => 'lib/Citfact/Form/MailerInterface.php',
     'Citfact\Form\Storage' => 'lib/Citfact/Form/Storage.php',
     'Citfact\Form\StorageInterface' => 'lib/Citfact/Form/StorageInterface.php',
