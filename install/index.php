@@ -83,7 +83,7 @@ class citfact_form extends CModule
         $modulePath = explode(DIRECTORY_SEPARATOR, __FILE__);
         $modulePath = array_slice($modulePath, 0, array_search($this->MODULE_ID, $modulePath) + 1);
 
-        return implode('/', $modulePath);
+        return implode(DIRECTORY_SEPARATOR, $modulePath);
     }
 
     /**
