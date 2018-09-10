@@ -80,10 +80,10 @@ class citfact_form extends CModule
      */
     protected function getModulePath()
     {
-        $modulePath = explode('/', __FILE__);
+        $modulePath = explode(DIRECTORY_SEPARATOR, __FILE__);
         $modulePath = array_slice($modulePath, 0, array_search($this->MODULE_ID, $modulePath) + 1);
 
-        return implode('/', $modulePath);
+        return implode(DIRECTORY_SEPARATOR, $modulePath);
     }
 
     /**
